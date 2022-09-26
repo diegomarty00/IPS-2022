@@ -8,5 +8,4 @@ Repositorio del Equipo PL1-2 de IPS.
 
 - [Diego Martínez Menéndez](https://github.com/diegomarty00) - UO270457
 - [Felipe García Gómez](https://github.com/UO285267) - UO285267
-- [Rita Fernández-Catuxo Ortíz](https://github.com/UO284185) - UO284185
 - [Sergio Maté Suárez](https://github.com/SergiMS-exe) - UO271563
