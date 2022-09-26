@@ -1,4 +1,4 @@
-# IPS-2022
+# IPS2022-PL1-2
 
 [![reuniones](https://img.shields.io/badge/Work%20meeting-RedKanban-%23B32024?style=flat&logo=Redmine)](https://in2test.lsi.uniovi.es/redkanban/)
 
