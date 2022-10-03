@@ -12,10 +12,17 @@ import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaPrincipal extends JFrame {
 
 	private JPanel contentPane;
+	private JLabel lblTitulo;
+	private JLabel lblTituloCompleto;
+	private JLabel lblInicioSesion;
+	private JButton btnAdmin;
+	private JButton btnMeico;
 
 	/**
 	 * Launch the application.
@@ -44,30 +51,50 @@ public class VentanaPrincipal extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		JLabel lblTítulo = new JLabel("GPTo");
-		lblTítulo.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTítulo.setFont(new Font("Arial Black", Font.PLAIN, 24));
-		lblTítulo.setBounds(10, 34, 459, 35);
-		contentPane.add(lblTítulo);
-		
-		JLabel lblTituloCompleto = new JLabel("Gestor de Pacientes Total");
-		lblTituloCompleto.setHorizontalAlignment(SwingConstants.CENTER);
-		lblTituloCompleto.setBounds(10, 70, 459, 14);
-		contentPane.add(lblTituloCompleto);
-		
-		JButton btnAdmin = new JButton("Administrador");
-		btnAdmin.setBounds(82, 130, 125, 50);
-		contentPane.add(btnAdmin);
-		
-		JButton btnMetico = new JButton("M\u00E9dico");
-		btnMetico.setBounds(279, 130, 125, 50);
-		contentPane.add(btnMetico);
-		
-		JLabel lblSesion = new JLabel("Inicio de sesi\u00F3n");
-		lblSesion.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSesion.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lblSesion.setBounds(10, 95, 459, 24);
-		contentPane.add(lblSesion);
+		contentPane.add(getLblTitulo());
+		contentPane.add(getLblTituloCompleto());
+		contentPane.add(getLblInicioSesion());
+		contentPane.add(getBtnAdmin());
+		contentPane.add(getBtnMeico());
+	}
+	public JLabel getLblTitulo() {
+		if (lblTitulo == null) {
+			lblTitulo = new JLabel("GPTo");
+			lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+			lblTitulo.setFont(new Font("Arial Black", Font.PLAIN, 24));
+			lblTitulo.setBounds(0, 0, 483, 44);
+		}
+		return lblTitulo;
+	}
+	public JLabel getLblTituloCompleto() {
+		if (lblTituloCompleto == null) {
+			lblTituloCompleto = new JLabel("Gestion Paciente Total");
+			lblTituloCompleto.setFont(new Font("Tahoma", Font.PLAIN, 14));
+			lblTituloCompleto.setHorizontalAlignment(SwingConstants.CENTER);
+			lblTituloCompleto.setBounds(10, 65, 473, 29);
+		}
+		return lblTituloCompleto;
+	}
+	public JLabel getLblInicioSesion() {
+		if (lblInicioSesion == null) {
+			lblInicioSesion = new JLabel("Inicio Sesi\u00F3n");
+			lblInicioSesion.setHorizontalAlignment(SwingConstants.CENTER);
+			lblInicioSesion.setBounds(10, 105, 463, 14);
+		}
+		return lblInicioSesion;
+	}
+	public JButton getBtnAdmin() {
+		if (btnAdmin == null) {
+			btnAdmin = new JButton("Administrador");
+			btnAdmin.setBounds(90, 130, 125, 50);
+		}
+		return btnAdmin;
+	}
+	public JButton getBtnMeico() {
+		if (btnMeico == null) {
+			btnMeico = new JButton("Medico");
+			btnMeico.setBounds(269, 130, 125, 50);
+		}
+		return btnMeico;
 	}
 }
