@@ -86,6 +86,12 @@ public class VentanaPrincipal extends JFrame {
 	public JButton getBtnAdmin() {
 		if (btnAdmin == null) {
 			btnAdmin = new JButton("Administrador");
+			btnAdmin.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					VentanaCitas frame = new VentanaCitas();
+					frame.setVisible(true);
+				}
+			});
 			btnAdmin.setBounds(90, 130, 125, 50);
 		}
 		return btnAdmin;
