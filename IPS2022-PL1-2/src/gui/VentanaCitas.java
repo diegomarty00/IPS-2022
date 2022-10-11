@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.border.EmptyBorder;
 
+import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
 public class VentanaCitas extends JFrame {
 
 	private JPanel contentPane;
@@ -32,8 +34,8 @@ public class VentanaCitas extends JFrame {
 	private JLabel lbMedicosSelccionados;
 	private JButton jbAñadir;
 	private JPanel panelComboBox;
-	private JComboBox comboBox;
-	private JComboBox comboBox_1;
+	private JComboBox cbPacinte;
+	private JComboBox cbMedicos;
 	private JComboBox cbLugar;
 	private JPanel panel_2;
 	private JPanel panel_3;
@@ -61,6 +63,8 @@ public class VentanaCitas extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		contentPane.add(getPanelC(), BorderLayout.CENTER);
 		contentPane.add(getPanelN(), BorderLayout.SOUTH);
+	    AutoCompleteDecorator.decorate(cbPacinte);
+	    AutoCompleteDecorator.decorate(cbMedicos);
 	}
 	private JPanel getPanelC() {
 		if (panelC == null) {
@@ -187,19 +191,19 @@ public class VentanaCitas extends JFrame {
 		return panelComboBox;
 	}
 	private JComboBox getComboBox_2() {
-		if (comboBox == null) {
-			comboBox = new JComboBox();
-			comboBox.setRequestFocusEnabled(false);
-			comboBox.setModel(new DefaultComboBoxModel(new String[] {"Paco Garcia Fernadez ", "Arnau Ferrer Despuig"}));
+		if (cbPacinte == null) {
+			cbPacinte = new JComboBox();
+			cbPacinte.setRequestFocusEnabled(false);
+			cbPacinte.setModel(new DefaultComboBoxModel(new String[] {"Paco Garcia Fernadez ", "Arnau Ferrer Despuig"}));
 		}
-		return comboBox;
+		return cbPacinte;
 	}
 	private JComboBox getComboBox_1_1() {
-		if (comboBox_1 == null) {
-			comboBox_1 = new JComboBox();
-			comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"Dr.Mario ", "Dr.Lustro"}));
+		if (cbMedicos == null) {
+			cbMedicos = new JComboBox();
+			cbMedicos.setModel(new DefaultComboBoxModel(new String[] {"Dr.Mario ", "Dr.Lustro"}));
 		}
-		return comboBox_1;
+		return cbMedicos;
 	}
 	private JComboBox getComboBox_2_1() {
 		if (cbLugar == null) {
