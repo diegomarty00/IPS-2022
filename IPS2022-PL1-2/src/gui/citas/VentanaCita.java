@@ -1,4 +1,4 @@
-package gui;
+package gui.citas;
 
 import java.awt.EventQueue;
 import java.awt.Font;
