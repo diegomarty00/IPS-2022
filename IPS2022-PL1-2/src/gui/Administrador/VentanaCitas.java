@@ -1,4 +1,4 @@
-package gui;
+package gui.Administrador;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -15,6 +15,7 @@ import javax.swing.JRadioButton;
 import javax.swing.border.EmptyBorder;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import javax.swing.JList;
 
 public class VentanaCitas extends JFrame {
 
@@ -49,6 +50,11 @@ public class VentanaCitas extends JFrame {
 	private JLabel lbFecha;
 	private JButton btEliminar;
 	private JComboBox cbFecha;
+	private JPanel panel_6;
+	private JPanel panel_7;
+	private JPanel panel_8;
+	private JPanel panel_9;
+	private JList list;
 
 	/**
 	 * Create the frame.
@@ -161,6 +167,7 @@ public class VentanaCitas extends JFrame {
 			pDer.setLayout(new BorderLayout(0, 0));
 			pDer.add(getLbMedicosSelccionados(), BorderLayout.NORTH);
 			pDer.add(getBtEliminar(), BorderLayout.SOUTH);
+			pDer.add(getList(), BorderLayout.CENTER);
 		}
 		return pDer;
 	}
@@ -268,7 +275,11 @@ public class VentanaCitas extends JFrame {
 	private JPanel getPanel_5() {
 		if (panel_5 == null) {
 			panel_5 = new JPanel();
-			panel_5.add(getJbAñadir());
+			panel_5.setLayout(new GridLayout(0, 1, 0, 0));
+			panel_5.add(getPanel_9());
+			panel_5.add(getPanel_8());
+			panel_5.add(getPanel_7());
+			panel_5.add(getPanel_6());
 		}
 		return panel_5;
 	}
@@ -297,5 +308,36 @@ public class VentanaCitas extends JFrame {
 			cbFecha = new JComboBox();
 		}
 		return cbFecha;
+	}
+	private JPanel getPanel_6() {
+		if (panel_6 == null) {
+			panel_6 = new JPanel();
+		}
+		return panel_6;
+	}
+	private JPanel getPanel_7() {
+		if (panel_7 == null) {
+			panel_7 = new JPanel();
+		}
+		return panel_7;
+	}
+	private JPanel getPanel_8() {
+		if (panel_8 == null) {
+			panel_8 = new JPanel();
+			panel_8.add(getJbAñadir());
+		}
+		return panel_8;
+	}
+	private JPanel getPanel_9() {
+		if (panel_9 == null) {
+			panel_9 = new JPanel();
+		}
+		return panel_9;
+	}
+	private JList getList() {
+		if (list == null) {
+			list = new JList();
+		}
+		return list;
 	}
 }
