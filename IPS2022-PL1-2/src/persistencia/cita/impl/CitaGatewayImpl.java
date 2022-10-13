@@ -10,12 +10,14 @@ import java.util.List;
 import java.util.Optional;
 
 import persistencia.PersistenceException;
+import persistencia.RecordAssembler;
 import persistencia.cita.CitaGateway;
 import persistencia.cita.CitaRecord;
 import util.jdbc.Jdbc;
 
 public class CitaGatewayImpl implements CitaGateway {
 
+	private static final String FIN_BY_CITA_ID = "SELECT * from CITA where IDCITA = ?";
 	private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
 	private static String ASIGNAR_SALIDA = "update CITA set HORA_SALIDA_REAL = ? where idcita = ?";
 	private static String ADD_CITA= "INSERT INTO Cita";
@@ -72,8 +74,24 @@ public class CitaGatewayImpl implements CitaGateway {
 
 	@Override
 	public Optional<CitaRecord> findById(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(FIN_BY_CITA_ID);
+			pst.setString(1,  id);
+
+			rs = pst.executeQuery();
+			
+			return RecordAssembler.toCitaRecord(rs);
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
 	}
 
 	@Override
