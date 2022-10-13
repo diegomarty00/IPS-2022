@@ -1,9 +1,13 @@
 package persistencia.cita;
 
+import java.time.LocalTime;
 import java.util.Optional;
 
 import persistencia.Gateway;
 
 public interface CitaGateway extends Gateway<CitaRecord>{
-	Optional<CitaRecord> findById(String id);
+	
+	void asignarHoraEntrada(String idCita, LocalTime horaEntrada);
+	
+	void asignarHoraSalida(String idCita, LocalTime horaSalida);
 }

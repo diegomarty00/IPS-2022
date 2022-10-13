@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +16,8 @@ import util.jdbc.Jdbc;
 
 public class CitaGatewayImpl implements CitaGateway {
 
+	private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
+	private static String ASIGNAR_SALIDA = "update CITA set HORA_SALIDA_REAL = ? where idcita = ?";
 	private static String ADD_CITA= "INSERT INTO Cita";
 	
 	@Override
@@ -71,6 +75,50 @@ public class CitaGatewayImpl implements CitaGateway {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void asignarHoraEntrada(String idCita, LocalTime horaEntrada) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(ASIGNAR_ENTRADA);
+			pst.setString(1,  idCita);
+			pst.setTime(2, Time.valueOf(horaEntrada));
+
+			pst.execute();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
+	public void asignarHoraSalida(String idCita, LocalTime horaSalida) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(ASIGNAR_SALIDA);
+			pst.setString(1,  idCita);
+			pst.setTime(2, Time.valueOf(horaSalida));
+
+			pst.execute();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+	}
+
+	
 
 
 }
