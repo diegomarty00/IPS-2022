@@ -17,7 +17,7 @@ import javax.swing.border.EmptyBorder;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import javax.swing.JList;
 
-public class VentanaCitas extends JFrame {
+public class VentanaCitasA extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel panelC;
@@ -59,7 +59,7 @@ public class VentanaCitas extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaCitas() {
+	public VentanaCitasA() {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 686, 374);
 		contentPane = new JPanel();
