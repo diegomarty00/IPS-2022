@@ -10,6 +10,11 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import util.mail.EnviarMail;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 public class VentanaPrincipal extends JFrame {
 
     private JPanel contentPane;
@@ -85,6 +90,11 @@ public class VentanaPrincipal extends JFrame {
     public JButton getBtnAdmin() {
 	if (btnAdmin == null) {
 	    btnAdmin = new JButton("Administrador");
+	    btnAdmin.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		
+	    	}
+	    });
 	    btnAdmin.setBounds(90, 130, 125, 50);
 	}
 	return btnAdmin;
