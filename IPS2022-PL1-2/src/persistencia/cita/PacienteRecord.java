@@ -2,10 +2,10 @@ package persistencia.cita;
 
 public class PacienteRecord {
 	
-	public String dniPaciente;
+	public int idPaciente;
 	public String nombre;
 	public String apellidos;
 	public String correo;
-	public int telefono;
+	public String telefono;
 	
 }

@@ -1,9 +1,7 @@
 package business.cita.operaciones;
 
-import java.time.LocalTime;
+import java.sql.Date;
 
-import persistencia.PersistenceFactory;
-import persistencia.cita.CitaGateway;
 import util.BusinessException;
 import util.command.Command;
 
@@ -11,17 +9,16 @@ public class AsignarHoraEntrada implements Command<Void>{
 
 	
 	public String idCita;
-	public LocalTime horaEntrada;
+	public Date horaEntrada;
 	
-	public AsignarHoraEntrada(String idCita, LocalTime horaEntrada) {
-		super();
+	public AsignarHoraEntrada(String idCita, Date horaEntrada) {
 		this.idCita=idCita;
 		this.horaEntrada=horaEntrada;
 	}
 	
 	@Override
 	public Void execute() throws BusinessException {
-		PersistenceFactory.forCita().asignarHoraEntrada(idCita, horaEntrada);
+		// TODO Auto-generated method stub
 		return null;
 	}
 	

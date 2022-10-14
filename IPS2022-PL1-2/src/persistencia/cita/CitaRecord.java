@@ -5,8 +5,8 @@ import java.time.LocalTime;
 
 public class CitaRecord {
 	
-	public String idCita;
-	public String dniPaciente;
+	public int idCita;
+	public int idPaciente;
 	public boolean urgente;
 	public LocalTime horaEntradaEstimada;
 	public LocalTime horaSalidaEstimada;
