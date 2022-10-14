@@ -79,7 +79,7 @@ public class CitaGatewayImpl implements CitaGateway {
 		ResultSet rs = null;
 		
 		try {
-			c = Jdbc.getCurrentConnection();
+			c = Jdbc.createThreadConnection();
 			
 			pst = c.prepareStatement(FIN_BY_CITA_ID);
 			pst.setString(1,  id);
@@ -104,8 +104,8 @@ public class CitaGatewayImpl implements CitaGateway {
 			c = Jdbc.getCurrentConnection();
 			
 			pst = c.prepareStatement(ASIGNAR_ENTRADA);
-			pst.setString(1,  idCita);
-			pst.setTime(2, Time.valueOf(horaEntrada));
+			pst.setString(2,  idCita);
+			pst.setTime(1, Time.valueOf(horaEntrada));
 
 			pst.execute();
 		} catch (SQLException e) {
@@ -125,8 +125,8 @@ public class CitaGatewayImpl implements CitaGateway {
 			c = Jdbc.getCurrentConnection();
 			
 			pst = c.prepareStatement(ASIGNAR_SALIDA);
-			pst.setString(1,  idCita);
-			pst.setTime(2, Time.valueOf(horaSalida));
+			pst.setString(2,  idCita);
+			pst.setTime(1, Time.valueOf(horaSalida));
 
 			pst.execute();
 		} catch (SQLException e) {

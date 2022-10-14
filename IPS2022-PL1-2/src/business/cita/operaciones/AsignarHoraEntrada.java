@@ -8,13 +8,11 @@ import util.BusinessException;
 import util.command.Command;
 
 public class AsignarHoraEntrada implements Command<Void>{
-
 	
-	public String idCita;
-	public LocalTime horaEntrada;
+	private String idCita;
+	private LocalTime horaEntrada;
 	
 	public AsignarHoraEntrada(String idCita, LocalTime horaEntrada) {
-		super();
 		this.idCita=idCita;
 		this.horaEntrada=horaEntrada;
 	}
