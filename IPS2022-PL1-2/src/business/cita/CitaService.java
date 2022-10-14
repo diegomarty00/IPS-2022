@@ -1,13 +1,13 @@
 package business.cita;
 
-import java.sql.Date;
+import java.time.LocalTime;
 
 import util.BusinessException;
 
 public interface CitaService {
 	
-	void asignarHoraEntrada(String idCita, Date horaEntrada) throws BusinessException;
+	void asignarHoraEntrada(String idCita, LocalTime horaEntrada) throws BusinessException;
 
-	void asignarHoraSalida(String idCita, Date horaSalida) throws BusinessException;
+	void asignarHoraSalida(String idCita, LocalTime horaSalida) throws BusinessException;
 	
 }

@@ -15,6 +15,10 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 
+import persistencia.cita.CitaRecord;
+import persistencia.PersistenceFactory;
+
+
 public class VentanaCita extends JFrame {
 
 	private JPanel contentPane;
@@ -26,7 +30,8 @@ public class VentanaCita extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					VentanaCita frame = new VentanaCita();
+					CitaRecord cita = PersistenceFactory.forCita().findById("1").get();
+					VentanaCita frame = new VentanaCita(cita);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -38,7 +43,7 @@ public class VentanaCita extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaCita() {
+	public VentanaCita(CitaRecord cita) {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 555, 375);
@@ -112,5 +117,9 @@ public class VentanaCita extends JFrame {
 		});
 		btnSetHoraSalida.setBounds(273, 111, 158, 30);
 		contentPane.add(btnSetHoraSalida);
+		
+		JButton btnCerrarCita = new JButton("Cerrar cita");
+		btnCerrarCita.setBounds(435, 312, 89, 23);
+		contentPane.add(btnCerrarCita);
 	}
 }
