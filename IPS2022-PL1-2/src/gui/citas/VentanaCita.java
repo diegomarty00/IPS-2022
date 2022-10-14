@@ -208,6 +208,7 @@ public class VentanaCita extends JFrame {
 	}
 
 	private boolean isEntradaAntesQueSalida() {
+		if ((horaEntrMod || minEntrMod) && !(horaSalMod || minSalMod)) return true;
 		if ((Integer) spnHoraEntrada.getValue() > (Integer) spnHoraSalida.getValue())
 			return false;
 		else if ((Integer) spnHoraEntrada.getValue() == (Integer) spnHoraSalida.getValue()) {
