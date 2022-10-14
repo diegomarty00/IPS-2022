@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.time.LocalTime;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -39,6 +40,15 @@ public class VentanaCita extends JFrame {
 
 	CitaRecord cita;
 	CitaService citaService;
+	private JCheckBox chckbxPacienteAcudido;
+	private JLabel lblCita;
+	private JLabel lblHoraEntrada;
+	private JLabel lblDosPuntosEntrada;
+	private JButton btnSetHoraEntrada;
+	private JLabel lblHoraSalida;
+	private JLabel lblDosPuntosSalida;
+	private JButton btnSetHoraSalida;
+	private JButton btnCerrarCita;
 
 	/**
 	 * Launch the application.
@@ -74,14 +84,15 @@ public class VentanaCita extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		JLabel lblCita = new JLabel("Cita");
+		lblCita = new JLabel("Cita");
 		lblCita.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		lblCita.setBounds(10, 26, 78, 30);
 		contentPane.add(lblCita);
 
-		SpinnerModel smHoraEntrada = new SpinnerNumberModel(00, 00, 23, 1);
+		SpinnerModel smHoraEntrada = new SpinnerNumberModel((cita.horaEntradaReal!=null)?cita.horaEntradaReal.getHour():00, 00, 23, 1);
 		spnHoraEntrada = new JSpinner(smHoraEntrada);
-		spnHoraEntrada.setBounds(118, 71, 37, 20);
+		spnHoraEntrada.setVisible(cita.pacienteAcudido);
+		spnHoraEntrada.setBounds(118, 105, 37, 20);
 		spnHoraEntrada.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -90,18 +101,21 @@ public class VentanaCita extends JFrame {
 		});
 		contentPane.add(spnHoraEntrada);
 
-		JLabel lblHoraEntrada = new JLabel("Hora de entrada");
-		lblHoraEntrada.setBounds(10, 77, 98, 14);
+		lblHoraEntrada = new JLabel("Hora de entrada");
+		lblHoraEntrada.setVisible(cita.pacienteAcudido);
+		lblHoraEntrada.setBounds(10, 111, 98, 14);
 		contentPane.add(lblHoraEntrada);
 
-		JLabel lblDosPuntosEntrada = new JLabel(":");
+		lblDosPuntosEntrada = new JLabel(":");
+		lblDosPuntosEntrada.setVisible(cita.pacienteAcudido);
 		lblDosPuntosEntrada.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblDosPuntosEntrada.setBounds(158, 73, 46, 14);
+		lblDosPuntosEntrada.setBounds(158, 107, 46, 14);;
 		contentPane.add(lblDosPuntosEntrada);
-
-		SpinnerModel smMinutosEntrada = new SpinnerNumberModel(00, 00, 59, 1);
+		
+		SpinnerModel smMinutosEntrada = new SpinnerNumberModel((cita.horaEntradaReal!=null)?cita.horaEntradaReal.getMinute():00, 00, 59, 1);
 		spnMinutosEntrada = new JSpinner(smMinutosEntrada);
-		spnMinutosEntrada.setBounds(165, 71, 36, 20);
+		spnMinutosEntrada.setVisible(cita.pacienteAcudido);
+		spnMinutosEntrada.setBounds(165, 105, 36, 20);
 		spnMinutosEntrada.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -110,18 +124,20 @@ public class VentanaCita extends JFrame {
 		});
 		contentPane.add(spnMinutosEntrada);
 
-		JButton btnSetHoraEntrada = new JButton("Establecer hora entrada");
+		btnSetHoraEntrada = new JButton("Establecer hora entrada");
+		btnSetHoraEntrada.setVisible(cita.pacienteAcudido);
 		btnSetHoraEntrada.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				establecerHoraEntrada();
 			}
 		});
-		btnSetHoraEntrada.setBounds(273, 70, 158, 30);
+		btnSetHoraEntrada.setBounds(273, 104, 158, 30);
 		contentPane.add(btnSetHoraEntrada);
 
-		SpinnerModel smHoraSalida = new SpinnerNumberModel(00, 00, 23, 1);
+		SpinnerModel smHoraSalida = new SpinnerNumberModel((cita.horaSalidaReal!=null)?cita.horaSalidaReal.getHour():00, 00, 23, 1);
 		spnHoraSalida = new JSpinner(smHoraSalida);
-		spnHoraSalida.setBounds(118, 116, 37, 20);
+		spnHoraSalida.setVisible(cita.pacienteAcudido);
+		spnHoraSalida.setBounds(118, 150, 37, 20);
 		spnHoraSalida.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -130,18 +146,21 @@ public class VentanaCita extends JFrame {
 		});
 		contentPane.add(spnHoraSalida);
 
-		JLabel lblHoraSalida = new JLabel("Hora de salida");
-		lblHoraSalida.setBounds(10, 121, 98, 14);
+		lblHoraSalida = new JLabel("Hora de salida");
+		lblHoraSalida.setVisible(cita.pacienteAcudido);
+		lblHoraSalida.setBounds(10, 155, 98, 14);
 		contentPane.add(lblHoraSalida);
 
-		JLabel lblDosPuntosSalida = new JLabel(":");
+		lblDosPuntosSalida = new JLabel(":");
+		lblDosPuntosSalida.setVisible(cita.pacienteAcudido);
 		lblDosPuntosSalida.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblDosPuntosSalida.setBounds(158, 117, 46, 14);
+		lblDosPuntosSalida.setBounds(158, 151, 46, 14);
 		contentPane.add(lblDosPuntosSalida);
 
-		SpinnerModel smMinutosSalida = new SpinnerNumberModel(00, 00, 59, 1);
+		SpinnerModel smMinutosSalida = new SpinnerNumberModel((cita.horaSalidaReal!=null)?cita.horaSalidaReal.getMinute():00, 00, 59, 1);
 		spnMinutosSalida = new JSpinner(smMinutosSalida);
-		spnMinutosSalida.setBounds(168, 116, 36, 20);
+		spnMinutosSalida.setVisible(cita.pacienteAcudido);
+		spnMinutosSalida.setBounds(168, 150, 36, 20);
 		spnMinutosSalida.addChangeListener(new ChangeListener() {
 			@Override
 			public void stateChanged(ChangeEvent e) {
@@ -150,23 +169,25 @@ public class VentanaCita extends JFrame {
 		});
 		contentPane.add(spnMinutosSalida);
 
-		JButton btnSetHoraSalida = new JButton("Establecer hora salida");
+		btnSetHoraSalida = new JButton("Establecer hora salida");
+		btnSetHoraSalida.setVisible(cita.pacienteAcudido);
 		btnSetHoraSalida.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				establecerHoraSalida();
 			}
 		});
-		btnSetHoraSalida.setBounds(273, 111, 158, 30);
+		btnSetHoraSalida.setBounds(273, 145, 158, 30);
 		contentPane.add(btnSetHoraSalida);
 
-		JButton btnCerrarCita = new JButton("Cerrar cita");
+		btnCerrarCita = new JButton("Cerrar cita");
 		btnCerrarCita.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cerrarCita();
 			}
 		});
-		btnCerrarCita.setBounds(435, 312, 89, 23);
+		btnCerrarCita.setBounds(400, 312, 124, 23);
 		contentPane.add(btnCerrarCita);
+		contentPane.add(getChckbxPacienteAcudido());
 	}
 
 	private void establecerHoraEntrada() {
@@ -187,7 +208,7 @@ public class VentanaCita extends JFrame {
 
 	private void cerrarCita() {
 		try {
-
+			
 			if (isEntradaAntesQueSalida()) {
 				if (horaEntrMod || minEntrMod)
 					citaService.asignarHoraEntrada(cita.idCita, (Integer) spnHoraEntrada.getValue(),
@@ -196,6 +217,8 @@ public class VentanaCita extends JFrame {
 				if (horaSalMod || minSalMod)
 					citaService.asignarHoraSalida(cita.idCita, (Integer) spnHoraSalida.getValue(),
 							(Integer) spnMinutosSalida.getValue());
+				
+				citaService.pacienteAcudido(cita.idCita);
 			}
 			else {
 				JOptionPane.showMessageDialog(this, "La hora de entrada no puede ser mayor que la de salida");
@@ -217,5 +240,32 @@ public class VentanaCita extends JFrame {
 		}
 		return true;
 	}
+	private JCheckBox getChckbxPacienteAcudido() {
+		if (chckbxPacienteAcudido == null) {
+			chckbxPacienteAcudido = new JCheckBox("Paciente Acudido");
+			chckbxPacienteAcudido.setSelected(cita.pacienteAcudido);
+			chckbxPacienteAcudido.setBounds(10, 76, 129, 23);
+			chckbxPacienteAcudido.addActionListener(new ActionListener() {
 
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					changeVisibility();
+				}
+			});
+		}
+		return chckbxPacienteAcudido;
+	}
+	
+	private void changeVisibility() {
+		spnHoraEntrada.setVisible(!spnHoraEntrada.isVisible());
+		spnMinutosEntrada.setVisible(!spnMinutosEntrada.isVisible());
+		spnHoraSalida.setVisible(!spnHoraSalida.isVisible());
+		spnMinutosSalida.setVisible(!spnMinutosSalida.isVisible());
+		lblDosPuntosEntrada.setVisible(!lblDosPuntosEntrada.isVisible());
+		lblDosPuntosSalida.setVisible(!lblDosPuntosSalida.isVisible());
+		lblHoraEntrada.setVisible(!lblHoraEntrada.isVisible());
+		lblHoraSalida.setVisible(!lblHoraSalida.isVisible());
+		btnSetHoraEntrada.setVisible(!btnSetHoraEntrada.isVisible());
+		btnSetHoraSalida.setVisible(!btnSetHoraSalida.isVisible());
+	}
 }

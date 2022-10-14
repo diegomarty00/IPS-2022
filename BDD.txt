@@ -23,7 +23,7 @@ CONSTRAINT PK_CITA PRIMARY KEY (IDCITA),
 CONSTRAINT FK_CITA_PACIENTE FOREIGN KEY (DNIPACIENTE) REFERENCES PACIENTE (DNI)
 )
 
-CREATE TABLE MEDICOS(
+CREATE TABLE MEDICO(
  idmedico INT NOT NULL,
  nombre varchar(20) NOT NULL,
  apellidos varchar(20) NOT NULL,
@@ -31,4 +31,4 @@ CREATE TABLE MEDICOS(
  PRIMARY KEY (idmedico));
 
 INSERT INTO PACIENTE values ('560483D', 'Jesus', 'Martin', 'jesus@martin.es', 666432)
-INSERT INTO CITA values ('1', '560483D', 0, 12:30:00, 13:00:00, null, null, 'jesus@martin.es', 666432)
+INSERT INTO CITA values ('1', '560483D', 0, '12:30:00', '13:00:00', 0, null, null, '2022-10-14', 'jesus@martin.es', 666432)

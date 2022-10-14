@@ -20,6 +20,7 @@ public class CitaGatewayImpl implements CitaGateway {
 	private static final String FIN_BY_CITA_ID = "SELECT * from CITA where IDCITA = ?";
 	private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
 	private static String ASIGNAR_SALIDA = "update CITA set HORA_SALIDA_REAL = ? where idcita = ?";
+	private static String PACIENTE_ACUDIDO = "update CITA set PACIENTE_ACUDIDO = 1 where idcita = ?";
 	private static String ADD_CITA= "INSERT INTO Cita";
 	
 	@Override
@@ -127,6 +128,26 @@ public class CitaGatewayImpl implements CitaGateway {
 			pst = c.prepareStatement(ASIGNAR_SALIDA);
 			pst.setString(2,  idCita);
 			pst.setTime(1, Time.valueOf(horaSalida));
+
+			pst.execute();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
+	public void setPacienteAcudido(String idCita) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(PACIENTE_ACUDIDO);
+			pst.setString(1,  idCita);
 
 			pst.execute();
 		} catch (SQLException e) {
