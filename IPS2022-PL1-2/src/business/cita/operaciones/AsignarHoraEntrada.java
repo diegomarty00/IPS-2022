@@ -3,7 +3,6 @@ package business.cita.operaciones;
 import java.time.LocalTime;
 
 import persistencia.PersistenceFactory;
-import persistencia.cita.CitaGateway;
 import util.BusinessException;
 import util.command.Command;
 

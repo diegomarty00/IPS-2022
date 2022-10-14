@@ -8,4 +8,5 @@ public interface CitaService {
 
 	void asignarHoraSalida(String idCita, int horaSalida, int minSalida) throws BusinessException;
 	
+	void pacienteAcudido(String idCita) throws BusinessException;
 }

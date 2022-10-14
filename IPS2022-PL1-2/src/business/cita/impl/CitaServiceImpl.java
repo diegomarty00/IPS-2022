@@ -5,6 +5,7 @@ import java.time.LocalTime;
 import business.cita.CitaService;
 import business.cita.operaciones.AsignarHoraEntrada;
 import business.cita.operaciones.AsignarHoraSalida;
+import business.cita.operaciones.SetPacienteAcudido;
 import util.BusinessException;
 import util.command.CommandExecutor;
 
@@ -22,6 +23,12 @@ public class CitaServiceImpl implements CitaService{
 	public void asignarHoraSalida(String idCita, int horaSalida, int minSalida)  throws BusinessException {
 		CommandExecutor c = new CommandExecutor();
 		c.execute(new AsignarHoraSalida(idCita, LocalTime.of(horaSalida, minSalida)));
+	}
+
+	@Override
+	public void pacienteAcudido(String idCita) throws BusinessException {
+		CommandExecutor c = new CommandExecutor();
+		c.execute(new SetPacienteAcudido(idCita));
 	}
 
 }
