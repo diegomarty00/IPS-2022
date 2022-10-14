@@ -26,7 +26,7 @@ public class CitaGatewayImpl implements CitaGateway {
 			c = Jdbc.getCurrentConnection();
 			
 			pst = c.prepareStatement(ADD_CITA);
-//			pst.setInt(1,  t.id_competicion);
+			pst.setInt(1,  t.idCita);
 //			pst.setString(2, t.nombre);
 //			pst.setDate(3, Date.valueOf( t.fecha));
 //			pst.setString(4, t.tipo);
