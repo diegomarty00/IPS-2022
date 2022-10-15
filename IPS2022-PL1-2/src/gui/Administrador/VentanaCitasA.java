@@ -20,9 +20,8 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import persistencia.medico.MedicoRecord;
 import persistencia.medico.impl.MedicoGatewayImpl;
-import persistencia.pacientes.PacienteGateway;
-import persistencia.pacientes.PacientesRecord;
-import persistencia.pacientes.impl.PacientesGatewayImpl;
+import persistencia.paciente.PacienteRecord;
+import persistencia.paciente.impl.PacienteGatewayImpl;
 
 import javax.swing.JList;
 import java.awt.event.ActionListener;
@@ -232,8 +231,8 @@ public class VentanaCitasA<E> extends JFrame {
 			cbPacinte = new JComboBox();
 			cbPacinte.setRequestFocusEnabled(false);
 			DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
-			PacientesGatewayImpl p = new PacientesGatewayImpl();
-			List<PacientesRecord> l =  p.findAll();
+			PacienteGatewayImpl p = new PacienteGatewayImpl();
+			List<PacienteRecord> l =  p.findAll();
 			for(int i = 0; i < l.size();i++) {
 				mod.addElement(l.get(i).toString());
 			}

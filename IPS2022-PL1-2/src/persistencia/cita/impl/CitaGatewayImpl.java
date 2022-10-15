@@ -35,19 +35,18 @@ public class CitaGatewayImpl implements CitaGateway {
 			c = Jdbc.getCurrentConnection();
 			
 			pst = c.prepareStatement(ADD_CITA);
-//			pst.setInt(1,  t.id_competicion);
-//			pst.setString(2, t.nombre);
-//			pst.setDate(3, Date.valueOf( t.fecha));
-//			pst.setString(4, t.tipo);
-//			pst.setInt(5, t.distancia);
-//			pst.setDouble(6, t.cuota);
-//			pst.setInt(7, t.numero_tramos);
-//
-//			pst.setDate(8, Date.valueOf( t.fecha_fin_inscripcion));
-//			pst.setInt(9, t.plazas);
-//			
-//			pst.setDate(10, Date.valueOf( t.fecha_inicio_inscripcion));
-//			pst.setInt(11, t.dorsalesReservados);
+			pst.setString(1,  t.idCita);
+			pst.setNString(2, t.dniPaciente);
+			pst.setBoolean(3, t.urgente);
+			pst.setTime(4,Time.valueOf(t.horaEntradaEstimada));
+			pst.setTime(5, Time.valueOf(t.horaSalidaEstimada));
+			pst.setBoolean(6, t.pacienteAcudido);
+			pst.setTime(7,Time.valueOf(t.horaEntradaReal));
+			pst.setTime(8, Time.valueOf(t.horaSalidaReal));
+			pst.setDate(9, Date.valueOf(t.fecha));
+			pst.setString(10, t.correoPaciente);
+			pst.setInt(11,Integer.parseInt(t.telefonoPaciente));
+			
 
 			pst.execute();
 		} catch (SQLException e) {
@@ -182,8 +181,5 @@ public class CitaGatewayImpl implements CitaGateway {
 			Jdbc.close(rs, pst);
 		}
 	}
-
-	
-
 
 }

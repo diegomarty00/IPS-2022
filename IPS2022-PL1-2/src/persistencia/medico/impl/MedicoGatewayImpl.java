@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import persistencia.PersistenceException;
-import persistencia.RecordAsembler;
+import persistencia.RecordAssembler;
 import util.jdbc.Jdbc;
 
 import persistencia.medico.MedicoGateway;
@@ -58,7 +58,7 @@ public class MedicoGatewayImpl implements MedicoGateway {
 			
 			
 
-			return RecordAsembler.toMedicoList(rs);
+			return RecordAssembler.toMedicoList(rs);
 
 		} catch (SQLException e) {
 			throw new PersistenceException(e);
