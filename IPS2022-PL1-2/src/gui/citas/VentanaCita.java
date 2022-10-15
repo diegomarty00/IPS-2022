@@ -51,6 +51,7 @@ public class VentanaCita extends JFrame {
 	private JLabel lblDosPuntosSalida;
 	private JButton btnSetHoraSalida;
 	private JButton btnCerrarCita;
+	private JButton btnVerHistorial;
 
 	/**
 	 * Launch the application.
@@ -191,6 +192,7 @@ public class VentanaCita extends JFrame {
 		btnCerrarCita.setBounds(400, 312, 124, 23);
 		contentPane.add(btnCerrarCita);
 		contentPane.add(getChckbxPacienteAcudido());
+		contentPane.add(getBtnVerHistorial());
 	}
 
 	private void establecerHoraEntrada() {
@@ -271,5 +273,18 @@ public class VentanaCita extends JFrame {
 		lblHoraSalida.setVisible(!lblHoraSalida.isVisible());
 		btnSetHoraEntrada.setVisible(!btnSetHoraEntrada.isVisible());
 		btnSetHoraSalida.setVisible(!btnSetHoraSalida.isVisible());
+	}
+	private JButton getBtnVerHistorial() {
+		if (btnVerHistorial == null) {
+			btnVerHistorial = new JButton("Ver Historial");
+			btnVerHistorial.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					VentanaHistorial v  = new VentanaHistorial(pacienteAsociado);
+					v.setVisible(true);
+				}
+			});
+			btnVerHistorial.setBounds(128, 312, 104, 23);
+		}
+		return btnVerHistorial;
 	}
 }

@@ -9,6 +9,7 @@ import java.util.Optional;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.MedicoCitaRecord;
 import persistencia.medico.MedicoRecord;
+import persistencia.paciente.HistorialRecord;
 import persistencia.paciente.PacienteRecord;
 
 public class RecordAssembler {
@@ -95,6 +96,17 @@ public class RecordAssembler {
 		
 		return paciente;
 	}
+	
+	private static HistorialRecord resultSetToHistorialRecord(ResultSet rs) throws SQLException {
+		HistorialRecord historial = new HistorialRecord();
+		historial.setIdHistorial(rs.getString("IDHISTORIAL"));
+		historial.setTitulo(rs.getString("TITULO"));
+		historial.setDescripcion(rs.getString("DESCRIPCION"));
+		historial.setDniPaciente(rs.getString("DNIPACIENTE"));
+		historial.setIdMedico(rs.getInt("IDMEDICO"));
+		historial.setFecha(rs.getDate("FECHA").toLocalDate());
+		return historial;
+	}
 
 	public static Optional<CitaRecord> toCitaRecord(ResultSet rs) throws SQLException {
 		if (rs.next()) {
@@ -116,5 +128,20 @@ public class RecordAssembler {
 			res.add(resultSetToCitaRecord(rs));
 		}
 		return res;
+	}
+
+	public static Optional<HistorialRecord> toHistorialRecord(ResultSet rs) throws SQLException{
+		if (rs.next()) {
+			return Optional.of(resultSetToHistorialRecord(rs));
+		} else
+			return Optional.ofNullable(null);
+	}
+
+	public static List<HistorialRecord> toHistorialList(ResultSet rs) throws SQLException {
+		List<HistorialRecord> list = new ArrayList<>();
+		while (rs.next()) {
+			list.add(resultSetToHistorialRecord(rs));
+		}
+		return list;
 	}
 }
