@@ -16,4 +16,8 @@ public class CitaRecord {
 	public LocalDate fecha;
 	public String correoPaciente; 
 	public String telefonoPaciente; 
+	
+	public String toString() {
+		return horaEntradaEstimada.toString();
+	}
 }

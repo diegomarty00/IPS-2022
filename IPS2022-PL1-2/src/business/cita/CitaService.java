@@ -1,5 +1,8 @@
 package business.cita;
 
+import java.util.List;
+
+import persistencia.cita.CitaRecord;
 import util.BusinessException;
 
 public interface CitaService {
@@ -9,4 +12,6 @@ public interface CitaService {
 	void asignarHoraSalida(String idCita, int horaSalida, int minSalida) throws BusinessException;
 	
 	void pacienteAcudido(String idCita) throws BusinessException;
+
+	List<CitaRecord> getCitasDelDia(int year, int month, int day) throws BusinessException;
 }

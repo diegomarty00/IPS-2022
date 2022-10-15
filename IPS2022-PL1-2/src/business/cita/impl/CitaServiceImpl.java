@@ -1,11 +1,16 @@
   package business.cita.impl;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import business.cita.CitaService;
 import business.cita.operaciones.AsignarHoraEntrada;
 import business.cita.operaciones.AsignarHoraSalida;
+import business.cita.operaciones.GetCitasDelDia;
 import business.cita.operaciones.SetPacienteAcudido;
+import persistencia.cita.CitaRecord;
 import util.BusinessException;
 import util.command.CommandExecutor;
 
@@ -29,6 +34,13 @@ public class CitaServiceImpl implements CitaService{
 	public void pacienteAcudido(String idCita) throws BusinessException {
 		CommandExecutor c = new CommandExecutor();
 		c.execute(new SetPacienteAcudido(idCita));
+	}
+
+	@Override
+	public List<CitaRecord> getCitasDelDia(int year, int month, int day) throws BusinessException {
+		Date date = Date.valueOf(LocalDate.of(year, month, day));
+		CommandExecutor c = new CommandExecutor();
+		return c.execute(new GetCitasDelDia(date));
 	}
 
 }

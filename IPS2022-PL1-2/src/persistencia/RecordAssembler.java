@@ -2,6 +2,8 @@ package persistencia;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import persistencia.cita.CitaRecord;
@@ -32,5 +34,13 @@ public class RecordAssembler {
 			return Optional.of(resultSetToCitaRecord(rs));
 		} else
 			return Optional.ofNullable(null);
+	}
+
+	public static List<CitaRecord> toCitaList(ResultSet rs) throws SQLException {
+		List<CitaRecord> res = new ArrayList<>();
+		while (rs.next()) {
+			res.add(resultSetToCitaRecord(rs));
+		}
+		return res;
 	}
 }

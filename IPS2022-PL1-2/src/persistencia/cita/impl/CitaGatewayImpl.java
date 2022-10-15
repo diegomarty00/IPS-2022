@@ -1,6 +1,7 @@
 package persistencia.cita.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +19,7 @@ import util.jdbc.Jdbc;
 public class CitaGatewayImpl implements CitaGateway {
 
 	private static final String FIN_BY_CITA_ID = "SELECT * from CITA where IDCITA = ?";
+	private static final String CITAS_DEL_DIA = "SELECT * from CITA where FECHA = ?";
 	private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
 	private static String ASIGNAR_SALIDA = "update CITA set HORA_SALIDA_REAL = ? where idcita = ?";
 	private static String PACIENTE_ACUDIDO = "update CITA set PACIENTE_ACUDIDO = 1 where idcita = ?";
@@ -150,6 +152,30 @@ public class CitaGatewayImpl implements CitaGateway {
 			pst.setString(1,  idCita);
 
 			pst.execute();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
+	public List<CitaRecord> getCitasDelDia(Date dia) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getCurrentConnection();
+			
+			pst = c.prepareStatement(CITAS_DEL_DIA);
+			pst.setDate(1,  dia);
+
+			pst.execute();
+			
+			rs = pst.executeQuery();
+			
+			return RecordAssembler.toCitaList(rs);
 		} catch (SQLException e) {
 			throw new PersistenceException(e);
 		} finally {
