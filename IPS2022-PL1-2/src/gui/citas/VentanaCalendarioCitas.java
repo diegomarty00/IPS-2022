@@ -22,6 +22,8 @@ import persistencia.cita.CitaRecord;
 import util.BusinessException;
 
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Date;
 import java.awt.event.ActionEvent;
 
@@ -77,6 +79,7 @@ public class VentanaCalendarioCitas extends JFrame {
 		contentPane.add(getBtnBuscar());
 		contentPane.add(getLblFormato());
 		contentPane.add(getScrollPane());
+		searchCitas();
 	}
 
 	private JLabel getLblTitulo() {
@@ -160,9 +163,20 @@ public class VentanaCalendarioCitas extends JFrame {
 
 	private JList<CitaRecord> getList() {
 		if (list == null) {
-			list = new JList<CitaRecord>();
-			list.setModel(modelo);
+			list = new JList<CitaRecord>(modelo);
+			list.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mousePressed(MouseEvent e) {
+					CitaRecord citaPulsada = (CitaRecord) list.getModel().getElementAt(list.locationToIndex(e.getPoint()));
+					verCita(citaPulsada);
+				}
+			});
 		}
 		return list;
+	}
+	
+	private void verCita(CitaRecord citaPulsada) {
+		VentanaCita v = new VentanaCita(citaPulsada);
+		v.setVisible(true);
 	}
 }

@@ -24,6 +24,7 @@ import business.cita.impl.CitaServiceImpl;
 import persistencia.PersistenceFactory;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.impl.CitaGatewayImpl;
+import persistencia.paciente.PacienteRecord;
 import util.BusinessException;
 
 public class VentanaCita extends JFrame {
@@ -39,6 +40,7 @@ public class VentanaCita extends JFrame {
 	private boolean minSalMod = false;
 
 	CitaRecord cita;
+	PacienteRecord pacienteAsociado;
 	CitaService citaService;
 	private JCheckBox chckbxPacienteAcudido;
 	private JLabel lblCita;
@@ -74,6 +76,7 @@ public class VentanaCita extends JFrame {
 	public VentanaCita(CitaRecord cita) {
 
 		this.cita = cita;
+		this.pacienteAsociado=cita.getPacienteAsociado();
 		citaService = new CitaServiceImpl();
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,9 +87,9 @@ public class VentanaCita extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		lblCita = new JLabel("Cita");
+		lblCita = new JLabel("Cita: "+pacienteAsociado.getNombre()+" "+pacienteAsociado.getApellidos());
 		lblCita.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		lblCita.setBounds(10, 26, 78, 30);
+		lblCita.setBounds(10, 26, 484, 30);
 		contentPane.add(lblCita);
 
 		SpinnerModel smHoraEntrada = new SpinnerNumberModel((cita.horaEntradaReal!=null)?cita.horaEntradaReal.getHour():00, 00, 23, 1);
