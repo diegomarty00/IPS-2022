@@ -1,6 +1,7 @@
 package persistencia.cita.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import persistencia.PersistenceException;
+import persistencia.RecordAsembler;
 import persistencia.cita.CitaGateway;
 import persistencia.cita.CitaRecord;
 import util.jdbc.Jdbc;
@@ -15,6 +17,7 @@ import util.jdbc.Jdbc;
 public class CitaGatewayImpl implements CitaGateway {
 
 	private static String ADD_CITA= "INSERT INTO Cita";
+	private static final String FIN_BY_CITA_ID = "SELECT * from CITA where IDCITA = ?";
 	
 	@Override
 	public void add(CitaRecord t) {
@@ -26,19 +29,11 @@ public class CitaGatewayImpl implements CitaGateway {
 			c = Jdbc.getCurrentConnection();
 			
 			pst = c.prepareStatement(ADD_CITA);
-			pst.setInt(1,  t.idCita);
-//			pst.setString(2, t.nombre);
-//			pst.setDate(3, Date.valueOf( t.fecha));
-//			pst.setString(4, t.tipo);
-//			pst.setInt(5, t.distancia);
-//			pst.setDouble(6, t.cuota);
-//			pst.setInt(7, t.numero_tramos);
-//
-//			pst.setDate(8, Date.valueOf( t.fecha_fin_inscripcion));
-//			pst.setInt(9, t.plazas);
-//			
-//			pst.setDate(10, Date.valueOf( t.fecha_inicio_inscripcion));
-//			pst.setInt(11, t.dorsalesReservados);
+			pst.setString(1,  t.idCita);
+			pst.setNString(2, t.dniPaciente);
+			pst.setBoolean(3, t.urgente);
+			pst.setDate(4,Date.valueOf(t.horaEntradaEstimada));
+			
 
 			pst.execute();
 		} catch (SQLException e) {
@@ -68,8 +63,24 @@ public class CitaGatewayImpl implements CitaGateway {
 
 	@Override
 	public Optional<CitaRecord> findById(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.createThreadConnection();
+			
+			pst = c.prepareStatement(FIN_BY_CITA_ID);
+			pst.setString(1,  id);
+
+			rs = pst.executeQuery();
+			
+			return RecordAsembler.toCitaRecord(rs);
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
 	}
 
 

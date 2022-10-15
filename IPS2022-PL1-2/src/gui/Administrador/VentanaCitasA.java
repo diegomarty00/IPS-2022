@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -19,10 +20,16 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import persistencia.medico.MedicoRecord;
 import persistencia.medico.impl.MedicoGatewayImpl;
+import persistencia.pacientes.PacienteGateway;
+import persistencia.pacientes.PacientesRecord;
+import persistencia.pacientes.impl.PacientesGatewayImpl;
 
 import javax.swing.JList;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.AbstractListModel;
 
-public class VentanaCitasA extends JFrame {
+public class VentanaCitasA<E> extends JFrame {
 
 	private JPanel contentPane;
 	private JPanel panelC;
@@ -59,8 +66,8 @@ public class VentanaCitasA extends JFrame {
 	private JPanel panel_7;
 	private JPanel panel_8;
 	private JPanel panel_9;
-	private JList list;
-
+	private JList listMedicos;
+	private DefaultListModel<String> modjlist = new DefaultListModel<>();
 	/**
 	 * Create the frame.
 	 */
@@ -107,6 +114,11 @@ public class VentanaCitasA extends JFrame {
 	private JButton getJbCacelar() {
 		if (jbCacelar == null) {
 			jbCacelar = new JButton("Cancelar");
+			jbCacelar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+				}
+			});
 			jbCacelar.setMnemonic('c');
 		}
 		return jbCacelar;
@@ -172,7 +184,7 @@ public class VentanaCitasA extends JFrame {
 			pDer.setLayout(new BorderLayout(0, 0));
 			pDer.add(getLbMedicosSelccionados(), BorderLayout.NORTH);
 			pDer.add(getBtEliminar(), BorderLayout.SOUTH);
-			pDer.add(getList(), BorderLayout.CENTER);
+			pDer.add(getListMedicos(), BorderLayout.CENTER);
 		}
 		return pDer;
 	}
@@ -186,6 +198,19 @@ public class VentanaCitasA extends JFrame {
 	private JButton getJbAñadir() {
 		if (jbAñadir == null) {
 			jbAñadir = new JButton("A\u00F1adir");
+			
+			jbAñadir.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					String me = cbMedicos.getSelectedItem().toString();
+					boolean b = true ; 
+					for(int i = 0 ; i<modjlist.getSize();i++) {
+						if (me.equals(modjlist.get(i))) {
+							b = false ;
+						}
+					}
+					if (b) modjlist.addElement(me);
+				}
+			});
 			jbAñadir.setFont(new Font("Times New Roman", Font.PLAIN, 12));
 		}
 		return jbAñadir;
@@ -207,8 +232,8 @@ public class VentanaCitasA extends JFrame {
 			cbPacinte = new JComboBox();
 			cbPacinte.setRequestFocusEnabled(false);
 			DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
-			MedicoGatewayImpl m = new MedicoGatewayImpl();
-			List<MedicoRecord> l =  m.findAll();
+			PacientesGatewayImpl p = new PacientesGatewayImpl();
+			List<PacientesRecord> l =  p.findAll();
 			for(int i = 0; i < l.size();i++) {
 				mod.addElement(l.get(i).toString());
 			}
@@ -319,6 +344,14 @@ public class VentanaCitasA extends JFrame {
 	private JButton getBtEliminar() {
 		if (btEliminar == null) {
 			btEliminar = new JButton("Eliminar");
+			btEliminar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					List<String> el = listMedicos.getSelectedValuesList();
+					for(int i= 0 ; i < el.size() ;i++) {
+						modjlist.removeElement(el.get(i));
+					}
+				}
+			});
 		}
 		return btEliminar;
 	}
@@ -353,10 +386,12 @@ public class VentanaCitasA extends JFrame {
 		}
 		return panel_9;
 	}
-	private JList getList() {
-		if (list == null) {
-			list = new JList();
+	private JList getListMedicos() {
+		if (listMedicos == null) {
+			listMedicos = new JList();
+			
+			listMedicos.setModel(modjlist);
 		}
-		return list;
+		return listMedicos;
 	}
 }
