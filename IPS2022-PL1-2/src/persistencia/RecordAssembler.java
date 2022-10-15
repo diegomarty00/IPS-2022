@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import persistencia.cita.CitaRecord;
+import persistencia.paciente.PacienteRecord;
 
 public class RecordAssembler {
 
@@ -28,10 +29,28 @@ public class RecordAssembler {
 
 		return cita;
 	}
+	
+	private static PacienteRecord resultSetToPacienteRecord(ResultSet rs) throws SQLException {
+		PacienteRecord paciente = new PacienteRecord();
+		paciente.setDniPaciente(rs.getString("DNI"));
+		paciente.setNombre(rs.getString("NOMBRE"));
+		paciente.setApellidos(rs.getString("APELLIDOS"));
+		paciente.setCorreo(rs.getString("CORREO"));
+		paciente.setTelefono(rs.getInt("TELEFONO"));
+		
+		return paciente;
+	}
 
 	public static Optional<CitaRecord> toCitaRecord(ResultSet rs) throws SQLException {
 		if (rs.next()) {
 			return Optional.of(resultSetToCitaRecord(rs));
+		} else
+			return Optional.ofNullable(null);
+	}
+	
+	public static Optional<PacienteRecord> toPacienteRecord(ResultSet rs) throws SQLException {
+		if (rs.next()) {
+			return Optional.of(resultSetToPacienteRecord(rs));
 		} else
 			return Optional.ofNullable(null);
 	}
