@@ -5,4 +5,10 @@ public class MedicoRecord {
 	public String nombre;
 	public String apellidos;
 	public String correo;
+	@Override
+	public String toString() {
+		return ""  + nombre + " "+ apellidos + " "+idMedico  ;
+	}
+	
+	
 }

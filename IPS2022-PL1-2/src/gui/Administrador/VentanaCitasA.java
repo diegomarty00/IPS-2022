@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -15,6 +16,10 @@ import javax.swing.JRadioButton;
 import javax.swing.border.EmptyBorder;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+
+import persistencia.medico.MedicoRecord;
+import persistencia.medico.impl.MedicoGatewayImpl;
+
 import javax.swing.JList;
 
 public class VentanaCitasA extends JFrame {
@@ -201,14 +206,28 @@ public class VentanaCitasA extends JFrame {
 		if (cbPacinte == null) {
 			cbPacinte = new JComboBox();
 			cbPacinte.setRequestFocusEnabled(false);
-			cbPacinte.setModel(new DefaultComboBoxModel(new String[] {"Paco Garcia Fernadez ", "Arnau Ferrer Despuig"}));
+			DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+			MedicoGatewayImpl m = new MedicoGatewayImpl();
+			List<MedicoRecord> l =  m.findAll();
+			for(int i = 0; i < l.size();i++) {
+				mod.addElement(l.get(i).toString());
+			}
+			
+			cbPacinte.setModel(mod);
 		}
 		return cbPacinte;
 	}
 	private JComboBox getComboBox_1_1() {
 		if (cbMedicos == null) {
 			cbMedicos = new JComboBox();
-			cbMedicos.setModel(new DefaultComboBoxModel(new String[] {"Dr.Mario ", "Dr.Lustro"}));
+			DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+			MedicoGatewayImpl m = new MedicoGatewayImpl();
+			List<MedicoRecord> l =  m.findAll();
+			for(int i = 0; i < l.size();i++) {
+				mod.addElement(l.get(i).toString());
+			}
+			
+			cbMedicos.setModel(mod);
 		}
 		return cbMedicos;
 	}

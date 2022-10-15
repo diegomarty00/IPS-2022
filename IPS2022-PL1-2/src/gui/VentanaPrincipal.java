@@ -1,5 +1,6 @@
 package gui;
 
+import java.sql.Connection;
 import java.awt.EventQueue;
 import java.awt.Font;
 
@@ -10,6 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import gui.Administrador.VentanaCitasA;
+import util.jdbc.Jdbc;
 import util.mail.EnviarMail;
 
 import java.awt.event.ActionListener;
@@ -30,12 +33,13 @@ public class VentanaPrincipal extends JFrame {
     public static void main(String[] args) {
 	EventQueue.invokeLater(new Runnable() {
 	    public void run() {
-		try {
-		    VentanaPrincipal frame = new VentanaPrincipal();
-		    frame.setVisible(true);
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
+			try {	
+			    VentanaPrincipal frame = new VentanaPrincipal();
+			    frame.setVisible(true);
+			  
+			} catch (Exception e) {
+			    e.printStackTrace();
+			}
 	    }
 	});
     }
@@ -92,7 +96,8 @@ public class VentanaPrincipal extends JFrame {
 	    btnAdmin = new JButton("Administrador");
 	    btnAdmin.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
-	    		
+	    		VentanaCitasA ven = new VentanaCitasA();
+	    		ven.setVisible(true);
 	    	}
 	    });
 	    btnAdmin.setBounds(90, 130, 125, 50);

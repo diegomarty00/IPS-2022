@@ -17,7 +17,7 @@ public class Jdbc {
 /* Configuration for Hsqldb
 */	
 	private static String DRIVER = "org.hsqldb.jdbcDriver";
-	private static String URL = "jdbc:hsqldb:hsql://localhost";
+	private static String URL = "jdbc:hsqldb:hsql://localhost/";
 	private static String USER = "sa";
 	private static String PASS = "";
 	
