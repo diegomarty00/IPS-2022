@@ -1,9 +1,16 @@
-package business.cita.impl;
+  package business.cita.impl;
 
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 import business.cita.CitaService;
 import business.cita.operaciones.AsignarHoraEntrada;
+import business.cita.operaciones.AsignarHoraSalida;
+import business.cita.operaciones.GetCitasDelDia;
+import business.cita.operaciones.SetPacienteAcudido;
+import persistencia.cita.CitaRecord;
 import util.BusinessException;
 import util.command.CommandExecutor;
 
@@ -11,16 +18,29 @@ import util.command.CommandExecutor;
 public class CitaServiceImpl implements CitaService{
 
 	@Override
-	public void asignarHoraEntrada(String idCita, Date horaEntrada) throws BusinessException{
+	public void asignarHoraEntrada(String idCita, int horaEntrada, int minEntrada) throws BusinessException{
 		CommandExecutor c = new CommandExecutor();
-		c.execute(new AsignarHoraEntrada(idCita, horaEntrada));
+		c.execute(new AsignarHoraEntrada(idCita, LocalTime.of(horaEntrada, minEntrada)));
 		
 	}
 
 	@Override
-	public void asignarHoraSalida(String idCita, Date horaSalida)  throws BusinessException {
-		// TODO Auto-generated method stub
-		
+	public void asignarHoraSalida(String idCita, int horaSalida, int minSalida)  throws BusinessException {
+		CommandExecutor c = new CommandExecutor();
+		c.execute(new AsignarHoraSalida(idCita, LocalTime.of(horaSalida, minSalida)));
+	}
+
+	@Override
+	public void pacienteAcudido(String idCita) throws BusinessException {
+		CommandExecutor c = new CommandExecutor();
+		c.execute(new SetPacienteAcudido(idCita));
+	}
+
+	@Override
+	public List<CitaRecord> getCitasDelDia(int year, int month, int day) throws BusinessException {
+		Date date = Date.valueOf(LocalDate.of(year, month, day));
+		CommandExecutor c = new CommandExecutor();
+		return c.execute(new GetCitasDelDia(date));
 	}
 
 }

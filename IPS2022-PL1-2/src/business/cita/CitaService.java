@@ -1,13 +1,17 @@
 package business.cita;
 
-import java.sql.Date;
+import java.util.List;
 
+import persistencia.cita.CitaRecord;
 import util.BusinessException;
 
 public interface CitaService {
 	
-	void asignarHoraEntrada(String idCita, Date horaEntrada) throws BusinessException;
+	void asignarHoraEntrada(String idCita, int horaEntrada, int minEntrada) throws BusinessException;
 
-	void asignarHoraSalida(String idCita, Date horaSalida) throws BusinessException;
+	void asignarHoraSalida(String idCita, int horaSalida, int minSalida) throws BusinessException;
 	
+	void pacienteAcudido(String idCita) throws BusinessException;
+
+	List<CitaRecord> getCitasDelDia(int year, int month, int day) throws BusinessException;
 }

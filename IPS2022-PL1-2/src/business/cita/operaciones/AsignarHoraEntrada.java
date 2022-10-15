@@ -1,24 +1,24 @@
 package business.cita.operaciones;
 
-import java.sql.Date;
+import java.time.LocalTime;
 
+import persistencia.PersistenceFactory;
 import util.BusinessException;
 import util.command.Command;
 
 public class AsignarHoraEntrada implements Command<Void>{
-
 	
-	public String idCita;
-	public Date horaEntrada;
+	private String idCita;
+	private LocalTime horaEntrada;
 	
-	public AsignarHoraEntrada(String idCita, Date horaEntrada) {
+	public AsignarHoraEntrada(String idCita, LocalTime horaEntrada) {
 		this.idCita=idCita;
 		this.horaEntrada=horaEntrada;
 	}
 	
 	@Override
 	public Void execute() throws BusinessException {
-		// TODO Auto-generated method stub
+		PersistenceFactory.forCita().asignarHoraEntrada(idCita, horaEntrada);
 		return null;
 	}
 	
