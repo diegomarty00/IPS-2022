@@ -79,7 +79,7 @@ public class VentanaCita extends JFrame {
 		this.pacienteAsociado=cita.getPacienteAsociado();
 		citaService = new CitaServiceImpl();
 		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 555, 375);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -222,6 +222,7 @@ public class VentanaCita extends JFrame {
 							(Integer) spnMinutosSalida.getValue());
 				
 				citaService.pacienteAcudido(cita.idCita);
+				dispose();
 			}
 			else {
 				JOptionPane.showMessageDialog(this, "La hora de entrada no puede ser mayor que la de salida");
