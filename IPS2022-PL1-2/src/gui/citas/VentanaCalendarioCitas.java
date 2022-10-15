@@ -137,7 +137,6 @@ public class VentanaCalendarioCitas extends JFrame {
 			citas = BusinessFactory.forCitaService().getCitasDelDia((Integer)getSpnYear().getValue(), (Integer)getSpnMes().getValue(), (Integer)getSpnDia().getValue());
 			for (CitaRecord cita : citas) {
 				modelo.addElement(cita);
-				System.out.println(cita);
 			}
 		} catch (BusinessException e) {
 			e.printStackTrace();
