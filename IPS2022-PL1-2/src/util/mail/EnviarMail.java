@@ -12,7 +12,7 @@ import javax.mail.internet.MimeMessage;
 
 public class EnviarMail {
 	
-	public static void enviaMail(String to ,String subject ,String text) {
+	public static void enviaMail(String to  ,String text) {
 		String from = "felipegarciagomez1000@gmail.com";
 		 String host = "smtp.gmail.com";
 		Properties properties = System.getProperties();
@@ -40,7 +40,7 @@ public class EnviarMail {
 
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
 
-            message.setSubject(subject);
+            message.setSubject("Cita urgente");
 
             message.setText(text);      
             Transport.send(message);

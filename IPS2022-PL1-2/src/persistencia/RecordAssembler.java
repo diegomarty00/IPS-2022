@@ -41,14 +41,11 @@ public class RecordAssembler {
 		return med;
 	}
 	
-	public static PacienteRecord rsToPacientes(ResultSet r) throws SQLException{
-		PacienteRecord pa = new PacienteRecord();
-		pa.setDniPaciente( r.getString("dni"));
-		pa.setNombre(r.getString("nombre"));
-		pa.setApellidos(r.getString("apellidos"));
-		pa.setCorreo(r.getString("correo"));
-		pa.setTelefono(r.getInt("telefono"));
-		return pa;
+	public static Optional<MedicoRecord> rsToMedicoO(ResultSet r) throws SQLException {
+		if (r.next()) {
+			return Optional.of(rsToMedico(r));
+		} else
+			return Optional.ofNullable(null);
 	}
 	
 	public static List<MedicoRecord> toMedicoList(ResultSet r) throws SQLException{
@@ -62,7 +59,7 @@ public class RecordAssembler {
 	public static List<PacienteRecord> toPacienteList(ResultSet r) throws SQLException {
 		List<PacienteRecord> list = new ArrayList<>();
 		while(r.next()) {
-			list.add(rsToPacientes(r));
+			list.add(resultSetToPacienteRecord(r));
 		}
 		return list ;
 	}
@@ -73,8 +70,13 @@ public class RecordAssembler {
 		cita.idCita = rs.getString("IDCITA");
 		cita.dniPaciente = rs.getString("DNIPACIENTE");
 		cita.urgente = rs.getBoolean("URGENTE");
-		cita.horaEntradaEstimada = rs.getTime("HORA_ENTRADA_ESTIMADA").toLocalTime();
-		cita.horaSalidaEstimada = rs.getTime("HORA_SALIDA_ESTIMADA").toLocalTime();
+		if(rs.getTime("HORA_ENTRADA_ESTIMADA") != null) 
+			cita.horaEntradaEstimada = rs.getTime("HORA_ENTRADA_ESTIMADA").toLocalTime();
+		
+		
+		if(rs.getTime("HORA_SALIDA_ESTIMADA") != null) 
+			cita.horaSalidaEstimada = rs.getTime("HORA_SALIDA_ESTIMADA").toLocalTime();
+		
 		cita.pacienteAcudido = rs.getBoolean("PACIENTE_ACUDIDO");
 		if (rs.getTime("HORA_ENTRADA_REAL") != null)
 			cita.horaEntradaReal = rs.getTime("HORA_ENTRADA_REAL").toLocalTime();
@@ -82,6 +84,7 @@ public class RecordAssembler {
 			cita.horaSalidaReal = rs.getTime("HORA_SALIDA_REAL").toLocalTime();
 		cita.correoPaciente = rs.getString("CORREO_PACIENTE");
 		cita.telefonoPaciente = rs.getString("TELEFONO_PACIENTE");
+		cita.lugar = rs.getString("LUGAR_CITA");
 
 		return cita;
 	}

@@ -18,6 +18,7 @@ import javax.swing.border.EmptyBorder;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
+import business.cita.operaciones.CrearCita;
 import persistencia.medico.MedicoRecord;
 import persistencia.medico.impl.MedicoGatewayImpl;
 import persistencia.paciente.PacienteRecord;
@@ -125,6 +126,19 @@ public class VentanaCitasA<E> extends JFrame {
 	private JButton getJbConfirmar() {
 		if (jbConfirmar == null) {
 			jbConfirmar = new JButton("Confirmar cita");
+			jbConfirmar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					int size = modjlist.size();
+					if( size> 0) {
+						CrearCita cc = new CrearCita();
+						cc.crearCita(cbPacinte.getSelectedItem().toString(),
+								rdbtnNewRadioButton.isSelected(),cbLugar.getSelectedItem().toString());
+						for(int i = 0 ; i < size; i++) {
+							cc.crearCitaMedico(modjlist.get(i));
+						}
+					}
+				}
+			});
 		}
 		return jbConfirmar;
 	}

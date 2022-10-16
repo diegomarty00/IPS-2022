@@ -36,14 +36,31 @@ public class MedicoGatewayImpl implements MedicoGateway {
 		
 	}
 
-	
+	private static final String FIN_BY_MEDICO_ID = "SELECT * from MEDICO where IDMEDICO = ?";
 	@Override
 	public Optional<MedicoRecord> findById(String id) {
-		return null;
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.createThreadConnection();
+			
+			pst = c.prepareStatement(FIN_BY_MEDICO_ID);
+			pst.setInt(1,Integer.parseInt(id) );
+
+			rs = pst.executeQuery();
+			
+			return RecordAssembler.rsToMedicoO(rs);
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
 		
 	}
 
-	private String findAll ="select * from PUBLIC.MEDICOS";
+	private String findAll ="select * from PUBLIC.MEDICO";
 	@Override
 	public List<MedicoRecord> findAll() {
 		Connection c = null;

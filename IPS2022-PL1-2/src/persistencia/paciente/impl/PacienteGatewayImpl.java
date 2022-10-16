@@ -44,7 +44,7 @@ public class PacienteGatewayImpl implements PacienteGateway {
 		ResultSet rs = null;
 		
 		try {
-			c = Jdbc.getCurrentConnection();
+			c = Jdbc.getConnection();
 			
 			pst = c.prepareStatement(PACIENTE_DNI);
 			pst.setString(1, dni);

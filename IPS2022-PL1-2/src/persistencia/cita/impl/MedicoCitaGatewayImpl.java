@@ -16,7 +16,7 @@ import util.jdbc.Jdbc;
 
 public class MedicoCitaGatewayImpl implements MedicoCitaGateway {
 
-	private static String ADD_CITA= "INSERT INTO MEDICOCITA";
+	private static String ADD_CITA= "INSERT INTO MEDICOCITA values (?,?)";
 	@Override
 	public void add(MedicoCitaRecord t) {
 		Connection c = null;
@@ -24,7 +24,7 @@ public class MedicoCitaGatewayImpl implements MedicoCitaGateway {
 		ResultSet rs = null;
 		
 		try {
-			c = Jdbc.getCurrentConnection();
+			c = Jdbc.getConnection();
 			
 			pst = c.prepareStatement(ADD_CITA);
 			pst.setString(1,  t.idCita);
