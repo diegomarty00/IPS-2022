@@ -1,5 +1,8 @@
 package business.cita.operaciones;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,9 +28,8 @@ public class CrearCita {
 		 CitaGatewayImpl c = new CitaGatewayImpl();
 		 List<CitaRecord> list = c.findAll();
 		if(list.size() > 0) {
-			String i = list.get(list.size() -1 ).idCita;
-			Integer.parseInt(i);
-			return Integer.parseInt(i)+1;
+			
+			return list.size()+1;
 		}
 		return 1;
 	}
@@ -58,6 +60,31 @@ public class CrearCita {
 		return li ; 
 	}
 	
+	public void crearCita(String paciente, boolean urgencia,String lugar, String año , String mes , String dia, String horaE, String horaS) {
+		String dni = parsePaciente(paciente);
+		List<String> contacto = sacarDatosContacto(dni);
+		String correo = contacto.get(0);
+		String num = contacto.get(1);
+		LocalDate fecha = toFecha(año, mes , dia);
+		ci.dniPaciente= dni;
+		ci.idCita = String.valueOf(nextid);
+		ci.correoPaciente = correo;
+		ci.telefonoPaciente = num;
+		ci.urgente = urgencia;
+		ci.pacienteAcudido = false ;
+		ci.lugar = lugar;
+		ci.fecha = fecha;
+		ci.horaEntradaEstimada = LocalTime.parse(horaE);
+		ci.horaSalidaEstimada = LocalTime.parse(horaS);
+		CitaGatewayImpl cg = new CitaGatewayImpl();
+		cg.add(ci);
+	}
+	
+	private LocalDate toFecha(String año, String mes, String dia) {
+		
+		return LocalDate.parse(año+"-"+mes+"-"+dia);
+	}
+
 	public void crearCita(String paciente, boolean urgencia,String lugar) {
 		String dni = parsePaciente(paciente);
 		List<String> contacto = sacarDatosContacto(dni);

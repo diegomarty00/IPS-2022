@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
@@ -28,6 +29,7 @@ import javax.swing.JList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractListModel;
+import javax.swing.SwingConstants;
 
 public class VentanaCitasA<E> extends JFrame {
 
@@ -55,19 +57,29 @@ public class VentanaCitasA<E> extends JFrame {
 	private JLabel lbInicio;
 	private JLabel lbFinal;
 	private JPanel panel_4;
-	private JComboBox jcbHoraInicio;
-	private JComboBox jcbHoraFinal;
+	private JComboBox cbHoraInicio;
+	private JComboBox cbHoraFinal;
 	private JPanel panel_5;
 	private JRadioButton rdbtnNewRadioButton;
 	private JLabel lbFecha;
 	private JButton btEliminar;
-	private JComboBox cbFecha;
 	private JPanel panel_6;
 	private JPanel panel_7;
 	private JPanel panel_8;
 	private JPanel panel_9;
 	private JList listMedicos;
 	private DefaultListModel<String> modjlist = new DefaultListModel<>();
+	private JPanel panel_10;
+	private JPanel panel_11;
+	private JPanel panel_12;
+	private JPanel panel_13;
+	private JLabel lbAño;
+	private JComboBox cbAño;
+	private JLabel lbMes;
+	private JComboBox cbMes;
+	private JLabel lbDia;
+	private JComboBox cbDia;
+	private List<String> listaH = setHorasL();
 	/**
 	 * Create the frame.
 	 */
@@ -131,8 +143,17 @@ public class VentanaCitasA<E> extends JFrame {
 					int size = modjlist.size();
 					if( size> 0) {
 						CrearCita cc = new CrearCita();
+						if(cbAño.getSelectedIndex() != -1 && cbMes.getSelectedIndex() != -1 && cbDia.getSelectedIndex() != -1 && 
+								cbHoraInicio.getSelectedIndex() != -1 && cbHoraFinal.getSelectedIndex() != -1) {
+							cc.crearCita(cbPacinte.getSelectedItem().toString(),
+									rdbtnNewRadioButton.isSelected(),cbLugar.getSelectedItem().toString(),cbAño.getSelectedItem().toString(),
+									cbMes.getSelectedItem().toString(),cbDia.getSelectedItem().toString(),
+									cbHoraInicio.getSelectedItem().toString(),cbHoraFinal.getSelectedItem().toString()); 
+							
+						}else {
 						cc.crearCita(cbPacinte.getSelectedItem().toString(),
 								rdbtnNewRadioButton.isSelected(),cbLugar.getSelectedItem().toString());
+						}
 						for(int i = 0 ; i < size; i++) {
 							cc.crearCitaMedico(modjlist.get(i));
 						}
@@ -236,7 +257,7 @@ public class VentanaCitasA<E> extends JFrame {
 			panelComboBox.add(getComboBox_2());
 			panelComboBox.add(getComboBox_1_1());
 			panelComboBox.add(getComboBox_2_1());
-			panelComboBox.add(getCbFecha());
+			panelComboBox.add(getPanel_10());
 			panelComboBox.add(getPanel_2());
 		}
 		return panelComboBox;
@@ -273,7 +294,7 @@ public class VentanaCitasA<E> extends JFrame {
 	private JComboBox getComboBox_2_1() {
 		if (cbLugar == null) {
 			cbLugar = new JComboBox();
-			cbLugar.setModel(new DefaultComboBoxModel(new String[] {"Consulta 1 ", "Consulta 2"}));
+			cbLugar.setModel(new DefaultComboBoxModel(new String[] {"Consulta 1 ", "Consulta 2", "Consulta 3 ", "Consulta 4", "Consulta 5", "Consulta 6", "Consulta 7", "Consulta 8", "Consulta 9"}));
 		}
 		return cbLugar;
 	}
@@ -313,22 +334,41 @@ public class VentanaCitasA<E> extends JFrame {
 		if (panel_4 == null) {
 			panel_4 = new JPanel();
 			panel_4.setLayout(new GridLayout(2, 0, 0, 0));
-			panel_4.add(getJcbHoraInicio());
-			panel_4.add(getJcbHoraFinal());
+			panel_4.add(getCbHoraInicio());
+			panel_4.add(getCbHoraFinal());
 		}
 		return panel_4;
 	}
-	private JComboBox getJcbHoraInicio() {
-		if (jcbHoraInicio == null) {
-			jcbHoraInicio = new JComboBox();
+	private JComboBox getCbHoraInicio() {
+		if (cbHoraInicio == null) {
+			cbHoraInicio = new JComboBox();
+			DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+			cbHoraInicio.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					setHFModel(cbHoraInicio.getSelectedIndex());
+				}
+			});
+			for(int i = 0; i < listaH.size();i++) {
+				mod.addElement(listaH.get(i));
+			}
+			cbHoraInicio.setModel(mod);
 		}
-		return jcbHoraInicio;
+		return cbHoraInicio;
 	}
-	private JComboBox getJcbHoraFinal() {
-		if (jcbHoraFinal == null) {
-			jcbHoraFinal = new JComboBox();
+	
+	private void setHFModel(int j) {
+		DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+		for(int i =  j; i < listaH.size();i++) {
+			mod.addElement(listaH.get(i));
 		}
-		return jcbHoraFinal;
+			cbHoraFinal.setModel(mod);
+	}
+	
+	private JComboBox getCbHoraFinal() {
+		if (cbHoraFinal == null) {
+			cbHoraFinal = new JComboBox();
+		}
+		return cbHoraFinal;
 	}
 	private JPanel getPanel_5() {
 		if (panel_5 == null) {
@@ -369,12 +409,6 @@ public class VentanaCitasA<E> extends JFrame {
 		}
 		return btEliminar;
 	}
-	private JComboBox getCbFecha() {
-		if (cbFecha == null) {
-			cbFecha = new JComboBox();
-		}
-		return cbFecha;
-	}
 	private JPanel getPanel_6() {
 		if (panel_6 == null) {
 			panel_6 = new JPanel();
@@ -411,5 +445,115 @@ public class VentanaCitasA<E> extends JFrame {
 	
 	public void delete() {
 		dispose();
+	}
+	private JPanel getPanel_10() {
+		if (panel_10 == null) {
+			panel_10 = new JPanel();
+			panel_10.setLayout(new GridLayout(0, 3, 0, 0));
+			panel_10.add(getPanel_11());
+			panel_10.add(getPanel_12());
+			panel_10.add(getPanel_13());
+		}
+		return panel_10;
+	}
+	private JPanel getPanel_11() {
+		if (panel_11 == null) {
+			panel_11 = new JPanel();
+			panel_11.setLayout(new GridLayout(2, 0, 0, 0));
+			panel_11.add(getLbAño());
+			panel_11.add(getCbAño());
+		}
+		return panel_11;
+	}
+	private JPanel getPanel_12() {
+		if (panel_12 == null) {
+			panel_12 = new JPanel();
+			panel_12.setLayout(new GridLayout(2, 0, 0, 0));
+			panel_12.add(getLbMes());
+			panel_12.add(getCbMes());
+		}
+		return panel_12;
+	}
+	private JPanel getPanel_13() {
+		if (panel_13 == null) {
+			panel_13 = new JPanel();
+			panel_13.setLayout(new GridLayout(2, 0, 0, 0));
+			panel_13.add(getLbDia());
+			panel_13.add(getCbDia());
+		}
+		return panel_13;
+	}
+	private JLabel getLbAño() {
+		if (lbAño == null) {
+			lbAño = new JLabel("A\u00F1o");
+			lbAño.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+			lbAño.setHorizontalAlignment(SwingConstants.CENTER);
+		}
+		return lbAño;
+	}
+	private JComboBox getCbAño() {
+		if (cbAño == null) {
+			cbAño = new JComboBox();
+			DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+			for(int i =2022;i<2051;i++) {
+				mod.addElement(i);
+			}
+			cbAño.setModel(mod);
+		}
+		return cbAño;
+	}
+	private JLabel getLbMes() {
+		if (lbMes == null) {
+			lbMes = new JLabel("Mes");
+			lbMes.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+			lbMes.setHorizontalAlignment(SwingConstants.CENTER);
+		}
+		return lbMes;
+	}
+	private JComboBox getCbMes() {
+		if (cbMes == null) {
+			cbMes = new JComboBox();
+			cbMes.setModel(new DefaultComboBoxModel(new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"}));
+		}
+		return cbMes;
+	}
+	private JLabel getLbDia() {
+		if (lbDia == null) {
+			lbDia = new JLabel("D\u00EDa");
+			lbDia.setHorizontalAlignment(SwingConstants.CENTER);
+			lbDia.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		}
+		return lbDia;
+	}
+	private JComboBox getCbDia() {
+		if (cbDia == null) {
+			cbDia = new JComboBox();
+			DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+			for(int i =1;i<32;i++) {
+				mod.addElement(i);
+			}
+			cbDia.setModel(mod);
+		}
+		return cbDia;
+	}
+	
+	private List<String> setHorasL() {
+		List l = new ArrayList<>();
+		for(int i =8;i<18;i++) {
+			String s = "";
+			if(i<10) {
+				s = "0" + i +":";
+			}else {
+				s = i + ":";
+			}
+			for(int j = 0 ; j <60;j = j +10) {
+				if(j == 0 ) {
+					l.add(s+"0"+j);
+				}else {
+					l.add(s+j);
+				}
+			}
+		}
+		return l ;
 	}
 }
