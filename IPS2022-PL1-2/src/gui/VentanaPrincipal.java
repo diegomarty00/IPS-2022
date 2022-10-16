@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import gui.Administrador.VentanaAdministrador;
 import gui.Administrador.VentanaCitasA;
 import util.jdbc.Jdbc;
 import util.mail.EnviarMail;
@@ -98,8 +99,8 @@ public class VentanaPrincipal extends JFrame {
 	    btnAdmin = new JButton("Administrador");
 	    btnAdmin.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
-	    		VentanaCitasA ven = new VentanaCitasA();
-	    		ven.setVisible(true);
+	    		VentanaAdministrador frame = new VentanaAdministrador();
+				frame.setVisible(true);
 	    	}
 	    });
 	    btnAdmin.setBounds(90, 130, 125, 50);

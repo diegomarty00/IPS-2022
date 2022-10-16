@@ -116,7 +116,7 @@ public class VentanaCitasA<E> extends JFrame {
 			jbCacelar = new JButton("Cancelar");
 			jbCacelar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					
+					delete();
 				}
 			});
 			jbCacelar.setMnemonic('c');
@@ -136,6 +136,7 @@ public class VentanaCitasA<E> extends JFrame {
 						for(int i = 0 ; i < size; i++) {
 							cc.crearCitaMedico(modjlist.get(i));
 						}
+						delete();
 					}
 				}
 			});
@@ -406,5 +407,9 @@ public class VentanaCitasA<E> extends JFrame {
 			listMedicos.setModel(modjlist);
 		}
 		return listMedicos;
+	}
+	
+	public void delete() {
+		dispose();
 	}
 }
