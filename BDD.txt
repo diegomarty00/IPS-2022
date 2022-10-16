@@ -48,7 +48,7 @@ IDCITA VARCHAR(255) NOT NULL,
 idmedico INT NOT NULL,
 CONSTRAINT PK_MEDICOCITA PRIMARY KEY (IDCITA,IDMEDICO),
 CONSTRAINT FK_MEDICOCITA_CITA FOREIGN KEY (IDCITA) REFERENCES CITA (IDCITA),
-CONSTRAINT FK_MEDICOCITA_MEDICO FOREIGN KEY (IDMEDICO) REFERENCES MEDICOS (IDMEDICO)
+CONSTRAINT FK_MEDICOCITA_MEDICO FOREIGN KEY (IDMEDICO) REFERENCES MEDICO (IDMEDICO)
 )
 
 
@@ -57,3 +57,15 @@ INSERT INTO PACIENTE values ('560483D', 'Jesus', 'Martin', 'jesus@martin.es', 66
 INSERT INTO CITA values ('1', '560483D', 0, '12:30:00', '13:00:00', 0, null, null, '2022-10-14', 'jesus@martin.es', 666432,'consulta_1')
 INSERT INTO MEDICO values (1, 'Julia', 'Lopez', 'lopezjulia@gmail.com')
 INSERT INTO HISTORIAL values ('1', 'Hepatitis', 'El paciente presenta una hepatitis tipo C cronica', '560483D', 1, '2022-10-10')
+ 
+  INSERT INTO medico
+(idmedico,nombre,apellidos,correo)
+VALUES (12,'Felipe','Garcia Gomez','felipegarciagomez5@gmail.com');
+
+INSERT INTO medico
+(idmedico,nombre,apellidos,correo)
+VALUES (13,'Diego','Martínez Menéndez ','felipegarciagomez5@gmail.com');
+
+INSERT INTO medico
+(idmedico,nombre,apellidos,correo)
+VALUES (14,'Sergio' ,'Mate Suarez','felipegarciagomez5@gmail.com');
