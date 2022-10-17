@@ -7,3 +7,5 @@ BaseDatos/data/test.log
 BaseDatos/data/test.properties
 
 BaseDatos/data/test.script
+
+*.class

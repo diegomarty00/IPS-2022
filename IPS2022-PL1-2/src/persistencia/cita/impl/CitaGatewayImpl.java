@@ -24,32 +24,48 @@ public class CitaGatewayImpl implements CitaGateway {
     private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
     private static String ASIGNAR_SALIDA = "update CITA set HORA_SALIDA_REAL = ? where idcita = ?";
     private static String PACIENTE_ACUDIDO = "update CITA set PACIENTE_ACUDIDO = 1 where idcita = ?";
-    private static String ADD_CITA = "INSERT INTO Cita";
+    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?)";
     private static String MODIFICAR_CONTACTO = "update CITA set CORREO_PACIENTE = ? , TELEFONO_PACIENTE = ? where idcita = ?";
 
-    @Override
-    public void add(CitaRecord t) {
-	Connection c = null;
-	PreparedStatement pst = null;
-	ResultSet rs = null;
-
-	try {
-	    c = Jdbc.getCurrentConnection();
-
-	    pst = c.prepareStatement(ADD_CITA);
-//			pst.setInt(1,  t.id_competicion);
-//			pst.setString(2, t.nombre);
-//			pst.setDate(3, Date.valueOf( t.fecha));
-//			pst.setString(4, t.tipo);
-//			pst.setInt(5, t.distancia);
-//			pst.setDouble(6, t.cuota);
-//			pst.setInt(7, t.numero_tramos);
-//
-//			pst.setDate(8, Date.valueOf( t.fecha_fin_inscripcion));
-//			pst.setInt(9, t.plazas);
-//			
-//			pst.setDate(10, Date.valueOf( t.fecha_inicio_inscripcion));
-//			pst.setInt(11, t.dorsalesReservados);
+	
+	@Override
+	public void add(CitaRecord t) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.createThreadConnection();
+			
+			pst = c.prepareStatement(ADD_CITA);
+			pst.setString(1,  t.idCita);
+			pst.setNString(2, t.dniPaciente);
+			pst.setBoolean(3, t.urgente);
+			if(t.horaEntradaEstimada != null ) {
+				pst.setTime(4,Time.valueOf(t.horaEntradaEstimada));
+				
+			}else {
+				pst.setTime(4,null);
+			}
+			if (t.horaSalidaEstimada != null) {
+				pst.setTime(5, Time.valueOf(t.horaSalidaEstimada));
+			}else {
+				pst.setTime(5, null);
+			}
+			
+			
+			pst.setBoolean(6, t.pacienteAcudido);
+			pst.setTime(7,null);
+			pst.setTime(8, null);
+			if(t.fecha != null ) {
+				pst.setDate(9, Date.valueOf(t.fecha));
+			}else {
+				pst.setDate(9, null);
+			}
+			
+			pst.setString(10, t.correoPaciente);
+			pst.setInt(11,Integer.parseInt(t.telefonoPaciente));
+			pst.setString(12, t.lugar);
 
 	    pst.execute();
 	} catch (SQLException e) {
@@ -65,9 +81,30 @@ public class CitaGatewayImpl implements CitaGateway {
 
     }
 
-    @Override
-    public void update(CitaRecord t) {
-	// TODO Auto-generated method stub
+
+	private static String findAll = "SELECT * FROM PUBLIC.cita";
+	@Override
+	public List<CitaRecord> findAll() {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+			c = Jdbc.getConnection();
+			
+			pst = c.prepareStatement(findAll);
+			rs = pst.executeQuery();
+			
+			
+
+			return RecordAssembler.toCitaList(rs);
+
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+	}
 
     }
 
@@ -185,6 +222,7 @@ public class CitaGatewayImpl implements CitaGateway {
 	}
     }
 
+
     @Override
     public List<CitaRecord> getCitasProximas(Date dia) {
 	Connection c = null;
@@ -229,5 +267,4 @@ public class CitaGatewayImpl implements CitaGateway {
 	    Jdbc.close(pst);
 	}
     }
-
 }

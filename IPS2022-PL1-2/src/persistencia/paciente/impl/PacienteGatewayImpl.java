@@ -44,7 +44,7 @@ public class PacienteGatewayImpl implements PacienteGateway {
 		ResultSet rs = null;
 		
 		try {
-			c = Jdbc.getCurrentConnection();
+			c = Jdbc.getConnection();
 			
 			pst = c.prepareStatement(PACIENTE_DNI);
 			pst.setString(1, dni);
@@ -61,10 +61,28 @@ public class PacienteGatewayImpl implements PacienteGateway {
 		}
 	}
 
+	private static String findAll = "SELECT * FROM PUBLIC.PACIENTE";
 	@Override
 	public List<PacienteRecord> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+			c = Jdbc.getConnection();
+			
+			pst = c.prepareStatement(findAll);
+			rs = pst.executeQuery();
+			
+			
+
+			return RecordAssembler.toPacienteList(rs);
+
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
 	}
 
 	@Override
