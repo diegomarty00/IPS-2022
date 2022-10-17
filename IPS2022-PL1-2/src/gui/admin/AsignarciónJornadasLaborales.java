@@ -467,11 +467,17 @@ public class AsignarciónJornadasLaborales extends JFrame {
     private JButton getBtnCancelar() {
 	if (btnCancelar == null) {
 	    btnCancelar = new JButton("Cancelar");
+	    btnCancelar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
 	    btnCancelar.setBackground(Color.RED);
 	    btnCancelar.setBounds(445, 329, 89, 23);
 	}
 	return btnCancelar;
     }
+    
 
     private JSpinner getspinnerMinutoInicio() {
 	if (spinnerMinutoInicio == null) {

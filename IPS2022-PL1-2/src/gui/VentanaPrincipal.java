@@ -11,8 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import gui.Administrador.VentanaAdministrador;
-import gui.Administrador.VentanaCitasA;
+import gui.admin.VentanaAdministrador;
+import gui.admin.VentanaCitasA;
 import gui.citas.VentanaCalendarioCitas;
 import util.jdbc.Jdbc;
 import util.mail.EnviarMail;

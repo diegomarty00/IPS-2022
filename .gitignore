@@ -9,3 +9,5 @@ BaseDatos/data/test.properties
 BaseDatos/data/test.script
 
 *.class
+IPS2022-PL1-2/target/classes/gui/VentanaPrincipal$1.class
+*.class

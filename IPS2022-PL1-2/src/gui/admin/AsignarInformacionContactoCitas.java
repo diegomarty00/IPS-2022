@@ -178,6 +178,7 @@ public class AsignarInformacionContactoCitas extends JFrame {
 	    btnSalir.setBackground(Color.RED);
 	    btnSalir.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
+		    dispose();
 		}
 	    });
 	    btnSalir.setBounds(393, 293, 89, 23);

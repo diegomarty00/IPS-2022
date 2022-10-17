@@ -106,13 +106,6 @@ public class CitaGatewayImpl implements CitaGateway {
 		}
 	}
 
-    }
-
-    @Override
-    public List<CitaRecord> findAll() {
-	// TODO Auto-generated method stub
-	return null;
-    }
 
     @Override
     public Optional<CitaRecord> findById(String id) {
@@ -267,4 +260,10 @@ public class CitaGatewayImpl implements CitaGateway {
 	    Jdbc.close(pst);
 	}
     }
+
+	@Override
+	public void update(CitaRecord t) {
+		// TODO Auto-generated method stub
+		
+	}
 }
