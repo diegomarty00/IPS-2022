@@ -287,7 +287,7 @@ public class AsignarciónJornadasLaborales extends JFrame {
 	if (spinnerHoraInicio == null) {
 	    SpinnerModel sm = new SpinnerNumberModel(9, 0, 23, 1);
 	    spinnerHoraInicio = new JSpinner(sm);
-	    spinnerHoraInicio.setBounds(173, 23, 39, 20);
+	    spinnerHoraInicio.setBounds(78, 23, 39, 20);
 	}
 	return spinnerHoraInicio;
     }
@@ -305,7 +305,7 @@ public class AsignarciónJornadasLaborales extends JFrame {
 	if (spinnerHoraFin == null) {
 	    SpinnerModel sm = new SpinnerNumberModel(9, 0, 23, 1);
 	    spinnerHoraFin = new JSpinner(sm);
-	    spinnerHoraFin.setBounds(78, 23, 39, 20);
+	    spinnerHoraFin.setBounds(173, 23, 39, 20);
 	}
 	return spinnerHoraFin;
     }
@@ -599,7 +599,7 @@ public class AsignarciónJornadasLaborales extends JFrame {
     private int indicarMesInicio() {
 	String[] mes = new java.text.DateFormatSymbols().getMonths();
 	for (int i = 0; i <= mes.length - 1; i++) {
-	    if (getspinnerMesFin().getValue()
+	    if (getspinnerMesInicio().getValue()
 		    .toString() == (mes[i].toString())) {
 		return i;
 	    }
@@ -663,7 +663,7 @@ public class AsignarciónJornadasLaborales extends JFrame {
 	    return false;
 	}
 
-	if (indicarFin().compareTo(indicarInicio()) >= 0) {
+	if (indicarFin().compareTo(indicarInicio()) <= 0) {
 	    JOptionPane.showMessageDialog(null,
 		    "Por favor, comprueba de que la fecha de incio de jornada sea menor que la de finalización de la misma",
 		    "Error - Mala finalización de jornadas", 0);
