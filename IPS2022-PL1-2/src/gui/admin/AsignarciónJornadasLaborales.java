@@ -468,16 +468,15 @@ public class AsignarciónJornadasLaborales extends JFrame {
 	if (btnCancelar == null) {
 	    btnCancelar = new JButton("Cancelar");
 	    btnCancelar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
+		public void actionPerformed(ActionEvent e) {
+		    dispose();
+		}
+	    });
 	    btnCancelar.setBackground(Color.RED);
 	    btnCancelar.setBounds(445, 329, 89, 23);
 	}
 	return btnCancelar;
     }
-    
 
     private JSpinner getspinnerMinutoInicio() {
 	if (spinnerMinutoInicio == null) {
@@ -664,7 +663,7 @@ public class AsignarciónJornadasLaborales extends JFrame {
 	    return false;
 	}
 
-	if (indicarFin().compareTo(indicarInicio()) <= 0) {
+	if (indicarFin().compareTo(indicarInicio()) >= 0) {
 	    JOptionPane.showMessageDialog(null,
 		    "Por favor, comprueba de que la fecha de incio de jornada sea menor que la de finalización de la misma",
 		    "Error - Mala finalización de jornadas", 0);
