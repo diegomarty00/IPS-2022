@@ -69,6 +69,7 @@ public class AsignarInformacionContactoCitas extends JFrame {
      * Create the frame.
      */
     public AsignarInformacionContactoCitas() {
+	setResizable(false);
 	setTitle("Informaci\u00F3n de contacto de las citas");
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 628, 366);

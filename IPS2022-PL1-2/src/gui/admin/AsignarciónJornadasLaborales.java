@@ -96,6 +96,7 @@ public class AsignarciónJornadasLaborales extends JFrame {
      * @throws BusinessException
      */
     public AsignarciónJornadasLaborales() throws BusinessException {
+	setResizable(false);
 	setTitle("Asignaci\u00F3n Jornadas Laborales - Manual");
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 666, 400);
@@ -557,17 +558,6 @@ public class AsignarciónJornadasLaborales extends JFrame {
 	spinnerDiaFin = new JSpinner(sm);
     }
 
-    private Timestamp indicarFin() {
-	@SuppressWarnings("deprecation")
-	Timestamp fecha = new Timestamp(
-		Integer.parseInt(getspinnerAnioFin().getValue().toString())
-			- 1900,
-		indicarMesFin(), (int) getspinnerDiaFin().getValue(),
-		(int) getspinnerHoraFin().getValue(),
-		(int) getspinnerMinutoFin().getValue(), 0, 0);
-	return fecha;
-    }
-
     private int indicarAnioFin() {
 	String[] cadena = getspinnerAnioFin().getValue().toString().split(".");
 	String rs = (cadena[0] + "" + cadena[1]);
@@ -585,12 +575,24 @@ public class AsignarciónJornadasLaborales extends JFrame {
 	return 0;
     }
 
-    private Timestamp indicarInicio() {
+    private Timestamp indicarFin() {
+	int anio = Integer.parseInt(getspinnerAnioFin().getValue().toString());
+	int dia = (int) getspinnerDiaFin().getValue();
+	dia = arreglarDiaMes(anio, indicarMesFin() + 1, dia);
 	@SuppressWarnings("deprecation")
-	Timestamp fecha = new Timestamp(
-		Integer.parseInt(getspinnerAnioInicio().getValue().toString())
-			- 1900,
-		indicarMesInicio(), (int) getspinnerDiaInicio().getValue(),
+	Timestamp fecha = new Timestamp(anio - 1900, indicarMesFin(), dia,
+		(int) getspinnerHoraFin().getValue(),
+		(int) getspinnerMinutoFin().getValue(), 0, 0);
+	return fecha;
+    }
+
+    private Timestamp indicarInicio() {
+	int anio = Integer
+		.parseInt(getspinnerAnioInicio().getValue().toString());
+	int dia = (int) getspinnerDiaInicio().getValue();
+	dia = arreglarDiaMes(anio, indicarMesInicio() + 1, dia);
+	@SuppressWarnings("deprecation")
+	Timestamp fecha = new Timestamp(anio - 1900, indicarMesInicio(), dia,
 		(int) getspinnerHoraInicio().getValue(),
 		(int) getspinnerMinutoInicio().getValue(), 0, 0);
 	return fecha;
@@ -648,6 +650,23 @@ public class AsignarciónJornadasLaborales extends JFrame {
 	    e.printStackTrace();
 	}
 
+    }
+
+    private int arreglarDiaMes(int anio, int mes, int dia) {
+	if (mes == 4 || mes == 6 || mes == 9 || mes == 11) {
+	    if (dia == 31)
+		dia = 30;
+	}
+	if ((mes == 2) && (anio % 4 != 0)) {
+	    if (dia >= 28)
+		dia = 28;
+	}
+	if ((mes == 2) && (anio % 4 == 0)) {
+	    if (dia >= 29)
+		dia = 29;
+
+	}
+	return dia;
     }
 
     private boolean comprobacionesBasicas() {
