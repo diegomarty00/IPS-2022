@@ -1,5 +1,6 @@
 package gui;
 
+import java.sql.Connection;
 import java.awt.EventQueue;
 import java.awt.Font;
 
@@ -10,6 +11,15 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import gui.admin.VentanaAdministrador;
+import gui.admin.VentanaCitasA;
+import gui.citas.VentanaCalendarioCitas;
+import util.jdbc.Jdbc;
+import util.mail.EnviarMail;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 public class VentanaPrincipal extends JFrame {
 
     private JPanel contentPane;
@@ -17,7 +27,7 @@ public class VentanaPrincipal extends JFrame {
     private JLabel lblTituloCompleto;
     private JLabel lblInicioSesion;
     private JButton btnAdmin;
-    private JButton btnMeico;
+    private JButton btnMedico;
 
     /**
      * Launch the application.
@@ -25,12 +35,15 @@ public class VentanaPrincipal extends JFrame {
     public static void main(String[] args) {
 	EventQueue.invokeLater(new Runnable() {
 	    public void run() {
-		try {
-		    VentanaPrincipal frame = new VentanaPrincipal();
-		    frame.setVisible(true);
-		} catch (Exception e) {
-		    e.printStackTrace();
-		}
+	    
+			try {	
+	
+			    VentanaPrincipal frame = new VentanaPrincipal();
+			    frame.setVisible(true);
+			  
+			} catch (Exception e) {
+			    e.printStackTrace();
+			}
 	    }
 	});
     }
@@ -50,7 +63,7 @@ public class VentanaPrincipal extends JFrame {
 	contentPane.add(getLblTituloCompleto());
 	contentPane.add(getLblInicioSesion());
 	contentPane.add(getBtnAdmin());
-	contentPane.add(getBtnMeico());
+	contentPane.add(getBtnMedico());
     }
 
     public JLabel getLblTitulo() {
@@ -85,16 +98,30 @@ public class VentanaPrincipal extends JFrame {
     public JButton getBtnAdmin() {
 	if (btnAdmin == null) {
 	    btnAdmin = new JButton("Administrador");
+	    btnAdmin.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		VentanaAdministrador frame = new VentanaAdministrador();
+				frame.setVisible(true);
+				setVisible(false);
+	    	}
+	    });
 	    btnAdmin.setBounds(90, 130, 125, 50);
 	}
 	return btnAdmin;
     }
 
-    public JButton getBtnMeico() {
-	if (btnMeico == null) {
-	    btnMeico = new JButton("Medico");
-	    btnMeico.setBounds(269, 130, 125, 50);
+    public JButton getBtnMedico() {
+	if (btnMedico == null) {
+	    btnMedico = new JButton("Medico");
+	    btnMedico.addActionListener(new ActionListener() {
+	    	public void actionPerformed(ActionEvent e) {
+	    		VentanaCalendarioCitas frame = new VentanaCalendarioCitas();
+				frame.setVisible(true);
+				setVisible(false);
+	    	}
+	    });
+	    btnMedico.setBounds(269, 130, 125, 50);
 	}
-	return btnMeico;
+	return btnMedico;
     }
 }

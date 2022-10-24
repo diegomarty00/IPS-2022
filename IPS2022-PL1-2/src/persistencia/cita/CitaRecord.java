@@ -21,6 +21,7 @@ public class CitaRecord {
 	public LocalDate fecha;
 	public String correoPaciente; 
 	public String telefonoPaciente; 
+	public String lugar;
 	
 	public PacienteRecord getPacienteAsociado() {
 		try {

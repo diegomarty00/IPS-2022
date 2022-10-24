@@ -39,5 +39,11 @@ public class PacienteRecord {
 		this.telefono = telefono;
 	}
 	public int telefono;
+
+
+	@Override
+	public String toString() {
+		return "" + nombre + " " + apellidos + " " + dniPaciente;
+	}
 	
 }
