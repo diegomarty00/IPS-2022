@@ -24,7 +24,7 @@ public class CitaGatewayImpl implements CitaGateway {
     private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
     private static String ASIGNAR_SALIDA = "update CITA set HORA_SALIDA_REAL = ? where idcita = ?";
     private static String PACIENTE_ACUDIDO = "update CITA set PACIENTE_ACUDIDO = 1 where idcita = ?";
-    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static String MODIFICAR_CONTACTO = "update CITA set CORREO_PACIENTE = ? , TELEFONO_PACIENTE = ? where idcita = ?";
 
 	
@@ -66,6 +66,7 @@ public class CitaGatewayImpl implements CitaGateway {
 			pst.setString(10, t.correoPaciente);
 			pst.setInt(11,Integer.parseInt(t.telefonoPaciente));
 			pst.setString(12, t.lugar);
+			pst.setString(13, t.otros);
 
 	    pst.execute();
 	} catch (SQLException e) {

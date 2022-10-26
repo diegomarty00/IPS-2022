@@ -85,6 +85,7 @@ public class RecordAssembler {
 		cita.correoPaciente = rs.getString("CORREO_PACIENTE");
 		cita.telefonoPaciente = rs.getString("TELEFONO_PACIENTE");
 		cita.lugar = rs.getString("LUGAR_CITA");
+		cita.otros = rs.getString("OTROS");
 
 		return cita;
 	}

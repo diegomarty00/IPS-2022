@@ -77,7 +77,7 @@ public class VentanaCitasA<E> extends JFrame {
     private JLabel lbDia;
     private JComboBox cbDia;
     private List<String> listaH = setHorasL();
-
+    private ProcesarAccion pa = new ProcesarAccion();
     /**
      * Create the frame.
      */
@@ -142,41 +142,50 @@ public class VentanaCitasA<E> extends JFrame {
     private JButton getJbConfirmar() {
 	if (jbConfirmar == null) {
 	    jbConfirmar = new JButton("Confirmar cita");
-	    jbConfirmar.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent arg0) {
-		    int size = modjlist.size();
-		    if (size > 0) {
-			CrearCita cc = new CrearCita();
-			if (cbAño.getSelectedIndex() != -1
-				&& cbMes.getSelectedIndex() != -1
-				&& cbDia.getSelectedIndex() != -1
-				&& cbHoraInicio.getSelectedIndex() != -1
-				&& cbHoraFinal.getSelectedIndex() != -1) {
-			    cc.crearCita(cbPacinte.getSelectedItem().toString(),
-				    rdbtnNewRadioButton.isSelected(),
-				    cbLugar.getSelectedItem().toString(),
-				    cbAño.getSelectedItem().toString(),
-				    cbMes.getSelectedItem().toString(),
-				    cbDia.getSelectedItem().toString(),
-				    cbHoraInicio.getSelectedItem().toString(),
-				    cbHoraFinal.getSelectedItem().toString());
-
-			} else {
-			    cc.crearCita(cbPacinte.getSelectedItem().toString(),
-				    rdbtnNewRadioButton.isSelected(),
-				    cbLugar.getSelectedItem().toString());
-			}
-			for (int i = 0; i < size; i++) {
-			    cc.crearCitaMedico(modjlist.get(i));
-			}
-			delete();
-		    }
-		}
-	    });
+	    jbConfirmar.addActionListener(pa);
 	}
 	return jbConfirmar;
     }
+    	
+    class ProcesarAccion implements ActionListener{
 
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			int size = modjlist.size();
+			
+		    if (size > 0) {
+			CrearCita cc = new CrearCita();
+				if (cbAño.getSelectedIndex() != -1
+					&& cbMes.getSelectedIndex() != -1
+					&& cbDia.getSelectedIndex() != -1
+					&& cbHoraInicio.getSelectedIndex() != -1
+					&& cbHoraFinal.getSelectedIndex() != -1) {
+					
+						DatosCita frame = new DatosCita(cbPacinte.getSelectedItem().toString(),
+								rdbtnNewRadioButton.isSelected(),
+							    cbLugar.getSelectedItem().toString(),
+							    cbAño.getSelectedItem().toString(),
+							    cbMes.getSelectedItem().toString(),
+							    cbDia.getSelectedItem().toString(),
+							    cbHoraInicio.getSelectedItem().toString(),
+							    cbHoraFinal.getSelectedItem().toString(),
+							    modjlist);
+						frame.setVisible(true);
+				
+
+				} 
+				delete();
+		    }
+		}
+	}
+    	
+    	
+    	
+    	
+    
+    
+    
     private JPanel getPanel() {
 	if (panel == null) {
 	    panel = new JPanel();
@@ -567,8 +576,7 @@ public class VentanaCitasA<E> extends JFrame {
     private JComboBox getCbMes() {
 	if (cbMes == null) {
 	    cbMes = new JComboBox();
-	    cbMes.setModel(new DefaultComboBoxModel(new String[] { "1", "2",
-		    "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
+	    cbMes.setModel(new DefaultComboBoxModel(new String[] {"01", "02", "03", "04", "05", "07", "08", "09", "10", "11", "12"}));
 	}
 	return cbMes;
     }

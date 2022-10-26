@@ -22,7 +22,7 @@ public class CitaRecord {
 	public String correoPaciente; 
 	public String telefonoPaciente; 
 	public String lugar;
-	
+	public String otros;
 	public PacienteRecord getPacienteAsociado() {
 		try {
 			return BusinessFactory.forPacienteService().getByDni(dniPaciente).get();

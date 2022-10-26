@@ -50,21 +50,18 @@ public class CrearCita {
 		return idm; 
 	}
 	
-	private List<String> sacarDatosContacto(String dni){
+	public PacienteRecord sacarDatosContacto(String dni){
 		List<String> li = new ArrayList<>();
 		PacienteGatewayImpl pa = new PacienteGatewayImpl();
 		PacienteRecord p = pa.findById(dni).get();
-		li.add(p.getCorreo());
-		li.add(String.valueOf( p.getTelefono()));
 		
-		return li ; 
+		
+		return p ; 
 	}
 	
-	public void crearCita(String paciente, boolean urgencia,String lugar, String año , String mes , String dia, String horaE, String horaS) {
+	public void crearCita(String paciente, boolean urgencia,String lugar, String año , String mes , String dia, String horaE, String horaS,String correo, String num,
+			String otros) {
 		String dni = parsePaciente(paciente);
-		List<String> contacto = sacarDatosContacto(dni);
-		String correo = contacto.get(0);
-		String num = contacto.get(1);
 		LocalDate fecha = toFecha(año, mes , dia);
 		ci.dniPaciente= dni;
 		ci.idCita = String.valueOf(nextid);
@@ -76,6 +73,7 @@ public class CrearCita {
 		ci.fecha = fecha;
 		ci.horaEntradaEstimada = LocalTime.parse(horaE);
 		ci.horaSalidaEstimada = LocalTime.parse(horaS);
+		ci.otros = otros;
 		CitaGatewayImpl cg = new CitaGatewayImpl();
 		cg.add(ci);
 	}
@@ -85,21 +83,21 @@ public class CrearCita {
 		return LocalDate.parse(año+"-"+mes+"-"+dia);
 	}
 
-	public void crearCita(String paciente, boolean urgencia,String lugar) {
-		String dni = parsePaciente(paciente);
-		List<String> contacto = sacarDatosContacto(dni);
-		String correo = contacto.get(0);
-		String num = contacto.get(1);
-		ci.dniPaciente= dni;
-		ci.idCita = String.valueOf(nextid);
-		ci.correoPaciente = correo;
-		ci.telefonoPaciente = num;
-		ci.urgente = urgencia;
-		ci.pacienteAcudido = false ;
-		ci.lugar = lugar;
-		CitaGatewayImpl cg = new CitaGatewayImpl();
-		cg.add(ci);
-	}
+//	public void crearCita(String paciente, boolean urgencia,String lugar) {
+//		String dni = parsePaciente(paciente);
+//		List<String> contacto = sacarDatosContacto(dni);
+//		String correo = contacto.get(0);
+//		String num = contacto.get(1);
+//		ci.dniPaciente= dni;
+//		ci.idCita = String.valueOf(nextid);
+//		ci.correoPaciente = correo;
+//		ci.telefonoPaciente = num;
+//		ci.urgente = urgencia;
+//		ci.pacienteAcudido = false ;
+//		ci.lugar = lugar;
+//		CitaGatewayImpl cg = new CitaGatewayImpl();
+//		cg.add(ci);
+//	}
 	public void crearCitaMedico(String med) {
 		
 		int idm = parseMed(med);
