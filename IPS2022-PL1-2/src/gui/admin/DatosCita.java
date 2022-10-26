@@ -126,6 +126,11 @@ public class DatosCita extends JFrame {
 	private JButton getBtCancelar() {
 		if (btCancelar == null) {
 			btCancelar = new JButton("Cancelar");
+			btCancelar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					dispose();
+				}
+			});
 			btCancelar.setBounds(177, 238, 89, 23);
 		}
 		return btCancelar;
