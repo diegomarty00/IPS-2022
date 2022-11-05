@@ -28,10 +28,16 @@ import persistencia.medico.MedicoRecord;
 import persistencia.medico.impl.MedicoGatewayImpl;
 import persistencia.paciente.PacienteRecord;
 import persistencia.paciente.impl.PacienteGatewayImpl;
+import javax.swing.JTextField;
+import javax.swing.JSpinner;
 
 public class VentanaCitasA<E> extends JFrame {
 
-    private JPanel contentPane;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
     private JPanel panelC;
     private JPanel panelN;
     private JPanel jPanelBotones;
@@ -80,13 +86,22 @@ public class VentanaCitasA<E> extends JFrame {
     private List<String> listaH = setHorasL();
     private ProcesarAccion pa = new ProcesarAccion();
     private JCheckBox jChBPrioritario;
+    private JPanel panel_14;
+    private JLabel lblNewLabel;
+    private JList<? extends E> listEspecialistas;
+    private JTextField txtElegirEspecialidad;
+    private JPanel panel_15;
+    private JComboBox comboBox;
+    private JPanel panel_16;
+    private JSpinner spinner;
+    private JButton btAniadirE;
     /**
      * Create the frame.
      */
     public VentanaCitasA() {
 	setTitle("Crear citas");
 	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	setBounds(100, 100, 686, 374);
+	setBounds(100, 100, 769, 374);
 	contentPane = new JPanel();
 	contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -192,9 +207,10 @@ public class VentanaCitasA<E> extends JFrame {
     private JPanel getPanel() {
 	if (panel == null) {
 	    panel = new JPanel();
-	    panel.setLayout(new GridLayout(0, 1, 0, 0));
+	    panel.setLayout(new GridLayout(6, 1, 0, 0));
 	    panel.add(getLbPacientes());
 	    panel.add(getLbMedicos());
+	    panel.add(getTxtElegirEspecialidad());
 	    panel.add(getLbLugar());
 	    panel.add(getLbFecha());
 	    panel.add(getLbHorario());
@@ -250,7 +266,7 @@ public class VentanaCitasA<E> extends JFrame {
 	    pDer.setLayout(new BorderLayout(0, 0));
 	    pDer.add(getLbMedicosSelccionados(), BorderLayout.NORTH);
 	    pDer.add(getBtEliminar(), BorderLayout.SOUTH);
-	    pDer.add(getListMedicos(), BorderLayout.CENTER);
+	    pDer.add(getPanel_14(), BorderLayout.CENTER);
 	}
 	return pDer;
     }
@@ -291,9 +307,10 @@ public class VentanaCitasA<E> extends JFrame {
     private JPanel getPanelComboBox() {
 	if (panelComboBox == null) {
 	    panelComboBox = new JPanel();
-	    panelComboBox.setLayout(new GridLayout(5, 1, 0, 0));
+	    panelComboBox.setLayout(new GridLayout(6, 1, 0, 0));
 	    panelComboBox.add(getComboBox_2());
 	    panelComboBox.add(getComboBox_1_1());
+	    panelComboBox.add(getPanel_15());
 	    panelComboBox.add(getComboBox_2_1());
 	    panelComboBox.add(getPanel_10());
 	    panelComboBox.add(getPanel_2());
@@ -425,7 +442,7 @@ public class VentanaCitasA<E> extends JFrame {
     private JPanel getPanel_5() {
 	if (panel_5 == null) {
 	    panel_5 = new JPanel();
-	    panel_5.setLayout(new GridLayout(0, 1, 0, 0));
+	    panel_5.setLayout(new GridLayout(5, 1, 0, 0));
 	    panel_5.add(getPanel_9());
 	    panel_5.add(getPanel_8());
 	    panel_5.add(getPanel_7());
@@ -638,5 +655,74 @@ public class VentanaCitasA<E> extends JFrame {
 			jChBPrioritario.setFont(new Font("Times New Roman", Font.BOLD, 14));
 		}
 		return jChBPrioritario;
+	}
+	private JPanel getPanel_14() {
+		if (panel_14 == null) {
+			panel_14 = new JPanel();
+			panel_14.setLayout(new GridLayout(3, 1, 0, 0));
+			panel_14.add(getListMedicos());
+			panel_14.add(getLblNewLabel());
+			panel_14.add(getListEspecialistas());
+		}
+		return panel_14;
+	}
+	private JLabel getLblNewLabel() {
+		if (lblNewLabel == null) {
+			lblNewLabel = new JLabel("Especialistas");
+			lblNewLabel.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		}
+		return lblNewLabel;
+	}
+	private JList<? extends E> getListEspecialistas() {
+		if (listEspecialistas == null) {
+			listEspecialistas = new JList();
+		}
+		return listEspecialistas;
+	}
+	private JTextField getTxtElegirEspecialidad() {
+		if (txtElegirEspecialidad == null) {
+			txtElegirEspecialidad = new JTextField();
+			txtElegirEspecialidad.setText("Especialidad");
+			txtElegirEspecialidad.setFont(new Font("Times New Roman", Font.BOLD, 16));
+			txtElegirEspecialidad.setEditable(false);
+			txtElegirEspecialidad.setColumns(10);
+		}
+		return txtElegirEspecialidad;
+	}
+	private JPanel getPanel_15() {
+		if (panel_15 == null) {
+			panel_15 = new JPanel();
+			panel_15.setLayout(new BorderLayout(0, 0));
+			panel_15.add(getComboBox(), BorderLayout.CENTER);
+			panel_15.add(getPanel_16(), BorderLayout.EAST);
+		}
+		return panel_15;
+	}
+	private JComboBox getComboBox() {
+		if (comboBox == null) {
+			comboBox = new JComboBox();
+		}
+		return comboBox;
+	}
+	private JPanel getPanel_16() {
+		if (panel_16 == null) {
+			panel_16 = new JPanel();
+			panel_16.setLayout(new BorderLayout(0, 0));
+			panel_16.add(getSpinner(), BorderLayout.WEST);
+			panel_16.add(getBtAniadirE(), BorderLayout.CENTER);
+		}
+		return panel_16;
+	}
+	private JSpinner getSpinner() {
+		if (spinner == null) {
+			spinner = new JSpinner();
+		}
+		return spinner;
+	}
+	private JButton getBtAniadirE() {
+		if (btAniadirE == null) {
+			btAniadirE = new JButton("A\u00F1adir ");
+		}
+		return btAniadirE;
 	}
 }
