@@ -19,6 +19,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import business.BusinessFactory;
 import business.cita.CitaService;
 import business.cita.impl.CitaServiceImpl;
 import persistencia.PersistenceFactory;
@@ -26,6 +27,7 @@ import persistencia.cita.CitaRecord;
 import persistencia.cita.impl.CitaGatewayImpl;
 import persistencia.paciente.PacienteRecord;
 import util.BusinessException;
+import javax.swing.JList;
 
 public class VentanaCita extends JFrame {
 
@@ -52,6 +54,9 @@ public class VentanaCita extends JFrame {
 	private JButton btnSetHoraSalida;
 	private JButton btnCerrarCita;
 	private JButton btnVerHistorial;
+	private JLabel lblCausas;
+	private JButton btnSeleccionarCausas;
+	private JList list;
 
 	/**
 	 * Launch the application.
@@ -78,10 +83,10 @@ public class VentanaCita extends JFrame {
 
 		this.cita = cita;
 		this.pacienteAsociado=cita.getPacienteAsociado();
-		citaService = new CitaServiceImpl();
+		citaService = BusinessFactory.forCitaService();
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 555, 375);
+		setBounds(100, 100, 626, 434);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -189,10 +194,13 @@ public class VentanaCita extends JFrame {
 				cerrarCita();
 			}
 		});
-		btnCerrarCita.setBounds(400, 312, 124, 23);
+		btnCerrarCita.setBounds(486, 371, 124, 23);
 		contentPane.add(btnCerrarCita);
 		contentPane.add(getChckbxPacienteAcudido());
 		contentPane.add(getBtnVerHistorial());
+		contentPane.add(getLblCausas());
+		contentPane.add(getBtnSeleccionarCausas());
+		contentPane.add(getList());
 	}
 
 	private void establecerHoraEntrada() {
@@ -283,8 +291,36 @@ public class VentanaCita extends JFrame {
 					v.setVisible(true);
 				}
 			});
-			btnVerHistorial.setBounds(128, 312, 104, 23);
+			btnVerHistorial.setBounds(506, 34, 104, 23);
 		}
 		return btnVerHistorial;
+	}
+	private JLabel getLblCausas() {
+		if (lblCausas == null) {
+			lblCausas = new JLabel("Causas de la consulta");
+			lblCausas.setFont(new Font("Tahoma", Font.PLAIN, 16));
+			lblCausas.setBounds(10, 211, 166, 41);
+		}
+		return lblCausas;
+	}
+	private JButton getBtnSeleccionarCausas() {
+		if (btnSeleccionarCausas == null) {
+			btnSeleccionarCausas = new JButton("Seleccionar Causas");
+			btnSeleccionarCausas.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					VentanaCausas ventCausas = new VentanaCausas(cita);
+					ventCausas.setVisible(true);
+				}
+			});
+			btnSeleccionarCausas.setBounds(198, 223, 124, 20);
+		}
+		return btnSeleccionarCausas;
+	}
+	private JList getList() {
+		if (list == null) {
+			list = new JList();
+			list.setBounds(10, 252, 310, 127);
+		}
+		return list;
 	}
 }

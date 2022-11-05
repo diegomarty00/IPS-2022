@@ -63,6 +63,16 @@ CONSTRAINT PK_IDJORNADA PRIMARY KEY (IDJORNADA),
 CONSTRAINT FK_IDMEDICOE FOREIGN KEY (IDMEDICO) REFERENCES MEDICO (IDMEDICO)
 )
 
+CREATE TABLE CAUSA {
+IDCAUSA INT NOT NULL,
+TITULO VARCHAR(255) NOT NULL,
+HORA_ASIGNACION TIME,
+FECHA_ASIGNACION DATE,
+IDCITA INT NOT NULL,
+CONSTRAINT PK_CAUSA PRIMARY KEY (IDCAUSA),
+CONSTRAINT FK_CAUSA_CITA FOREIGN KEY (IDCITA) REFERENCES CITA (IDCITA)
+}
+
 
 
 INSERT INTO PACIENTE values ('560483D', 'Jesus', 'Martin', 'jesus@martin.es', 666432)
@@ -71,7 +81,7 @@ INSERT INTO CITA values ('1', '560483D', 0, '12:30:00', '13:00:00', 0, null, nul
 INSERT INTO CITA values ('2', '535732D', 0, '12:30:00', '13:00:00', 0, null, null, '2022-10-17', 'marta@martin.es', 357522,'consulta_1','',0)
 INSERT INTO MEDICO values (1, 'Julia', 'Lopez', 'lopezjulia@gmail.com')
 INSERT INTO HISTORIAL values ('1', 'Hepatitis', 'El paciente presenta una hepatitis tipo C cronica', '560483D', 1, '2022-10-10')
- 
+INSERT INTO CAUSA values (1, 'Vomitos', '12:36:56', '2022-10-14', '1')
   INSERT INTO medico
 (idmedico,nombre,apellidos,correo)
 VALUES (12,'Felipe','Garcia Gomez','felipegarciagomez5@gmail.com');
