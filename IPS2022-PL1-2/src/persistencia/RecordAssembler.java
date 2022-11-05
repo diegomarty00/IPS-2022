@@ -82,10 +82,12 @@ public class RecordAssembler {
 			cita.horaEntradaReal = rs.getTime("HORA_ENTRADA_REAL").toLocalTime();
 		if (rs.getTime("HORA_SALIDA_REAL") != null)
 			cita.horaSalidaReal = rs.getTime("HORA_SALIDA_REAL").toLocalTime();
+		cita.fecha= rs.getDate("FECHA").toLocalDate();
 		cita.correoPaciente = rs.getString("CORREO_PACIENTE");
 		cita.telefonoPaciente = rs.getString("TELEFONO_PACIENTE");
 		cita.lugar = rs.getString("LUGAR_CITA");
 		cita.otros = rs.getString("OTROS");
+		cita.prioritario = rs.getBoolean("PRIORITARIO");
 
 		return cita;
 	}

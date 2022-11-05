@@ -23,6 +23,7 @@ public class CitaRecord {
 	public String telefonoPaciente; 
 	public String lugar;
 	public String otros;
+	public boolean prioritario;
 	public PacienteRecord getPacienteAsociado() {
 		try {
 			return BusinessFactory.forPacienteService().getByDni(dniPaciente).get();

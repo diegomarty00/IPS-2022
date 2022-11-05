@@ -7,6 +7,8 @@ import java.util.List;
 import persistencia.Gateway;
 
 public interface CitaGateway extends Gateway<CitaRecord> {
+	
+	void modificarHorario(String idCita,LocalTime nHoraEntrada ,LocalTime nHoraSalida);
 
     void asignarHoraEntrada(String idCita, LocalTime horaEntrada);
 

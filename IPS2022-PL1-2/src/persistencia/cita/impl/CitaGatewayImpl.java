@@ -22,9 +22,10 @@ public class CitaGatewayImpl implements CitaGateway {
     private static final String PROXIMAS_CITAS = "SELECT * from CITA where fecha >= ?";
     private static final String CITAS_DEL_DIA = "SELECT * from CITA where FECHA = ?";
     private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
+    private static String ASIGNAR_NUEVO_HORARIO = "update CITA set HORA_ENTRADA_ESTIMADA = ? , HORA_SALIDA_ESTIMADA = ?  where idcita = ?";
     private static String ASIGNAR_SALIDA = "update CITA set HORA_SALIDA_REAL = ? where idcita = ?";
     private static String PACIENTE_ACUDIDO = "update CITA set PACIENTE_ACUDIDO = 1 where idcita = ?";
-    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static String MODIFICAR_CONTACTO = "update CITA set CORREO_PACIENTE = ? , TELEFONO_PACIENTE = ? where idcita = ?";
 
 	
@@ -67,6 +68,7 @@ public class CitaGatewayImpl implements CitaGateway {
 			pst.setInt(11,Integer.parseInt(t.telefonoPaciente));
 			pst.setString(12, t.lugar);
 			pst.setString(13, t.otros);
+			pst.setBoolean(14, t.prioritario);
 
 	    pst.execute();
 	} catch (SQLException e) {
@@ -130,6 +132,8 @@ public class CitaGatewayImpl implements CitaGateway {
 	}
     }
 
+    
+    
     @Override
     public void asignarHoraEntrada(String idCita, LocalTime horaEntrada) {
 	Connection c = null;
@@ -266,5 +270,26 @@ public class CitaGatewayImpl implements CitaGateway {
 	public void update(CitaRecord t) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void modificarHorario(String idCita, LocalTime nHoraEntrada, LocalTime nHoraSalida) {
+		Connection c = null;
+		PreparedStatement pst = null;
+
+		try {
+		    c = Jdbc.createThreadConnection();
+
+		    pst = c.prepareStatement(ASIGNAR_NUEVO_HORARIO);
+		    pst.setString(3, idCita);
+		    pst.setTime(1,Time.valueOf(nHoraEntrada));
+		    pst.setTime(2, Time.valueOf(nHoraSalida));
+
+		    pst.execute();
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(pst);
+		}
 	}
 }

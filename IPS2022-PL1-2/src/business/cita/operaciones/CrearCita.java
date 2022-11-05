@@ -9,6 +9,7 @@ import java.util.Optional;
 
 import org.hsqldb.lib.ArrayUtil;
 
+import business.BusinessFactory;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.MedicoCitaRecord;
 import persistencia.cita.impl.CitaGatewayImpl;
@@ -17,6 +18,7 @@ import persistencia.medico.MedicoRecord;
 import persistencia.medico.impl.MedicoGatewayImpl;
 import persistencia.paciente.PacienteRecord;
 import persistencia.paciente.impl.PacienteGatewayImpl;
+import util.BusinessException;
 import util.mail.EnviarMail;
 
 public class CrearCita {
@@ -59,10 +61,10 @@ public class CrearCita {
 		return p ; 
 	}
 	
-	public void crearCita(String paciente, boolean urgencia,String lugar, String año , String mes , String dia, String horaE, String horaS,String correo, String num,
-			String otros) {
+	public void crearCita(String paciente, boolean urgencia,String lugar, String anio , String mes , String dia, String horaE, String horaS,String correo, String num,
+			String otros, boolean prio) {
 		String dni = parsePaciente(paciente);
-		LocalDate fecha = toFecha(año, mes , dia);
+		LocalDate fecha = toFecha(anio, mes , dia);
 		ci.dniPaciente= dni;
 		ci.idCita = String.valueOf(nextid);
 		ci.correoPaciente = correo;
@@ -74,10 +76,70 @@ public class CrearCita {
 		ci.horaEntradaEstimada = LocalTime.parse(horaE);
 		ci.horaSalidaEstimada = LocalTime.parse(horaS);
 		ci.otros = otros;
+		ci.prioritario = prio;
+		almacena();
+		
+	}
+	
+	public boolean comprovarChoqueCitas(String anio, String dia, String mes, String hI, String hF) {
+		CitaGatewayImpl cg = new CitaGatewayImpl();
+		LocalTime inicio = LocalTime.parse(hI);
+		LocalTime fin = LocalTime.parse(hF);
+		
+		try {
+			List<CitaRecord> citas = BusinessFactory.forCitaService().getCitasDelDia(Integer.valueOf(anio), Integer.valueOf(mes), Integer.valueOf(dia));
+			if(citas.size() == 0) return false; 
+			for(int i = 0 ;i < citas.size(); i++) {
+				CitaRecord ci = citas.get(i);
+				LocalTime hi = ci.horaEntradaEstimada;
+				LocalTime hf = ci.horaSalidaEstimada;
+				if(hi.compareTo(fin) > 0) {
+					
+				}else if(hf.compareTo(inicio) < 0 ) {
+				
+				}else {
+					return true;
+				}
+				
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return false ;
+	}
+	
+	
+	
+	public List<CitaRecord> citasChoque(String anio, String dia, String mes, String hI, String hF){
+		List<CitaRecord> lista = new ArrayList<>();
+		CitaGatewayImpl cg = new CitaGatewayImpl();
+		LocalTime inicio = LocalTime.parse(hI);
+		LocalTime fin = LocalTime.parse(hF);
+		try {
+			List<CitaRecord> citas = BusinessFactory.forCitaService().getCitasDelDia(Integer.valueOf(anio), Integer.valueOf(mes), Integer.valueOf(dia));
+			for(int i = 0 ;i < citas.size(); i++) {
+				CitaRecord ci = citas.get(i);
+				LocalTime hi = ci.horaEntradaEstimada;
+				LocalTime hf = ci.horaSalidaEstimada;
+				if(hi.compareTo(fin) > 0 || hf.compareTo(inicio) < 0  || ci.prioritario) {
+					
+				}else {
+					lista.add(ci);
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return lista ;
+	}
+	
+	private void almacena() {
 		CitaGatewayImpl cg = new CitaGatewayImpl();
 		cg.add(ci);
 	}
-	
 	private LocalDate toFecha(String año, String mes, String dia) {
 		
 		return LocalDate.parse(año+"-"+mes+"-"+dia);
