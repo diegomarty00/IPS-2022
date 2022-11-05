@@ -87,3 +87,15 @@ VALUES (13,'Diego','Martínez Menéndez ','felipegarciagomez5@gmail.com');
 INSERT INTO medico
 (idmedico,nombre,apellidos,correo)
 VALUES (14,'Sergio' ,'Mate Suarez','felipegarciagomez5@gmail.com');
+
+INSERT INTO "PUBLIC"."ESPECIALIDAD"
+( "IDESPECIALIDAD" )
+VALUES ( 'Traumatologia');
+
+INSERT INTO "PUBLIC"."ESPECIALIDAD"
+( "IDESPECIALIDAD" )
+VALUES ( 'Primaria');
+
+INSERT INTO "PUBLIC"."ESPECIALIDAD"
+( "IDESPECIALIDAD" )
+VALUES ( 'Cardiologia');
