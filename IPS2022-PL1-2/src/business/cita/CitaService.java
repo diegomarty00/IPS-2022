@@ -1,5 +1,6 @@
 package business.cita;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import persistencia.cita.CitaRecord;
@@ -24,4 +25,7 @@ public interface CitaService {
     void modificarCita(String idCita, String textCorreo, int textTelefono)
 	    throws BusinessException;
 
+    void updateCausas(String idCita, ArrayList<String> causas)
+    	throws BusinessException;
+    
 }

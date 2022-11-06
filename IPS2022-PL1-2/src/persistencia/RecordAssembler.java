@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.MedicoCitaRecord;
 import persistencia.medico.MedicoRecord;
@@ -113,6 +114,11 @@ public class RecordAssembler {
 		historial.setFecha(rs.getDate("FECHA").toLocalDate());
 		return historial;
 	}
+	
+	private static CausaRecord resultSetToCausaRecord(ResultSet rs) throws SQLException {
+		return new CausaRecord(rs.getInt("IDCAUSA"), rs.getString("TITULO"), rs.getTime("HORA_ASIGNACION").toLocalTime(),
+				rs.getDate("FECHA_ASIGNACION").toLocalDate(), rs.getString("IDCITA"));
+	}
 
 	public static Optional<CitaRecord> toCitaRecord(ResultSet rs) throws SQLException {
 		if (rs.next()) {
@@ -150,4 +156,12 @@ public class RecordAssembler {
 		}
 		return list;
 	}
+
+	public static List<CausaRecord> toCausaList(ResultSet rs) throws SQLException {
+		List<CausaRecord> list = new ArrayList<CausaRecord>();
+		while (rs.next())
+			list.add(resultSetToCausaRecord(rs));
+		return list;
+	}
+	
 }

@@ -1,6 +1,7 @@
 package persistencia.cita;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -21,5 +22,10 @@ public interface CitaGateway extends Gateway<CitaRecord> {
     List<CitaRecord> getCitasProximas(Date dia);
 
     void modificarCita(String idCita, String correo, int telefono);
-
+    
+    void insertarCausa(String idCita, String titulo, Time hora, Date fecha);
+    
+    List<CausaRecord> getCausas(String idCita);
+    
+    void removeCausa(int idCausa);
 }

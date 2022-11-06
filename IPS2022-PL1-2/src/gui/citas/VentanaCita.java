@@ -5,7 +5,9 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalTime;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -19,13 +21,16 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import business.BusinessFactory;
 import business.cita.CitaService;
 import business.cita.impl.CitaServiceImpl;
 import persistencia.PersistenceFactory;
+import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.impl.CitaGatewayImpl;
 import persistencia.paciente.PacienteRecord;
 import util.BusinessException;
+import javax.swing.JList;
 
 public class VentanaCita extends JFrame {
 
@@ -52,6 +57,10 @@ public class VentanaCita extends JFrame {
 	private JButton btnSetHoraSalida;
 	private JButton btnCerrarCita;
 	private JButton btnVerHistorial;
+	private JLabel lblCausas;
+	private JButton btnSeleccionarCausas;
+	private JList<CausaRecord> list;
+	private DefaultListModel<CausaRecord> modeloCausas;
 
 	/**
 	 * Launch the application.
@@ -78,13 +87,16 @@ public class VentanaCita extends JFrame {
 
 		this.cita = cita;
 		this.pacienteAsociado=cita.getPacienteAsociado();
-		citaService = new CitaServiceImpl();
+		citaService = BusinessFactory.forCitaService();
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 555, 375);
+		setBounds(100, 100, 626, 434);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
+		modeloCausas = new DefaultListModel<>();
+		updateModeloCausas();
+		
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
@@ -189,10 +201,21 @@ public class VentanaCita extends JFrame {
 				cerrarCita();
 			}
 		});
-		btnCerrarCita.setBounds(400, 312, 124, 23);
+		btnCerrarCita.setBounds(486, 371, 124, 23);
 		contentPane.add(btnCerrarCita);
 		contentPane.add(getChckbxPacienteAcudido());
 		contentPane.add(getBtnVerHistorial());
+		contentPane.add(getLblCausas());
+		contentPane.add(getBtnSeleccionarCausas());
+		contentPane.add(getList());
+	}
+
+	private void updateModeloCausas() {
+		modeloCausas.clear();
+		List<CausaRecord> causas = PersistenceFactory.forCita().getCausas(cita.idCita);
+		for (CausaRecord causa : causas) {
+			modeloCausas.addElement(causa);
+		}
 	}
 
 	private void establecerHoraEntrada() {
@@ -283,8 +306,42 @@ public class VentanaCita extends JFrame {
 					v.setVisible(true);
 				}
 			});
-			btnVerHistorial.setBounds(128, 312, 104, 23);
+			btnVerHistorial.setBounds(506, 34, 104, 23);
 		}
 		return btnVerHistorial;
+	}
+	private JLabel getLblCausas() {
+		if (lblCausas == null) {
+			lblCausas = new JLabel("Causas de la consulta");
+			lblCausas.setFont(new Font("Tahoma", Font.PLAIN, 16));
+			lblCausas.setBounds(10, 211, 166, 41);
+		}
+		return lblCausas;
+	}
+	private JButton getBtnSeleccionarCausas() {
+		if (btnSeleccionarCausas == null) {
+			btnSeleccionarCausas = new JButton("Seleccionar Causas");
+			btnSeleccionarCausas.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					openVentCausas();
+				}			
+			});
+			btnSeleccionarCausas.setBounds(198, 223, 124, 20);
+		}
+		return btnSeleccionarCausas;
+	}
+	
+	private void openVentCausas() {
+		VentanaCausas ventCausas = new VentanaCausas(cita);
+		ventCausas.setVisible(true);
+		this.dispose();
+	}
+	
+	private JList<CausaRecord> getList() {
+		if (list == null) {
+			list = new JList<CausaRecord>(modeloCausas);
+			list.setBounds(10, 252, 310, 127);
+		}
+		return list;
 	}
 }
