@@ -14,6 +14,8 @@ import persistencia.cita.CitaRecord;
 import persistencia.cita.MedicoCitaRecord;
 import persistencia.cita.impl.CitaGatewayImpl;
 import persistencia.cita.impl.MedicoCitaGatewayImpl;
+import persistencia.especialidad.EspecialidadCitaRecord;
+import persistencia.especialidad.impl.EspecialidadCitaGatewayImpl;
 import persistencia.medico.MedicoRecord;
 import persistencia.medico.impl.MedicoGatewayImpl;
 import persistencia.paciente.PacienteRecord;
@@ -172,6 +174,12 @@ public class CrearCita {
 		if (ci.urgente)
 			enviarCorreo(idm);
 		
+	}
+	
+	public void crearCitaEspecialidad(EspecialidadCitaRecord es) {
+		EspecialidadCitaGatewayImpl ec = new EspecialidadCitaGatewayImpl();
+		es.idCita = String.valueOf(nextid);
+		ec.add(es);
 	}
 	
 	private void enviarCorreo(int idm) {
