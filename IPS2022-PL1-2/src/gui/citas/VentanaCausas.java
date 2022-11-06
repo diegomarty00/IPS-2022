@@ -3,6 +3,8 @@ package gui.citas;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +26,9 @@ import persistencia.PersistenceFactory;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
 import util.BusinessException;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
 
 public class VentanaCausas extends JFrame {
 
@@ -43,6 +48,14 @@ public class VentanaCausas extends JFrame {
 	CitaService citaService = BusinessFactory.forCitaService();
 	
 	ArrayList<String> selectedCausas = new ArrayList<String>();
+	private JLabel lblSetHoraFecha;
+	private JSpinner spnDia;
+	private JSpinner spnMes;
+	private JSpinner spnYear;
+	private JLabel lblFormato;
+	private JSpinner spnHora;
+	private JLabel lblDosPuntos;
+	private JSpinner spnMinutos;
 	
 	/**
 	 * Create the frame.
@@ -52,7 +65,7 @@ public class VentanaCausas extends JFrame {
 		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 606, 428);
+		setBounds(100, 100, 630, 530);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -64,6 +77,14 @@ public class VentanaCausas extends JFrame {
 		contentPane.add(getTxtBuscar());
 		contentPane.add(getBtnBuscar());
 		contentPane.add(getBtnReset());
+		contentPane.add(getLblSetHoraFecha());
+		contentPane.add(getSpnDia());
+		contentPane.add(getSpnMes());
+		contentPane.add(getSpnYear());
+		contentPane.add(getLblFormato());
+		contentPane.add(getSpnHora());
+		contentPane.add(getLblDosPuntos());
+		contentPane.add(getSpnMinutos());
 	}
 
 	private JLabel getLblSeleccionCausas() {
@@ -112,7 +133,7 @@ public class VentanaCausas extends JFrame {
 					saveSelection();
 				}
 			});
-			btnSave.setBounds(210, 359, 149, 23);
+			btnSave.setBounds(445, 467, 149, 23);
 		}
 		return btnSave;
 	}
@@ -205,12 +226,71 @@ public class VentanaCausas extends JFrame {
 	private void saveSelection() {
 		try {
 			checkSelected();
-			BusinessFactory.forCitaService().updateCausas(cita.idCita, selectedCausas);
+			LocalDate fecha = LocalDate.of((Integer)getSpnYear().getValue(), (Integer)getSpnMes().getValue(), (Integer)getSpnDia().getValue());
+			LocalTime hora = LocalTime.of((Integer)getSpnHora().getValue(), (Integer)getSpnMinutos().getValue());
+			BusinessFactory.forCitaService().updateCausas(cita.idCita, selectedCausas, fecha, hora);
 			VentanaCita ventanaCita = new VentanaCita(cita);
 			ventanaCita.setVisible(true);
 			this.dispose();
 		} catch (BusinessException e) {
 			e.printStackTrace();
 		}
+	}
+	private JLabel getLblSetHoraFecha() {
+		if (lblSetHoraFecha == null) {
+			lblSetHoraFecha = new JLabel("Establecer fecha y hora de causas a\u00F1adidas");
+			lblSetHoraFecha.setFont(new Font("Tahoma", Font.PLAIN, 15));
+			lblSetHoraFecha.setBounds(20, 359, 308, 29);
+		}
+		return lblSetHoraFecha;
+	}
+	private JSpinner getSpnDia() {
+		if (spnDia == null) {
+			spnDia = new JSpinner(new SpinnerNumberModel(LocalDate.now().getDayOfMonth(),1,31,1));
+			spnDia.setBounds(20, 423, 41, 20);
+		}
+		return spnDia;
+	}
+	private JSpinner getSpnMes() {
+		if (spnMes == null) {
+			spnMes = new JSpinner(new SpinnerNumberModel(LocalDate.now().getMonthValue(),1,12,1));
+			spnMes.setBounds(71, 423, 43, 20);
+		}
+		return spnMes;
+	}
+	private JSpinner getSpnYear() {
+		if (spnYear == null) {
+			spnYear = new JSpinner(new SpinnerNumberModel(LocalDate.now().getYear(),1900,2100,1));
+			spnYear.setBounds(124, 423, 64, 20);
+		}
+		return spnYear;
+	}
+	private JLabel getLblFormato() {
+		if (lblFormato == null) {
+			lblFormato = new JLabel("dd              mm             yyyy");
+			lblFormato.setBounds(28, 399, 173, 20);
+		}
+		return lblFormato;
+	}
+	private JSpinner getSpnHora() {
+		if (spnHora == null) {
+			spnHora = new JSpinner(new SpinnerNumberModel(LocalTime.now().getHour(),0,23,1));
+			spnHora.setBounds(220, 423, 41, 20);
+		}
+		return spnHora;
+	}
+	private JLabel getLblDosPuntos() {
+		if (lblDosPuntos == null) {
+			lblDosPuntos = new JLabel(":");
+			lblDosPuntos.setBounds(265, 426, 4, 14);
+		}
+		return lblDosPuntos;
+	}
+	private JSpinner getSpnMinutos() {
+		if (spnMinutos == null) {
+			spnMinutos = new JSpinner(new SpinnerNumberModel(LocalTime.now().getMinute(),0,59,1));
+			spnMinutos.setBounds(271, 423, 43, 20);
+		}
+		return spnMinutos;
 	}
 }
