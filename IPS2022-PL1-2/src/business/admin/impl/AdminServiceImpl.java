@@ -5,6 +5,8 @@ import java.util.List;
 import business.admin.AdminService;
 import business.admin.operaciones.AsignarJornadasLaboralesMedicos;
 import business.admin.operaciones.BuscarMedicos;
+import business.admin.operaciones.CrearJornadasLaboralesComunes;
+import persistencia.admin.JornadaComunRecord;
 import persistencia.admin.JornadaRecord;
 import persistencia.admin.MedicoRecord;
 import util.BusinessException;
@@ -24,6 +26,12 @@ public class AdminServiceImpl implements AdminService {
     public List<MedicoRecord> buscarMedicos() throws BusinessException {
 	return c.execute(new BuscarMedicos());
 
+    }
+
+    @Override
+    public void crearJornadasLaboralesComuens(JornadaComunRecord jornada)
+	    throws BusinessException {
+	c.execute(new CrearJornadasLaboralesComunes(jornada));
     }
 
 }

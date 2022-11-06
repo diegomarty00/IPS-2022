@@ -7,4 +7,6 @@ public interface AdminGateway extends Gateway<MedicoRecord> {
     void añadirJornadas(JornadaRecord medico);
 
     void asignarInformacionContactoCitas();
+
+    void crearJornadas(JornadaComunRecord jornada);
 }
