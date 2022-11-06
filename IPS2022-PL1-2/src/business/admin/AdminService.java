@@ -11,4 +11,7 @@ public interface AdminService {
 	    throws BusinessException;
 
     List<MedicoRecord> buscarMedicos() throws BusinessException;
+
+    List<JornadaRecord> listarJornadasMedico(String idMedico)
+	    throws BusinessException;
 }

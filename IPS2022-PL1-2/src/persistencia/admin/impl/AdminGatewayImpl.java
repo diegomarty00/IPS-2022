@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import persistencia.JornadaAssembler;
 import persistencia.PersistenceException;
 import persistencia.admin.AdminGateway;
 import persistencia.admin.JornadaRecord;
@@ -19,6 +20,7 @@ public class AdminGatewayImpl implements AdminGateway {
     private static final String ALL_MEDICOS = "SELECT * from MEDICO";
     private static final String AÑADIR_JORNADAS = "insert into JORNADA values (?, ?, ?, ?, ?)";
     private static final String CONTAR_JORNADAS = "SELECT count(*) from JORNADA";
+    private static final String FINDBYMEDICOS = "SELECT * from JORNADA where idmedico = ?";
 
     @Override
     public void add(MedicoRecord t) {
@@ -108,4 +110,25 @@ public class AdminGatewayImpl implements AdminGateway {
 
     }
 
+    @Override
+    public List<JornadaRecord> findByMedico(String idMedico) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	List<JornadaRecord> jornadas = new ArrayList<>();
+	try {
+	    c = Jdbc.getCurrentConnection();
+
+	    pst = c.prepareStatement(FINDBYMEDICOS);
+	    pst.setString(1, idMedico);
+	    rs = pst.executeQuery();
+
+	    jornadas = JornadaAssembler.toJornadaList(rs);
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+	return jornadas;
+    }
 }
