@@ -28,4 +28,6 @@ public interface CitaGateway extends Gateway<CitaRecord> {
     List<CausaRecord> getCausas(String idCita);
     
     void removeCausa(int idCausa);
+
+	List<PrescripcionRecord> getPrescripciones(String idCita);
 }

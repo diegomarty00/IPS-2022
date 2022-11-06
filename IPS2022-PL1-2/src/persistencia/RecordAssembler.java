@@ -9,6 +9,7 @@ import java.util.Optional;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.MedicoCitaRecord;
+import persistencia.cita.PrescripcionRecord;
 import persistencia.medico.MedicoRecord;
 import persistencia.paciente.HistorialRecord;
 import persistencia.paciente.PacienteRecord;
@@ -120,6 +121,16 @@ public class RecordAssembler {
 				rs.getDate("FECHA_ASIGNACION").toLocalDate(), rs.getString("IDCITA"));
 	}
 
+	private static PrescripcionRecord resultSetToPrescripcionRecord(ResultSet rs) throws SQLException {
+		if (rs.getString("TIPO").equalsIgnoreCase("MEDICAMENTO"))
+			return new PrescripcionRecord(rs.getInt("IDPRESCRIPCION"), rs.getString("TITULO"), rs.getString("TIPO"), 
+					rs.getString("CANTIDAD"), rs.getString("INTERVALO_DOSIS"), rs.getString("DURACION"), rs.getString("OBSERVACIONES"),
+					rs.getTime("HORA_ASIGNACION").toLocalTime(), rs.getDate("FECHA_ASIGNACION").toLocalDate(), rs.getString("IDCITA"));
+		else 
+			return new PrescripcionRecord(rs.getInt("IDPRESCRIPCION"), rs.getString("TITULO"), rs.getString("TIPO"), rs.getString("OBSERVACIONES"),
+					rs.getTime("HORA_ASIGNACION").toLocalTime(), rs.getDate("FECHA_ASIGNACION").toLocalDate(), rs.getString("IDCITA"));
+	}
+
 	public static Optional<CitaRecord> toCitaRecord(ResultSet rs) throws SQLException {
 		if (rs.next()) {
 			return Optional.of(resultSetToCitaRecord(rs));
@@ -161,6 +172,13 @@ public class RecordAssembler {
 		List<CausaRecord> list = new ArrayList<CausaRecord>();
 		while (rs.next())
 			list.add(resultSetToCausaRecord(rs));
+		return list;
+	}
+
+	public static List<PrescripcionRecord> toPrescripcionList(ResultSet rs) throws SQLException {
+		List<PrescripcionRecord> list = new ArrayList<PrescripcionRecord>();
+		while (rs.next())
+			list.add(resultSetToPrescripcionRecord(rs));
 		return list;
 	}
 	

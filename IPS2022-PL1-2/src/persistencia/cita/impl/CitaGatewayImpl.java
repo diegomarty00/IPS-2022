@@ -15,6 +15,7 @@ import persistencia.RecordAssembler;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaGateway;
 import persistencia.cita.CitaRecord;
+import persistencia.cita.PrescripcionRecord;
 import util.jdbc.Jdbc;
 
 public class CitaGatewayImpl implements CitaGateway {
@@ -23,6 +24,7 @@ public class CitaGatewayImpl implements CitaGateway {
     private static final String PROXIMAS_CITAS = "SELECT * from CITA where fecha >= ?";
     private static final String CITAS_DEL_DIA = "SELECT * from CITA where FECHA = ?";
 	private static final String FIND_CAUSAS_FROM_CITA = "SELECT * from CAUSA where IDCITA = ?";
+	private static final String FIND_PRESCRIPCIONES_FROM_CITA = "SELECT * from PRESCRIPCION where IDCITA = ?";
     private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
     private static String ASIGNAR_NUEVO_HORARIO = "update CITA set HORA_ENTRADA_ESTIMADA = ? , HORA_SALIDA_ESTIMADA = ?  where idcita = ?";
     private static String ASIGNAR_SALIDA = "update CITA set HORA_SALIDA_REAL = ? where idcita = ?";
@@ -335,6 +337,28 @@ public class CitaGatewayImpl implements CitaGateway {
 		    throw new PersistenceException(e);
 		} finally {
 		    Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
+	public List<PrescripcionRecord> getPrescripciones(String idCita) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.createThreadConnection();
+			
+			pst = c.prepareStatement(FIND_PRESCRIPCIONES_FROM_CITA);
+			pst.setString(1, idCita);
+			
+			rs = pst.executeQuery();
+			
+			return RecordAssembler.toPrescripcionList(rs);
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
 		}
 	}
 
