@@ -13,6 +13,7 @@ public interface AdminService {
 
     List<MedicoRecord> buscarMedicos() throws BusinessException;
 
-    void crearJornadasLaboralesComuens(JornadaComunRecord jornada)
-	    throws BusinessException;
+    void crearJornadasLaboralesComuens(JornadaComunRecord jornada) throws BusinessException;
+
+    List<JornadaRecord> listarJornadasMedico(String idMedico) throws BusinessException;
 }
