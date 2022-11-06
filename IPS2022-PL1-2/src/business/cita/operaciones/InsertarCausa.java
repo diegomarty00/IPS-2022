@@ -13,20 +13,17 @@ public class InsertarCausa implements Command<Void>{
 
 	private String idCita;
 	private String causa;
-	private LocalDate fecha;
-	private LocalTime hora;
 	
-	public InsertarCausa(String idCita, String causa, LocalDate fecha, LocalTime hora) {
-		super();
-		this.idCita = idCita;
-		this.causa = causa;
-		this.fecha = fecha;
-		this.hora = hora;
+	public InsertarCausa(String idCita, String causa) {
+		this.idCita=idCita;
+		this.causa=causa;
 	}
-
+	
 	@Override
 	public Void execute() throws BusinessException {
-		PersistenceFactory.forCita().insertarCausa(idCita, causa, Time.valueOf(hora), Date.valueOf(fecha));
+		Time hora = Time.valueOf(LocalTime.now());
+		Date fecha = Date.valueOf(LocalDate.now());
+		PersistenceFactory.forCita().insertarCausa(idCita, causa, hora, fecha);
 		return null;
 	}
 

@@ -25,7 +25,6 @@ public class AdminGatewayImpl implements AdminGateway {
     private static final String CONTAR_JORNADASCOMUNES = "SELECT count(*) from JornadaComun";
     private static final String FINDBYMEDICOS = "SELECT * from JORNADA where idmedico = ?";
 
-
     @Override
     public void add(MedicoRecord t) {
 	// TODO Auto-generated method stub
@@ -128,7 +127,9 @@ public class AdminGatewayImpl implements AdminGateway {
 	    pst_count = c.prepareStatement(CONTAR_JORNADASCOMUNES);
 
 	    rs = pst_count.executeQuery();
+
 	    pst = c.prepareStatement(AÑADIR_JORNADASCOMUNES);
+
 	    rs.next();
 	    pst.setInt(1, rs.getInt(1));
 	    pst.setString(2, jornada.nombre);
@@ -147,6 +148,7 @@ public class AdminGatewayImpl implements AdminGateway {
 	    Jdbc.close(rs, pst_count);
 	}
     }
+
 
     @Override
     public List<JornadaRecord> findByMedico(String idMedico) {
@@ -169,5 +171,4 @@ public class AdminGatewayImpl implements AdminGateway {
 	}
 	return jornadas;
     }
-
 }

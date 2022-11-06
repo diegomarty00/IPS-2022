@@ -1,7 +1,5 @@
 package business.cita;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +25,7 @@ public interface CitaService {
     void modificarCita(String idCita, String textCorreo, int textTelefono)
 	    throws BusinessException;
 
-    void updateCausas(String idCita, ArrayList<String> causas, LocalDate fecha, LocalTime hora)
+    void updateCausas(String idCita, ArrayList<String> causas)
     	throws BusinessException;
     
 }
