@@ -19,9 +19,9 @@ import util.jdbc.Jdbc;
 public class AdminGatewayImpl implements AdminGateway {
 
     private static final String ALL_MEDICOS = "SELECT * from MEDICO";
-    private static final String AÃ‘ADIR_JORNADAS = "insert into JORNADA values (?, ?, ?, ?, ?)";
+    private static final String AÑADIR_JORNADAS = "insert into JORNADA values (?, ?, ?, ?, ?)";
     private static final String CONTAR_JORNADAS = "SELECT count(*) from JORNADA";
-    private static final String AÃ‘ADIR_JORNADASCOMUNES = "insert into JornadaComun values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String AÑADIR_JORNADASCOMUNES = "insert into JornadaComun values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String CONTAR_JORNADASCOMUNES = "SELECT count(*) from JornadaComun";
     private static final String FINDBYMEDICOS = "SELECT * from JORNADA where idmedico = ?";
 
@@ -78,7 +78,7 @@ public class AdminGatewayImpl implements AdminGateway {
     }
 
     @Override
-    public void aÃ±adirJornadas(JornadaRecord jornada) {
+    public void añadirJornadas(JornadaRecord jornada) {
 
 	Connection c = null;
 	PreparedStatement pst = null;
@@ -90,7 +90,7 @@ public class AdminGatewayImpl implements AdminGateway {
 	    pst_count = c.prepareStatement(CONTAR_JORNADAS);
 
 	    rs = pst_count.executeQuery();
-	    pst = c.prepareStatement(AÃ‘ADIR_JORNADAS);
+	    pst = c.prepareStatement(AÑADIR_JORNADAS);
 	    rs.next();
 	    pst.setInt(1, rs.getInt(1));
 	    pst.setInt(2, jornada.idMedico);
@@ -128,7 +128,7 @@ public class AdminGatewayImpl implements AdminGateway {
 
 	    rs = pst_count.executeQuery();
 
-	    pst = c.prepareStatement(AÃ‘ADIR_JORNADASCOMUNES);
+	    pst = c.prepareStatement(AÑADIR_JORNADASCOMUNES);
 
 	    rs.next();
 	    pst.setInt(1, rs.getInt(1));
@@ -148,7 +148,6 @@ public class AdminGatewayImpl implements AdminGateway {
 	    Jdbc.close(rs, pst_count);
 	}
     }
-
 
     @Override
     public List<JornadaRecord> findByMedico(String idMedico) {

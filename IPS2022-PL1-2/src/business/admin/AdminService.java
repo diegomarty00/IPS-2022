@@ -20,7 +20,6 @@ public interface AdminService {
 	    JornadaRecord jornada, MedicoRecord medico)
 	    throws BusinessException;
 
-    void crearJornadasLaboralesComuens(JornadaComunRecord jornada) throws BusinessException;
-
-    List<JornadaRecord> listarJornadasMedico(String idMedico) throws BusinessException;
+    List<JornadaRecord> listarJornadasMedico(String idMedico)
+	    throws BusinessException;
 }
