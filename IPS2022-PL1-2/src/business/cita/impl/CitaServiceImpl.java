@@ -71,7 +71,7 @@ public class CitaServiceImpl implements CitaService {
     }
 
 	@Override
-	public void updateCausas(String idCita, ArrayList<String> causas) throws BusinessException {
+	public void updateCausas(String idCita, ArrayList<String> causas, LocalDate fecha, LocalTime hora) throws BusinessException {
 		CommandExecutor c;
 		
 		List<CausaRecord> causasRecord = PersistenceFactory.forCita().getCausas(idCita);
@@ -88,7 +88,7 @@ public class CitaServiceImpl implements CitaService {
 		
 		for (String causa: causas) {
 			c = new CommandExecutor();
-			c.execute(new InsertarCausa(idCita, causa));
+			c.execute(new InsertarCausa(idCita, causa, fecha, hora));
 		}
 		
 		
