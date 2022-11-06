@@ -74,10 +74,15 @@ public class CitaServiceImpl implements CitaService {
 	public void updateCausas(String idCita, ArrayList<String> causas) throws BusinessException {
 		CommandExecutor c;
 		
-		for (CausaRecord causa : PersistenceFactory.forCita().getCausas(idCita)) {
-			if(!causas.contains(causa.getTitulo())) {
+		List<CausaRecord> causasRecord = PersistenceFactory.forCita().getCausas(idCita);
+		
+		for (CausaRecord causa : causasRecord) {
+			if(!causas.contains(causa.getTitulo())) { //Si tenemos una causa que no ha sido seleccionada se borra
 				c = new CommandExecutor();
 				c.execute(new DeleteCausa(causa.getIdCausa()));
+			} else { //Si tenemos causas que estan seleccionadas quiere decir que ya la habiamos anyadido antes. 
+				//Por lo que la borramos de la lista de seleccionados
+				causas.remove(causa.getTitulo());
 			}
 		}
 		

@@ -280,35 +280,13 @@ public class CitaGatewayImpl implements CitaGateway {
 		    c = Jdbc.getCurrentConnection();
 
 		    pst = c.prepareStatement(ADD_CAUSA);
-		    pst.setInt(1, nextId("CAUSA"));
+		    pst.setInt(1, getCausas(idCita).size()+1);
 		    pst.setString(2, titulo);
 		    pst.setTime(3, hora);
 		    pst.setDate(4, fecha);
 		    pst.setString(5, idCita);
 
 		    pst.execute();
-		} catch (SQLException e) {
-		    throw new PersistenceException(e);
-		} finally {
-		    Jdbc.close(rs, pst);
-		}
-	}
-	
-	private int nextId(String table) {
-		Connection c = null;
-		PreparedStatement pst = null;
-		ResultSet rs = null;
-
-		try {
-		    c = Jdbc.getCurrentConnection();
-
-		    pst = c.prepareStatement("SELECT COUNT(*) FROM "+table);
-
-		    pst.execute();
-		    
-		    rs=pst.executeQuery();
-		    
-		    return rs.getInt("C1")+1;
 		} catch (SQLException e) {
 		    throw new PersistenceException(e);
 		} finally {
