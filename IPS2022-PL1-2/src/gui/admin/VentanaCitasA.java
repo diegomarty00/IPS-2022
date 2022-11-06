@@ -24,6 +24,10 @@ import javax.swing.border.EmptyBorder;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import business.cita.operaciones.CrearCita;
+import persistencia.especialidad.EspecialidadCitaGateway;
+import persistencia.especialidad.EspecialidadCitaRecord;
+import persistencia.especialidad.EspecialidadRecord;
+import persistencia.especialidad.impl.EspecialidadGatewayImpl;
 import persistencia.medico.MedicoRecord;
 import persistencia.medico.impl.MedicoGatewayImpl;
 import persistencia.paciente.PacienteRecord;
@@ -73,6 +77,7 @@ public class VentanaCitasA<E> extends JFrame {
     private JPanel panel_9;
     private JList listMedicos;
     private DefaultListModel<String> modjlist = new DefaultListModel<>();
+    private DefaultListModel<EspecialidadCitaRecord> eslist =  new DefaultListModel<>();
     private JPanel panel_10;
     private JPanel panel_11;
     private JPanel panel_12;
@@ -88,13 +93,13 @@ public class VentanaCitasA<E> extends JFrame {
     private JCheckBox jChBPrioritario;
     private JPanel panel_14;
     private JLabel lblNewLabel;
-    private JList<? extends E> listEspecialistas;
     private JTextField txtElegirEspecialidad;
     private JPanel panel_15;
-    private JComboBox comboBox;
+    private JComboBox cbEspecialidad;
     private JPanel panel_16;
-    private JSpinner spinner;
+    private JSpinner spNme;
     private JButton btAniadirE;
+    private JList listEspecialistas;
     /**
      * Create the frame.
      */
@@ -171,8 +176,8 @@ public class VentanaCitasA<E> extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
 			int size = modjlist.size();
-			
-		    if (size > 0) {
+			int si = eslist.size();
+		    if (size > 0|| si > 0 ) {
 			CrearCita cc = new CrearCita();
 				if (cbAño.getSelectedIndex() != -1
 					&& cbMes.getSelectedIndex() != -1
@@ -188,7 +193,7 @@ public class VentanaCitasA<E> extends JFrame {
 							    cbDia.getSelectedItem().toString(),
 							    cbHoraInicio.getSelectedItem().toString(),
 							    cbHoraFinal.getSelectedItem().toString(),
-							    modjlist,jChBPrioritario.isSelected());
+							    modjlist,jChBPrioritario.isSelected(),eslist);
 						frame.setVisible(true);
 				
 
@@ -673,12 +678,6 @@ public class VentanaCitasA<E> extends JFrame {
 		}
 		return lblNewLabel;
 	}
-	private JList<? extends E> getListEspecialistas() {
-		if (listEspecialistas == null) {
-			listEspecialistas = new JList();
-		}
-		return listEspecialistas;
-	}
 	private JTextField getTxtElegirEspecialidad() {
 		if (txtElegirEspecialidad == null) {
 			txtElegirEspecialidad = new JTextField();
@@ -693,36 +692,72 @@ public class VentanaCitasA<E> extends JFrame {
 		if (panel_15 == null) {
 			panel_15 = new JPanel();
 			panel_15.setLayout(new BorderLayout(0, 0));
-			panel_15.add(getComboBox(), BorderLayout.CENTER);
+			panel_15.add(getCbEspecialidad(), BorderLayout.CENTER);
 			panel_15.add(getPanel_16(), BorderLayout.EAST);
 		}
 		return panel_15;
 	}
-	private JComboBox getComboBox() {
-		if (comboBox == null) {
-			comboBox = new JComboBox();
+	private JComboBox getCbEspecialidad() {
+		if (cbEspecialidad == null) {
+			cbEspecialidad = new JComboBox();
+			DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+		    EspecialidadGatewayImpl e = new EspecialidadGatewayImpl();
+		    List<EspecialidadRecord> l = e.findAll();
+		    for (int i = 0; i < l.size(); i++) {
+			mod.addElement(l.get(i));
+		    }
+
+		    cbEspecialidad.setModel(mod);
 		}
-		return comboBox;
+		return cbEspecialidad;
 	}
 	private JPanel getPanel_16() {
 		if (panel_16 == null) {
 			panel_16 = new JPanel();
 			panel_16.setLayout(new BorderLayout(0, 0));
-			panel_16.add(getSpinner(), BorderLayout.WEST);
+			panel_16.add(getSpNme(), BorderLayout.WEST);
 			panel_16.add(getBtAniadirE(), BorderLayout.CENTER);
 		}
 		return panel_16;
 	}
-	private JSpinner getSpinner() {
-		if (spinner == null) {
-			spinner = new JSpinner();
+	private JSpinner getSpNme() {
+		if (spNme == null) {
+			spNme = new JSpinner();
 		}
-		return spinner;
+		return spNme;
 	}
 	private JButton getBtAniadirE() {
 		if (btAniadirE == null) {
 			btAniadirE = new JButton("A\u00F1adir ");
+			btAniadirE.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(cbEspecialidad.getSelectedIndex() >= 0 ) {
+					    EspecialidadCitaRecord es = new EspecialidadCitaRecord();
+					    EspecialidadRecord especialidad = (EspecialidadRecord) cbEspecialidad.getSelectedItem();
+					    es.idEspecialidad = especialidad.idEspecialidad;
+					    es.nMedicos = (Integer) spNme.getValue();
+					   
+					    boolean b = true;
+					    for (int i = 0; i < eslist.getSize(); i++) {
+							if (es.idEspecialidad.equals(eslist.get(i).idEspecialidad)) {
+							    b = false;
+							}
+					    }
+					    if (b)
+						eslist.addElement(es);
+					}
+				}
+			});
 		}
 		return btAniadirE;
+	}
+	
+	
+	private JList getListEspecialistas() {
+		if (listEspecialistas == null) {
+			listEspecialistas = new JList();
+			listEspecialistas.setModel(eslist);
+		}
+		return listEspecialistas;
 	}
 }
