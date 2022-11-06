@@ -29,5 +29,9 @@ public interface CitaService {
 
     void updateCausas(String idCita, ArrayList<String> causas, LocalDate fecha, LocalTime hora)
     	throws BusinessException;
+
+	String[] getPosiblesPrescripciones();
+
+	String[] getPosiblesCausas();
     
 }

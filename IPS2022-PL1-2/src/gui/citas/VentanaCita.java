@@ -393,7 +393,8 @@ public class VentanaCita extends JFrame {
 	}
 	
 	private void openVentPresc() {
-		// TODO Auto-generated method stub
-		
+		VentanaPrescripciones ventPresc = new VentanaPrescripciones(cita);
+		ventPresc.setVisible(true);
+		this.dispose();
 	}
 }

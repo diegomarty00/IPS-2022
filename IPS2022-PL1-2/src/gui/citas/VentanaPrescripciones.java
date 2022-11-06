@@ -1,5 +1,6 @@
 package gui.citas;
 
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,15 +8,21 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
@@ -25,17 +32,14 @@ import business.cita.CitaService;
 import persistencia.PersistenceFactory;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
+import persistencia.cita.PrescripcionRecord;
 import util.BusinessException;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerModel;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.JList;
 
-public class VentanaCausas extends JFrame {
+public class VentanaPrescripciones extends JFrame {
 
 	private JPanel contentPane;
-	private JLabel lblSeleccionCausas;
-	private JTable tablePosiblesCausas;
-	private JScrollPane scrollPane;
+	private JLabel lblPrescripciones;
 	private JButton btnSave;
 	private JTextField txtBuscar;
 	private JButton btnBuscar;
@@ -56,11 +60,13 @@ public class VentanaCausas extends JFrame {
 	private JSpinner spnHora;
 	private JLabel lblDosPuntos;
 	private JSpinner spnMinutos;
+	private JScrollPane scrollPanePosiblesPrescs;
+	private JList<PrescripcionRecord> listPosiblesPrescs;
 	
 	/**
 	 * Create the frame.
 	 */
-	public VentanaCausas(CitaRecord cita) {
+	public VentanaPrescripciones(CitaRecord cita) {
 		this.cita = cita;
 		
 		setResizable(false);
@@ -71,8 +77,7 @@ public class VentanaCausas extends JFrame {
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		contentPane.add(getLblSeleccionCausas());
-		contentPane.add(getScrollPane());
+		contentPane.add(getLblPrescripciones());
 		contentPane.add(getBtnSave());
 		contentPane.add(getTxtBuscar());
 		contentPane.add(getBtnBuscar());
@@ -85,45 +90,16 @@ public class VentanaCausas extends JFrame {
 		contentPane.add(getSpnHora());
 		contentPane.add(getLblDosPuntos());
 		contentPane.add(getSpnMinutos());
+		contentPane.add(getScrollPane_1());
 	}
 
-	private JLabel getLblSeleccionCausas() {
-		if (lblSeleccionCausas == null) {
-			lblSeleccionCausas = new JLabel("Seleccione las causas de la consulta");
-			lblSeleccionCausas.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblSeleccionCausas.setBounds(20, 11, 298, 42);
+	private JLabel getLblPrescripciones() {
+		if (lblPrescripciones == null) {
+			lblPrescripciones = new JLabel("Prescripciones para el paciente");
+			lblPrescripciones.setFont(new Font("Tahoma", Font.PLAIN, 18));
+			lblPrescripciones.setBounds(20, 11, 298, 42);
 		}
-		return lblSeleccionCausas;
-	}
-	private JTable getTablePosiblesCausas() {
-		if (tablePosiblesCausas == null) {
-			dataTable = getDataTable();
-			columnNames= new String[] {"Causa", "Seleccionado"};
-			DefaultTableModel model = new DefaultTableModel(dataTable, columnNames);
-			tablePosiblesCausas = new JTable(model) {
-				private static final long serialVersionUID = 1L;
-
-				@Override
-				public Class<?> getColumnClass(int column) {
-					switch (column) {
-						case 0: 
-							return String.class;
-						default: 
-							return Boolean.class;
-					}
-				}
-			};
-		}
-		return tablePosiblesCausas;
-	}
-
-	private JScrollPane getScrollPane() {
-		if (scrollPane == null) {
-			scrollPane = new JScrollPane();
-			scrollPane.setBounds(20, 100, 534, 248);
-			scrollPane.setViewportView(getTablePosiblesCausas());
-		}
-		return scrollPane;
+		return lblPrescripciones;
 	}
 	private JButton getBtnSave() {
 		if (btnSave == null) {
@@ -145,7 +121,7 @@ public class VentanaCausas extends JFrame {
 					search();
 				}
 			});
-			txtBuscar.setBounds(20, 69, 368, 20);
+			txtBuscar.setBounds(20, 66, 265, 20);
 			txtBuscar.setColumns(10);
 		}
 		return txtBuscar;
@@ -158,7 +134,7 @@ public class VentanaCausas extends JFrame {
 					search();
 				}
 			});
-			btnBuscar.setBounds(494, 66, 89, 23);
+			btnBuscar.setBounds(394, 65, 89, 23);
 		}
 		return btnBuscar;
 	}
@@ -172,60 +148,26 @@ public class VentanaCausas extends JFrame {
 					search();
 				}
 			});
-			btnReset.setBounds(398, 66, 89, 23);
+			btnReset.setBounds(295, 65, 89, 23);
 		}
 		return btnReset;
 	}
 	
 	private void search() {
-		checkSelected();
 		String text = getTxtBuscar().getText().toLowerCase();
-		List<Object[]> dataFiltered = new ArrayList<Object[]>();
-		String tituloCausa;
-		for (int i = 0; i < dataTable.length; i++) {
-			tituloCausa=((String)dataTable[i][0]).toLowerCase();
-			if (tituloCausa.contains(text)) {
-				dataFiltered.add(dataTable[i]);
-			}
+		DefaultListModel<PrescripcionRecord> modelFiltered = new DefaultListModel<PrescripcionRecord>();
+		DefaultListModel<PrescripcionRecord> defaultModel = getModelPosiblesPrescs();
+		for (int i = 0; i < defaultModel.getSize(); i++) {
+			String titulo = defaultModel.getElementAt(i).getTitulo().toLowerCase();
+			if (titulo.contains(text))
+				modelFiltered.addElement(defaultModel.getElementAt(i));
 		}
-		tablePosiblesCausas.setModel(new DefaultTableModel(dataFiltered.stream().toArray(Object[][] ::new), columnNames));
+		getListPosiblesPrescs().setModel(modelFiltered);
 	}
-	
-	private Object[][] getDataTable() {
-		List<String> causas = new ArrayList<String>(Arrays.asList(BusinessFactory.forCitaService().getPosiblesCausas()));
-		List<Object[]> data = new ArrayList<Object[]>();
-		List<CausaRecord> causasRecords = PersistenceFactory.forCita().getCausas(cita.idCita);
-		for (CausaRecord causa : causasRecords) {
-			if (causas.contains(causa.getTitulo())) {
-				data.add(new Object[] {causa.getTitulo(), Boolean.TRUE});
-				causas.remove(causa.getTitulo());
-			}
-		}
-		for (String causa : causas) {
-			data.add(new Object[] {causa, Boolean.FALSE});
-		}
-		
-		return data.stream().toArray(Object[][] ::new);
-	}
-	
-	private void checkSelected() {
-		TableModel model = getTablePosiblesCausas().getModel();
-		String tituloCausa;
-		for (int i = 0; i < model.getRowCount(); i++) {
-			tituloCausa=(String)model.getValueAt(i, 0);
-			if ((boolean)model.getValueAt(i, 1)==true) {
-				if (!selectedCausas.contains(tituloCausa))
-					selectedCausas.add(tituloCausa);
-			} else {
-				if (selectedCausas.contains(tituloCausa))
-					selectedCausas.remove(tituloCausa);
-			}
-		}
-	}
+
 
 	private void saveSelection() {
 		try {
-			checkSelected();
 			LocalDate fecha = LocalDate.of((Integer)getSpnYear().getValue(), (Integer)getSpnMes().getValue(), (Integer)getSpnDia().getValue());
 			LocalTime hora = LocalTime.of((Integer)getSpnHora().getValue(), (Integer)getSpnMinutos().getValue());
 			BusinessFactory.forCitaService().updateCausas(cita.idCita, selectedCausas, fecha, hora);
@@ -292,5 +234,30 @@ public class VentanaCausas extends JFrame {
 			spnMinutos.setBounds(271, 423, 43, 20);
 		}
 		return spnMinutos;
+	}
+	private JScrollPane getScrollPane_1() {
+		if (scrollPanePosiblesPrescs == null) {
+			scrollPanePosiblesPrescs = new JScrollPane();
+			scrollPanePosiblesPrescs.setBounds(20, 97, 323, 211);
+			scrollPanePosiblesPrescs.setViewportView(getListPosiblesPrescs());
+		}
+		return scrollPanePosiblesPrescs;
+	}
+	private JList<PrescripcionRecord> getListPosiblesPrescs() {
+		if (listPosiblesPrescs == null) {
+			listPosiblesPrescs = new JList<PrescripcionRecord>(getModelPosiblesPrescs());
+		}
+		return listPosiblesPrescs;
+	}
+
+	private DefaultListModel<PrescripcionRecord> getModelPosiblesPrescs() {
+		String[] posiblesPrescs = BusinessFactory.forCitaService().getPosiblesPrescripciones();
+		DefaultListModel<PrescripcionRecord> model = new DefaultListModel<PrescripcionRecord>(); 
+		for (int i = 0; i < posiblesPrescs.length; i+=2) {
+			String titulo = posiblesPrescs[i];
+			String tipo = posiblesPrescs[i+1];
+			model.addElement(new PrescripcionRecord(titulo, tipo));
+		}
+		return model;
 	}
 }

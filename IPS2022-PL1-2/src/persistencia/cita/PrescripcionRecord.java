@@ -33,8 +33,6 @@ public class PrescripcionRecord {
 		this.idCita = idCita;
 	}
 	
-	
-	
 	public PrescripcionRecord(int idPrescricpion, String titulo, String tipo, String observaciones,
 			LocalTime horaAsignacion, LocalDate fechaAsignacion, String idCita) {
 		super();
@@ -50,7 +48,11 @@ public class PrescripcionRecord {
 		this.idCita = idCita;
 	}
 
-
+	public PrescripcionRecord(String titulo, String tipo) {
+		super();
+		this.titulo = titulo;
+		this.tipo = tipo;
+	}
 
 	public int getIdPrescricpion() {
 		return idPrescricpion;
@@ -86,7 +88,9 @@ public class PrescripcionRecord {
 
 	@Override
 	public String toString() {
-		if (tipo.equalsIgnoreCase("MEDICAMENTO"))
+		if (horaAsignacion==null)
+			return titulo+" ("+tipo+")";
+		else if (tipo.equalsIgnoreCase("MEDICAMENTO"))
 			return titulo+" ("+tipo+") "+cantidad+" "+intervaloDosis+" durante "+
 				duracion+(!observaciones.equals("")?". "+observaciones:"")+ ". "+horaAsignacion.toString()+" del dia "+fechaAsignacion.toString();
 		else 

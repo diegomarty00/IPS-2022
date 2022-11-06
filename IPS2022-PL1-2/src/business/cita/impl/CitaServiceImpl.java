@@ -94,4 +94,17 @@ public class CitaServiceImpl implements CitaService {
 		
 	}
 
+	@Override
+	public String[] getPosiblesPrescripciones() {
+		return new String[] {"Paracetamol", "Medicamento",
+				"Vendaje", "Tratamiento",
+				"Penicilina", "Medicamento",
+				"Resonancia Magnetica", "Prueba"};
+	}
+
+	@Override
+	public String[] getPosiblesCausas() {
+		return new String[] {"Fiebre","Vomitos","Hipotermia","Dolor de cabeza"};
+	}
+
 }
