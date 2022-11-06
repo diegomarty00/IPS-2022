@@ -5,7 +5,9 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalTime;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
@@ -23,6 +25,7 @@ import business.BusinessFactory;
 import business.cita.CitaService;
 import business.cita.impl.CitaServiceImpl;
 import persistencia.PersistenceFactory;
+import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.impl.CitaGatewayImpl;
 import persistencia.paciente.PacienteRecord;
@@ -56,7 +59,8 @@ public class VentanaCita extends JFrame {
 	private JButton btnVerHistorial;
 	private JLabel lblCausas;
 	private JButton btnSeleccionarCausas;
-	private JList list;
+	private JList<CausaRecord> list;
+	private DefaultListModel<CausaRecord> modeloCausas;
 
 	/**
 	 * Launch the application.
@@ -90,6 +94,9 @@ public class VentanaCita extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
+		modeloCausas = new DefaultListModel<>();
+		updateModeloCausas();
+		
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
@@ -203,6 +210,14 @@ public class VentanaCita extends JFrame {
 		contentPane.add(getList());
 	}
 
+	private void updateModeloCausas() {
+		modeloCausas.clear();
+		List<CausaRecord> causas = PersistenceFactory.forCita().getCausas(cita.idCita);
+		for (CausaRecord causa : causas) {
+			modeloCausas.addElement(causa);
+		}
+	}
+
 	private void establecerHoraEntrada() {
 		LocalTime time = LocalTime.now();
 		spnHoraEntrada.setValue(time.getHour());
@@ -308,17 +323,23 @@ public class VentanaCita extends JFrame {
 			btnSeleccionarCausas = new JButton("Seleccionar Causas");
 			btnSeleccionarCausas.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					VentanaCausas ventCausas = new VentanaCausas(cita);
-					ventCausas.setVisible(true);
-				}
+					openVentCausas();
+				}			
 			});
 			btnSeleccionarCausas.setBounds(198, 223, 124, 20);
 		}
 		return btnSeleccionarCausas;
 	}
-	private JList getList() {
+	
+	private void openVentCausas() {
+		VentanaCausas ventCausas = new VentanaCausas(cita);
+		ventCausas.setVisible(true);
+		this.dispose();
+	}
+	
+	private JList<CausaRecord> getList() {
 		if (list == null) {
-			list = new JList();
+			list = new JList<CausaRecord>(modeloCausas);
 			list.setBounds(10, 252, 310, 127);
 		}
 		return list;

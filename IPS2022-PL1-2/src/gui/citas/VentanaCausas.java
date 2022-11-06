@@ -1,29 +1,29 @@
 package gui.citas;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-
-import business.BusinessFactory;
-import business.cita.CitaService;
-import persistencia.cita.CitaRecord;
-
-import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JTable;
-import javax.swing.JScrollPane;
-import javax.swing.JButton;
-import javax.swing.JTextField;
-import java.awt.event.InputMethodListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+import business.BusinessFactory;
+import business.cita.CitaService;
+import persistencia.PersistenceFactory;
+import persistencia.cita.CausaRecord;
+import persistencia.cita.CitaRecord;
+import util.BusinessException;
 
 public class VentanaCausas extends JFrame {
 
@@ -41,6 +41,8 @@ public class VentanaCausas extends JFrame {
 
 	CitaRecord cita;
 	CitaService citaService = BusinessFactory.forCitaService();
+	
+	ArrayList<String> selectedCausas = new ArrayList<String>();
 	
 	/**
 	 * Create the frame.
@@ -74,7 +76,7 @@ public class VentanaCausas extends JFrame {
 	}
 	private JTable getTablePosiblesCausas() {
 		if (tablePosiblesCausas == null) {
-			dataTable = new Object[][] {{"Fiebre", Boolean.FALSE}, {"Vomitos", Boolean.FALSE}, {"Hipotermia", Boolean.FALSE}, {"Dolor de cabeza", Boolean.FALSE}};
+			dataTable = getDataTable();
 			columnNames= new String[] {"Causa", "Seleccionado"};
 			DefaultTableModel model = new DefaultTableModel(dataTable, columnNames);
 			tablePosiblesCausas = new JTable(model) {
@@ -93,6 +95,7 @@ public class VentanaCausas extends JFrame {
 		}
 		return tablePosiblesCausas;
 	}
+
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
@@ -108,8 +111,6 @@ public class VentanaCausas extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					saveSelection();
 				}
-
-				
 			});
 			btnSave.setBounds(210, 359, 149, 23);
 		}
@@ -156,6 +157,7 @@ public class VentanaCausas extends JFrame {
 	}
 	
 	private void search() {
+		checkSelected();
 		String text = getTxtBuscar().getText().toLowerCase();
 		List<Object[]> dataFiltered = new ArrayList<Object[]>();
 		String tituloCausa;
@@ -168,8 +170,47 @@ public class VentanaCausas extends JFrame {
 		tablePosiblesCausas.setModel(new DefaultTableModel(dataFiltered.stream().toArray(Object[][] ::new), columnNames));
 	}
 	
+	private Object[][] getDataTable() {
+		List<String> causas = new ArrayList<String>(Arrays.asList("Fiebre","Vomitos","Hipotermia","Dolor de cabeza"));
+		List<Object[]> data = new ArrayList<Object[]>();
+		List<CausaRecord> causasRecords = PersistenceFactory.forCita().getCausas(cita.idCita);
+		for (CausaRecord causa : causasRecords) {
+			if (causas.contains(causa.getTitulo())) {
+				data.add(new Object[] {causa.getTitulo(), Boolean.TRUE});
+				causas.remove(causa.getTitulo());
+			}
+		}
+		for (String causa : causas) {
+			data.add(new Object[] {causa, Boolean.FALSE});
+		}
+		
+		return data.stream().toArray(Object[][] ::new);
+	}
+	
+	private void checkSelected() {
+		TableModel model = getTablePosiblesCausas().getModel();
+		String tituloCausa;
+		for (int i = 0; i < model.getRowCount(); i++) {
+			tituloCausa=(String)model.getValueAt(i, 0);
+			if ((boolean)model.getValueAt(i, 1)==true) {
+				if (!selectedCausas.contains(tituloCausa))
+					selectedCausas.add(tituloCausa);
+			} else {
+				if (selectedCausas.contains(tituloCausa))
+					selectedCausas.remove(tituloCausa);
+			}
+		}
+	}
+
 	private void saveSelection() {
-		
-		
+		try {
+			checkSelected();
+			BusinessFactory.forCitaService().updateCausas(cita.idCita, selectedCausas);
+			VentanaCita ventanaCita = new VentanaCita(cita);
+			ventanaCita.setVisible(true);
+			this.dispose();
+		} catch (BusinessException e) {
+			e.printStackTrace();
+		}
 	}
 }
