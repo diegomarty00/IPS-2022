@@ -24,11 +24,12 @@ public class CitaGatewayImpl implements CitaGateway {
     private static final String CITAS_DEL_DIA = "SELECT * from CITA where FECHA = ?";
 	private static final String FIND_CAUSAS_FROM_CITA = "SELECT * from CAUSA where IDCITA = ?";
     private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
+    private static String ASIGNAR_NUEVO_HORARIO = "update CITA set HORA_ENTRADA_ESTIMADA = ? , HORA_SALIDA_ESTIMADA = ?  where idcita = ?";
     private static String ASIGNAR_SALIDA = "update CITA set HORA_SALIDA_REAL = ? where idcita = ?";
     private static String PACIENTE_ACUDIDO = "update CITA set PACIENTE_ACUDIDO = 1 where idcita = ?";
-    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static String ADD_CAUSA= "INSERT INTO Causa values (?,?,?,?,?)";
     private static String DELETE_CAUSA= "DELETE FROM Causa WHERE IDCAUSA = ?";
+    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static String MODIFICAR_CONTACTO = "update CITA set CORREO_PACIENTE = ? , TELEFONO_PACIENTE = ? where idcita = ?";
     
 	
@@ -71,6 +72,7 @@ public class CitaGatewayImpl implements CitaGateway {
 			pst.setInt(11,Integer.parseInt(t.telefonoPaciente));
 			pst.setString(12, t.lugar);
 			pst.setString(13, t.otros);
+			pst.setBoolean(14, t.prioritario);
 
 	    pst.execute();
 	} catch (SQLException e) {
@@ -132,6 +134,8 @@ public class CitaGatewayImpl implements CitaGateway {
 	}
     }
 
+    
+    
     @Override
     public void asignarHoraEntrada(String idCita, LocalTime horaEntrada) {
 		Connection c = null;
@@ -269,6 +273,24 @@ public class CitaGatewayImpl implements CitaGateway {
 		
 	}
 
+@Override
+	public void modificarHorario(String idCita, LocalTime nHoraEntrada, LocalTime nHoraSalida) {
+		Connection c = null;
+		PreparedStatement pst = null;
+    try {
+		    c = Jdbc.createThreadConnection();
+		    pst = c.prepareStatement(ASIGNAR_NUEVO_HORARIO);
+		    pst.setString(3, idCita);
+		    pst.setTime(1,Time.valueOf(nHoraEntrada));
+		    pst.setTime(2, Time.valueOf(nHoraSalida));
+		    pst.execute();
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(pst);
+    }
+}
+
 	
 	@Override
 	public void insertarCausa(String idCita, String titulo, Time hora, Date fecha) {
@@ -300,7 +322,7 @@ public class CitaGatewayImpl implements CitaGateway {
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 
-		try {
+    try {
 		    c = Jdbc.createThreadConnection();
 
 		    pst = c.prepareStatement(FIND_CAUSAS_FROM_CITA);

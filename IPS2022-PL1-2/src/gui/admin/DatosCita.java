@@ -38,13 +38,14 @@ public class DatosCita extends JFrame {
 	private String hI;
 	private String hF;
 	private boolean urgente;
+	private boolean prioritario;
 	private DefaultListModel<String> modjlist;
 	ProcesarAccion p = new ProcesarAccion();
 	private PacienteRecord pa;
 	/**
 	 * Create the frame.
 	 */
-	public DatosCita(String paciente, boolean urgencia,String lugar, String anio , String mes , String dia, String horaE, String horaS,DefaultListModel<String> modjlist) {
+	public DatosCita(String paciente, boolean urgencia,String lugar, String anio , String mes , String dia, String horaE, String horaS,DefaultListModel<String> modjlist,boolean prioridad) {
 		this.paciente = paciente;
 		this.urgente = urgencia;
 		this.lugar = lugar;
@@ -54,6 +55,7 @@ public class DatosCita extends JFrame {
 		this.hI = horaE;
 		this.hF = horaS;
 		this.modjlist = modjlist;
+		this.prioritario = prioridad;
 		pa =  ObtenerPacientes.sacarDatosContacto(ObtenerPacientes.parsePaciente(paciente));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -153,24 +155,60 @@ public class DatosCita extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// TODO Auto-generated method stub
-			int size = modjlist.size();
-		    
+			
 			CrearCita cc = new CrearCita();
-			    cc.crearCita(paciente,
-				    urgente,
-				    lugar,
-				    anio,
-				    mes,
-				    dia,
-				    hI,
-				    hF,
-				    tfEmail.getText(),
-				    tfTelf.getText(),tfOtros.getText());
-			for (int i = 0; i < size; i++) {
-			    cc.crearCitaMedico(modjlist.get(i));
-			}
-			delete();
+		    if(!prioritario || !cc.comprovarChoqueCitas(anio,dia,mes ,hI,hF)) {
+		    	cc.crearCita(paciente,
+					    urgente,
+					    lugar,
+					    anio,
+					    mes,
+					    dia,
+					    hI,
+					    hF,
+					    tfEmail.getText(),
+					    tfTelf.getText(),tfOtros.getText(),prioritario);
+		    	if(modjlist != null) {
+			    	int size = modjlist.size();
+					for (int i = 0; i < size; i++) {
+					    cc.crearCitaMedico(modjlist.get(i));
+					}
+			    }
+		    	delete();
+		    }else if(prioritario && !cc.comprovarChoqueCitas(anio,dia,mes ,hI,hF)) {
+		    	cc.crearCita(paciente,
+					    urgente,
+					    lugar,
+					    anio,
+					    mes,
+					    dia,
+					    hI,
+					    hF,
+					    tfEmail.getText(),
+					    tfTelf.getText(),tfOtros.getText(),prioritario);
+		    	if(modjlist != null) {
+			    	int size = modjlist.size();
+					for (int i = 0; i < size; i++) {
+					    cc.crearCitaMedico(modjlist.get(i));
+					}
+			    }
+		    	delete();
+		    }else {
+		    	CitaPrioritaria cp = new CitaPrioritaria(cc,ob(),paciente,
+					    urgente,
+					    lugar,
+					    anio,
+					    mes,
+					    dia,
+					    hI,
+					    hF,modjlist,
+					    tfEmail.getText(),
+					    tfTelf.getText(),tfOtros.getText(),prioritario);
+		    	cp.setVisible(true);
 		    }
 		}
-	
+	}
+	private DatosCita ob() {
+		return this;
+	}
 }

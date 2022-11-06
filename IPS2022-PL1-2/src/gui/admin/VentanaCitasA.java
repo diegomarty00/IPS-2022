@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -57,7 +58,7 @@ public class VentanaCitasA<E> extends JFrame {
     private JComboBox cbHoraInicio;
     private JComboBox cbHoraFinal;
     private JPanel panel_5;
-    private JRadioButton rdbtnNewRadioButton;
+    private JCheckBox jChBUrgente;
     private JLabel lbFecha;
     private JButton btEliminar;
     private JPanel panel_6;
@@ -78,6 +79,7 @@ public class VentanaCitasA<E> extends JFrame {
     private JComboBox cbDia;
     private List<String> listaH = setHorasL();
     private ProcesarAccion pa = new ProcesarAccion();
+    private JCheckBox jChBPrioritario;
     /**
      * Create the frame.
      */
@@ -113,6 +115,7 @@ public class VentanaCitasA<E> extends JFrame {
 	    panelN.setLayout(new BorderLayout(0, 0));
 	    panelN.add(getJPanelBotones(), BorderLayout.EAST);
 	    panelN.add(getRdbtnNewRadioButton(), BorderLayout.CENTER);
+	    panelN.add(getJChBPrioritario(), BorderLayout.WEST);
 	}
 	return panelN;
     }
@@ -163,14 +166,14 @@ public class VentanaCitasA<E> extends JFrame {
 					&& cbHoraFinal.getSelectedIndex() != -1) {
 					
 						DatosCita frame = new DatosCita(cbPacinte.getSelectedItem().toString(),
-								rdbtnNewRadioButton.isSelected(),
+								jChBUrgente.isSelected(),
 							    cbLugar.getSelectedItem().toString(),
 							    cbAño.getSelectedItem().toString(),
 							    cbMes.getSelectedItem().toString(),
 							    cbDia.getSelectedItem().toString(),
 							    cbHoraInicio.getSelectedItem().toString(),
 							    cbHoraFinal.getSelectedItem().toString(),
-							    modjlist);
+							    modjlist,jChBPrioritario.isSelected());
 						frame.setVisible(true);
 				
 
@@ -267,15 +270,17 @@ public class VentanaCitasA<E> extends JFrame {
 
 	    jbAñadir.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-		    String me = cbMedicos.getSelectedItem().toString();
-		    boolean b = true;
-		    for (int i = 0; i < modjlist.getSize(); i++) {
-			if (me.equals(modjlist.get(i))) {
-			    b = false;
+			if(cbMedicos.getSelectedIndex() > 0 ) {
+			    String me = cbMedicos.getSelectedItem().toString();
+			    boolean b = true;
+			    for (int i = 0; i < modjlist.getSize(); i++) {
+					if (me.equals(modjlist.get(i))) {
+					    b = false;
+					}
+			    }
+			    if (b)
+				modjlist.addElement(me);
 			}
-		    }
-		    if (b)
-			modjlist.addElement(me);
 		}
 	    });
 	    jbAñadir.setFont(new Font("Times New Roman", Font.PLAIN, 12));
@@ -316,6 +321,7 @@ public class VentanaCitasA<E> extends JFrame {
 	if (cbMedicos == null) {
 	    cbMedicos = new JComboBox();
 	    DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+	    mod.addElement("--------");
 	    MedicoGatewayImpl m = new MedicoGatewayImpl();
 	    List<MedicoRecord> l = m.findAll();
 	    for (int i = 0; i < l.size(); i++) {
@@ -428,13 +434,13 @@ public class VentanaCitasA<E> extends JFrame {
 	return panel_5;
     }
 
-    private JRadioButton getRdbtnNewRadioButton() {
-	if (rdbtnNewRadioButton == null) {
-	    rdbtnNewRadioButton = new JRadioButton("Cita urgente ");
-	    rdbtnNewRadioButton
+    private JCheckBox getRdbtnNewRadioButton() {
+	if (jChBUrgente == null) {
+	    jChBUrgente = new JCheckBox("Cita urgente ");
+	    jChBUrgente
 		    .setFont(new Font("Times New Roman", Font.BOLD, 14));
 	}
-	return rdbtnNewRadioButton;
+	return jChBUrgente;
     }
 
     private JLabel getLbFecha() {
@@ -595,7 +601,12 @@ public class VentanaCitasA<E> extends JFrame {
 	    cbDia = new JComboBox();
 	    DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
 	    for (int i = 1; i < 32; i++) {
-		mod.addElement(i);
+	    	if(i<10) {
+	    		mod.addElement("0"+i);
+	    	}
+	    	else {
+	    		mod.addElement(i);
+	    	}
 	    }
 	    cbDia.setModel(mod);
 	}
@@ -621,4 +632,11 @@ public class VentanaCitasA<E> extends JFrame {
 	}
 	return l;
     }
+	private JCheckBox getJChBPrioritario() {
+		if (jChBPrioritario == null) {
+			jChBPrioritario = new JCheckBox("Cita prioritaria");
+			jChBPrioritario.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		}
+		return jChBPrioritario;
+	}
 }
