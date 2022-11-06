@@ -2,6 +2,7 @@ package business.admin;
 
 import java.util.List;
 
+import persistencia.admin.JornadaComunRecord;
 import persistencia.admin.JornadaRecord;
 import persistencia.admin.MedicoRecord;
 import util.BusinessException;
@@ -12,6 +13,7 @@ public interface AdminService {
 
     List<MedicoRecord> buscarMedicos() throws BusinessException;
 
-    List<JornadaRecord> listarJornadasMedico(String idMedico)
-	    throws BusinessException;
+    void crearJornadasLaboralesComuens(JornadaComunRecord jornada) throws BusinessException;
+
+    List<JornadaRecord> listarJornadasMedico(String idMedico) throws BusinessException;
 }
