@@ -171,7 +171,7 @@ public class VentanaCausas extends JFrame {
 	}
 	
 	private Object[][] getDataTable() {
-		List<String> causas = new ArrayList<String>(Arrays.asList("Fiebre","Vomitos","Hipotermia","Dolor de cabeza"));
+		List<String> causas = new ArrayList<String>(Arrays.asList(BusinessFactory.forCitaService().getPosiblesCausas()));
 		List<Object[]> data = new ArrayList<Object[]>();
 		List<CausaRecord> causasRecords = PersistenceFactory.forCita().getCausas(cita.idCita);
 		for (CausaRecord causa : causasRecords) {

@@ -15,6 +15,7 @@ import persistencia.RecordAssembler;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaGateway;
 import persistencia.cita.CitaRecord;
+import persistencia.cita.PrescripcionRecord;
 import util.jdbc.Jdbc;
 
 public class CitaGatewayImpl implements CitaGateway {
@@ -23,12 +24,16 @@ public class CitaGatewayImpl implements CitaGateway {
     private static final String PROXIMAS_CITAS = "SELECT * from CITA where fecha >= ?";
     private static final String CITAS_DEL_DIA = "SELECT * from CITA where FECHA = ?";
 	private static final String FIND_CAUSAS_FROM_CITA = "SELECT * from CAUSA where IDCITA = ?";
+	private static final String FIND_PRESCRIPCIONES_FROM_CITA = "SELECT * from PRESCRIPCION where IDCITA = ?";
+
     private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
     private static String ASIGNAR_NUEVO_HORARIO = "update CITA set HORA_ENTRADA_ESTIMADA = ? , HORA_SALIDA_ESTIMADA = ?  where idcita = ?";
     private static String ASIGNAR_SALIDA = "update CITA set HORA_SALIDA_REAL = ? where idcita = ?";
     private static String PACIENTE_ACUDIDO = "update CITA set PACIENTE_ACUDIDO = 1 where idcita = ?";
     private static String ADD_CAUSA= "INSERT INTO Causa values (?,?,?,?,?)";
     private static String DELETE_CAUSA= "DELETE FROM Causa WHERE IDCAUSA = ?";
+    private static String ADD_PRESCRIPCION = "INSERT INTO PRESCRIPCION values (?,?,?,?,?,?,?,?,?,?)";
+    private static String DELETE_PRESCRIPCION = "DELETE FROM PRESCRIPCION WHERE IDPRESCRIPCION = ?";
     private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static String MODIFICAR_CONTACTO = "update CITA set CORREO_PACIENTE = ? , TELEFONO_PACIENTE = ? where idcita = ?";
     
@@ -302,13 +307,34 @@ public class CitaGatewayImpl implements CitaGateway {
 		    c = Jdbc.getCurrentConnection();
 
 		    pst = c.prepareStatement(ADD_CAUSA);
-		    pst.setInt(1, getCausas(idCita).size()+1);
+			pst.setInt(1, getLastId("CAUSA", "IDCAUSA")+1);
 		    pst.setString(2, titulo);
 		    pst.setTime(3, hora);
 		    pst.setDate(4, fecha);
 		    pst.setString(5, idCita);
 
 		    pst.execute();
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
+	public int getLastId(String tabla, String columnName) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+    try {
+		    c = Jdbc.createThreadConnection();
+
+		    pst = c.prepareStatement("SELECT MAX("+columnName+") FROM "+tabla);
+
+		    rs = pst.executeQuery();
+		    rs.next();
+		    return rs.getInt("C1");
 		} catch (SQLException e) {
 		    throw new PersistenceException(e);
 		} finally {
@@ -339,6 +365,28 @@ public class CitaGatewayImpl implements CitaGateway {
 	}
 
 	@Override
+	public List<PrescripcionRecord> getPrescripciones(String idCita) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.createThreadConnection();
+			
+			pst = c.prepareStatement(FIND_PRESCRIPCIONES_FROM_CITA);
+			pst.setString(1, idCita);
+			
+			rs = pst.executeQuery();
+			
+			return RecordAssembler.toPrescripcionList(rs);
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
 	public void removeCausa(int idCausa) {
 		Connection c = null;
 		PreparedStatement pst = null;
@@ -349,6 +397,54 @@ public class CitaGatewayImpl implements CitaGateway {
 
 		    pst = c.prepareStatement(DELETE_CAUSA);
 		    pst.setInt(1, idCausa);
+		    pst.execute();
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
+	public void insertarPrescripcion(PrescripcionRecord presc) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+		    c = Jdbc.getCurrentConnection();
+
+		    pst = c.prepareStatement(ADD_PRESCRIPCION);
+			pst.setInt(1, getLastId("PRESCRIPCION", "IDPRESCRIPCION")+1);
+		    pst.setString(2, presc.getTitulo());
+		    pst.setString(3, presc.getTipo());
+		    pst.setString(4, presc.getCantidad());
+		    pst.setString(5, presc.getIntervaloDosis());
+		    pst.setString(6, presc.getDuracion());
+		    pst.setString(7, presc.getObservaciones());
+		    pst.setTime(8, Time.valueOf(presc.getHoraAsignacion()));
+		    pst.setDate(9, Date.valueOf(presc.getFechaAsignacion()));
+		    pst.setString(10, presc.getIdCita());
+
+		    pst.execute();
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
+	public void deletePrescripcion(PrescripcionRecord presc) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+		    c = Jdbc.getCurrentConnection();
+
+		    pst = c.prepareStatement(DELETE_PRESCRIPCION);
+		    pst.setInt(1, presc.getIdPrescricpion());
 		    pst.execute();
 		} catch (SQLException e) {
 		    throw new PersistenceException(e);

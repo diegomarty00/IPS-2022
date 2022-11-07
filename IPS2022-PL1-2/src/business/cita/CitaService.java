@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import persistencia.cita.CitaRecord;
+import persistencia.cita.PrescripcionRecord;
 import util.BusinessException;
 
 public interface CitaService {
@@ -27,5 +28,17 @@ public interface CitaService {
 
     void updateCausas(String idCita, ArrayList<String> causas)
     	throws BusinessException;
+    
+    void updatePrescripciones(List<PrescripcionRecord> prescripciones, String idCita)
+    		throws BusinessException;
+
+	String[] getPosiblesPrescripciones();
+
+	String[] getPosiblesCausas();
+
+	PrescripcionRecord createPrescripcionRecord(String titulo, String tipo, String observaciones, LocalTime hora, LocalDate fecha, String idCita);
+
+	PrescripcionRecord createPrescripcionRecord(String titulo, String tipo, String cantidad, String intervalo, String duracion,
+			String observaciones, LocalTime hora, LocalDate fecha, String idCita);
     
 }
