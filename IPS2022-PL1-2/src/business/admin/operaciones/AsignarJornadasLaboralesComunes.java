@@ -24,31 +24,31 @@ public class AsignarJornadasLaboralesComunes implements Command<Void> {
     public Void execute() throws BusinessException {
 	for (int i = 0; i < comun.lunes.size(); i++) {
 	    calcularFechas(comun.lunes.get(i));
-	    PersistenceFactory.forAdmin().añadirJornadas(jornada);
+	    PersistenceFactory.forAdmin().aniadirJornadas(jornada);
 	}
 	for (int i = 0; i < comun.martes.size(); i++) {
 	    calcularFechas(comun.martes.get(i));
-	    PersistenceFactory.forAdmin().añadirJornadas(jornada);
+	    PersistenceFactory.forAdmin().aniadirJornadas(jornada);
 	}
 	for (int i = 0; i < comun.miercoles.size(); i++) {
 	    calcularFechas(comun.miercoles.get(i));
-	    PersistenceFactory.forAdmin().añadirJornadas(jornada);
+	    PersistenceFactory.forAdmin().aniadirJornadas(jornada);
 	}
 	for (int i = 0; i < comun.jueves.size(); i++) {
 	    calcularFechas(comun.jueves.get(i));
-	    PersistenceFactory.forAdmin().añadirJornadas(jornada);
+	    PersistenceFactory.forAdmin().aniadirJornadas(jornada);
 	}
 	for (int i = 0; i < comun.viernes.size(); i++) {
 	    calcularFechas(comun.viernes.get(i));
-	    PersistenceFactory.forAdmin().añadirJornadas(jornada);
+	    PersistenceFactory.forAdmin().aniadirJornadas(jornada);
 	}
 	for (int i = 0; i < comun.sabado.size(); i++) {
 	    calcularFechas(comun.sabado.get(i));
-	    PersistenceFactory.forAdmin().añadirJornadas(jornada);
+	    PersistenceFactory.forAdmin().aniadirJornadas(jornada);
 	}
 	for (int i = 0; i < comun.domingo.size(); i++) {
 	    calcularFechas(comun.domingo.get(i));
-	    PersistenceFactory.forAdmin().añadirJornadas(jornada);
+	    PersistenceFactory.forAdmin().aniadirJornadas(jornada);
 	}
 	return null;
     }

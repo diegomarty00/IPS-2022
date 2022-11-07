@@ -140,9 +140,9 @@ public class CrearCita {
 		CitaGatewayImpl cg = new CitaGatewayImpl();
 		cg.add(ci);
 	}
-	private LocalDate toFecha(String año, String mes, String dia) {
+	private LocalDate toFecha(String anio, String mes, String dia) {
 		
-		return LocalDate.parse(año+"-"+mes+"-"+dia);
+		return LocalDate.parse(anio+"-"+mes+"-"+dia);
 	}
 
 //	public void crearCita(String paciente, boolean urgencia,String lugar) {

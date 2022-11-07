@@ -15,7 +15,7 @@ public class AsignarJornadasLaboralesMedicos implements Command<Void> {
 
     @Override
     public Void execute() throws BusinessException {
-	PersistenceFactory.forAdmin().añadirJornadas(jornada);
+	PersistenceFactory.forAdmin().aniadirJornadas(jornada);
 	return null;
     }
 

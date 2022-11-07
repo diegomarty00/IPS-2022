@@ -6,7 +6,7 @@ import persistencia.Gateway;
 
 public interface AdminGateway extends Gateway<MedicoRecord> {
 
-    void añadirJornadas(JornadaRecord medico);
+    void aniadirJornadas(JornadaRecord medico);
 
     void asignarInformacionContactoCitas();
 
