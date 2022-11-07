@@ -30,4 +30,10 @@ public interface CitaGateway extends Gateway<CitaRecord> {
     void removeCausa(int idCausa);
 
 	List<PrescripcionRecord> getPrescripciones(String idCita);
+	
+	int getLastId(String tabla, String columnName);
+
+	void insertarPrescripcion(PrescripcionRecord presc);
+
+	void deletePrescripcion(PrescripcionRecord presc);
 }

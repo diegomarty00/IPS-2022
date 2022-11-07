@@ -96,4 +96,11 @@ public class PrescripcionRecord {
 		else 
 			return titulo+" ("+tipo+") "+(!observaciones.equals("")?". "+observaciones:"")+ ". "+horaAsignacion.toString()+" del dia "+fechaAsignacion.toString();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		PrescripcionRecord presc = (PrescripcionRecord) obj;
+		return getTitulo().equals(presc.getTitulo()) && getHoraAsignacion().equals(presc.getHoraAsignacion()) && 
+				getFechaAsignacion().equals(presc.getFechaAsignacion()) && getIdCita().equals(presc.getIdCita());
+	}
 }
