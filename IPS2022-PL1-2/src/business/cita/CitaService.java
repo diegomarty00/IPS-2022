@@ -1,5 +1,7 @@
 package business.cita;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,18 +29,22 @@ public interface CitaService {
 	    throws BusinessException;
 
     void updateCausas(String idCita, ArrayList<String> causas)
-    	throws BusinessException;
-    
-    void updatePrescripciones(List<PrescripcionRecord> prescripciones, String idCita)
-    		throws BusinessException;
+	    throws BusinessException;
 
-	String[] getPosiblesPrescripciones();
+    void updatePrescripciones(List<PrescripcionRecord> prescripciones,
+	    String idCita) throws BusinessException;
 
-	String[] getPosiblesCausas();
+    String[] getPosiblesPrescripciones();
 
-	PrescripcionRecord createPrescripcionRecord(String titulo, String tipo, String observaciones, LocalTime hora, LocalDate fecha, String idCita);
+    String[] getPosiblesCausas();
 
-	PrescripcionRecord createPrescripcionRecord(String titulo, String tipo, String cantidad, String intervalo, String duracion,
-			String observaciones, LocalTime hora, LocalDate fecha, String idCita);
-    
+    PrescripcionRecord createPrescripcionRecord(String titulo, String tipo,
+	    String observaciones, LocalTime hora, LocalDate fecha,
+	    String idCita);
+
+    PrescripcionRecord createPrescripcionRecord(String titulo, String tipo,
+	    String cantidad, String intervalo, String duracion,
+	    String observaciones, LocalTime hora, LocalDate fecha,
+	    String idCita);
+
 }
