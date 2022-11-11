@@ -33,6 +33,7 @@ import persistencia.paciente.PacienteRecord;
 import util.BusinessException;
 import javax.swing.JList;
 import javax.swing.ListModel;
+import javax.swing.JScrollPane;
 
 public class VentanaCita extends JFrame {
 
@@ -67,6 +68,8 @@ public class VentanaCita extends JFrame {
 	private JList<PrescripcionRecord> listPrescripciones;
 	private DefaultListModel<PrescripcionRecord> modeloPrescripciones;
 	private JButton btnSeleccionarPrescripciones;
+	private JScrollPane scrollPane_1;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
@@ -216,10 +219,18 @@ public class VentanaCita extends JFrame {
 		contentPane.add(getBtnVerHistorial());
 		contentPane.add(getLblCausas());
 		contentPane.add(getBtnSeleccionarCausas());
-		contentPane.add(getListCausas());
 		contentPane.add(getLblPrescripciones());
-		contentPane.add(getListPrescripciones());
 		contentPane.add(getBtnSeleccionarPrescripciones());
+		
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(399, 252, 310, 127);
+		contentPane.add(scrollPane_1);
+		scrollPane_1.setViewportView(getListPrescripciones());
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(23, 250, 310, 129);
+		contentPane.add(scrollPane);
+		scrollPane.setViewportView(getListCausas());
 	}
 
 	private void updateModeloCausas() {
@@ -360,7 +371,6 @@ public class VentanaCita extends JFrame {
 	private JList<CausaRecord> getListCausas() {
 		if (listCausas == null) {
 			listCausas = new JList<CausaRecord>(modeloCausas);
-			listCausas.setBounds(10, 252, 310, 127);
 		}
 		return listCausas;
 	}
@@ -375,7 +385,6 @@ public class VentanaCita extends JFrame {
 	private JList<PrescripcionRecord> getListPrescripciones() {
 		if (listPrescripciones == null) {
 			listPrescripciones = new JList<PrescripcionRecord>(modeloPrescripciones);
-			listPrescripciones.setBounds(399, 252, 310, 127);
 		}
 		return listPrescripciones;
 	}
