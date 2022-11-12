@@ -72,7 +72,7 @@ public class CrearCita {
 		ci.correoPaciente = correo;
 		ci.telefonoPaciente = num;
 		ci.urgente = urgencia;
-		ci.pacienteAcudido = false ;
+		ci.pacienteAcudido = "Asistencia Sin Asignar" ;
 		ci.lugar = lugar;
 		ci.fecha = fecha;
 		ci.horaEntradaEstimada = LocalTime.parse(horaE);

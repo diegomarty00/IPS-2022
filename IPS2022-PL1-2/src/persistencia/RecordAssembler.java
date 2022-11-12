@@ -79,7 +79,7 @@ public class RecordAssembler {
 		if(rs.getTime("HORA_SALIDA_ESTIMADA") != null) 
 			cita.horaSalidaEstimada = rs.getTime("HORA_SALIDA_ESTIMADA").toLocalTime();
 		
-		cita.pacienteAcudido = rs.getBoolean("PACIENTE_ACUDIDO");
+		cita.pacienteAcudido = rs.getString("PACIENTE_ACUDIDO");
 		if (rs.getTime("HORA_ENTRADA_REAL") != null)
 			cita.horaEntradaReal = rs.getTime("HORA_ENTRADA_REAL").toLocalTime();
 		if (rs.getTime("HORA_SALIDA_REAL") != null)

@@ -15,7 +15,7 @@ public class CitaRecord {
 	public boolean urgente;
 	public LocalTime horaEntradaEstimada;
 	public LocalTime horaSalidaEstimada;
-	public boolean pacienteAcudido;
+	public String pacienteAcudido;
 	public LocalTime horaEntradaReal;
 	public LocalTime horaSalidaReal;
 	public LocalDate fecha;

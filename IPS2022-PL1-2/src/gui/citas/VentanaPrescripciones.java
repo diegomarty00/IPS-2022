@@ -538,7 +538,7 @@ public class VentanaPrescripciones extends JFrame {
 		}
 		else {
 			String cantidad = getTxtCantidad().getText();
-			String intervalo = getLblIntervalo().getText();
+			String intervalo = getTxtIntervalo().getText();
 			String duracion = getTxtDuracion().getText();
 			
 			prescripcion = BusinessFactory.forCitaService().createPrescripcionRecord(titulo, tipo, cantidad, intervalo, duracion, observaciones, hora, fecha, cita.idCita);

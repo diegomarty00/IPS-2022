@@ -13,7 +13,7 @@ DNIPACIENTE VARCHAR(255) NOT NULL,
 URGENTE BIT NOT NULL,
 HORA_ENTRADA_ESTIMADA TIME ,
 HORA_SALIDA_ESTIMADA TIME ,
-PACIENTE_ACUDIDO BIT NOT NULL,
+PACIENTE_ACUDIDO VARCHAR(255) NOT NULL,
 HORA_ENTRADA_REAL TIME,
 HORA_SALIDA_REAL TIME,
 FECHA DATE ,
@@ -113,8 +113,8 @@ CONSTRAINT FK_ESPECIALIDADCITA_ESPECIALIDAD FOREIGN KEY (IDESPECIALIDAD) REFEREN
 
 INSERT INTO PACIENTE values ('560483D', 'Jesus', 'Martin', 'jesus@martin.es', 666432)
 INSERT INTO PACIENTE values ('535732D', 'Marta', 'Martin', 'marta@martin.es', 357522)
-INSERT INTO CITA values ('1', '560483D', 0, '12:30:00', '13:00:00', 0, null, null, '2022-10-14', 'jesus@martin.es', 666432,'consulta_1','',0)
-INSERT INTO CITA values ('2', '535732D', 0, '12:30:00', '13:00:00', 0, null, null, '2022-10-17', 'marta@martin.es', 357522,'consulta_1','',0)
+INSERT INTO CITA values ('1', '560483D', 0, '12:30:00', '13:00:00', 'Asistencia Sin Asignar', null, null, '2022-10-14', 'jesus@martin.es', 666432,'consulta_1','',0)
+INSERT INTO CITA values ('2', '535732D', 0, '12:30:00', '13:00:00', 'Asistencia Sin Asignar', null, null, '2022-10-17', 'marta@martin.es', 357522,'consulta_1','',0)
 INSERT INTO MEDICO values (1, 'Julia', 'Lopez', 'lopezjulia@gmail.com')
 INSERT INTO HISTORIAL values ('1', 'Hepatitis', 'El paciente presenta una hepatitis tipo C cronica', '560483D', 1, '2022-10-10')
 

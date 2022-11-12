@@ -17,7 +17,7 @@ public interface CitaService {
     void asignarHoraSalida(String idCita, int horaSalida, int minSalida)
 	    throws BusinessException;
 
-    void pacienteAcudido(String idCita) throws BusinessException;
+    void pacienteAcudido(String idCita, String estadoAsistencia) throws BusinessException;
 
     List<CitaRecord> getCitasProximas(int year, int month, int day)
 	    throws BusinessException;

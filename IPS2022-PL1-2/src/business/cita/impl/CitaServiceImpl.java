@@ -44,9 +44,9 @@ public class CitaServiceImpl implements CitaService {
     }
 
     @Override
-    public void pacienteAcudido(String idCita) throws BusinessException {
+    public void pacienteAcudido(String idCita, String estadoAsistencia) throws BusinessException {
 	CommandExecutor c = new CommandExecutor();
-	c.execute(new SetPacienteAcudido(idCita));
+	c.execute(new SetPacienteAcudido(idCita, estadoAsistencia));
     }
 
     @Override

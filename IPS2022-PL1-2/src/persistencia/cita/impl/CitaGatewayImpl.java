@@ -29,7 +29,7 @@ public class CitaGatewayImpl implements CitaGateway {
     private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
     private static String ASIGNAR_NUEVO_HORARIO = "update CITA set HORA_ENTRADA_ESTIMADA = ? , HORA_SALIDA_ESTIMADA = ?  where idcita = ?";
     private static String ASIGNAR_SALIDA = "update CITA set HORA_SALIDA_REAL = ? where idcita = ?";
-    private static String PACIENTE_ACUDIDO = "update CITA set PACIENTE_ACUDIDO = 1 where idcita = ?";
+    private static String PACIENTE_ACUDIDO = "update CITA set PACIENTE_ACUDIDO = ? where idcita = ?";
     private static String ADD_CAUSA= "INSERT INTO Causa values (?,?,?,?,?)";
     private static String DELETE_CAUSA= "DELETE FROM Causa WHERE IDCAUSA = ?";
     private static String ADD_PRESCRIPCION = "INSERT INTO PRESCRIPCION values (?,?,?,?,?,?,?,?,?,?)";
@@ -64,7 +64,7 @@ public class CitaGatewayImpl implements CitaGateway {
 			}
 			
 			
-			pst.setBoolean(6, t.pacienteAcudido);
+			pst.setString(6, t.pacienteAcudido);
 			pst.setTime(7,null);
 			pst.setTime(8, null);
 			if(t.fecha != null ) {
@@ -184,7 +184,7 @@ public class CitaGatewayImpl implements CitaGateway {
     }
 
     @Override
-    public void setPacienteAcudido(String idCita) {
+    public void setPacienteAcudido(String idCita, String estadoAsistencia) {
 	Connection c = null;
 	PreparedStatement pst = null;
 	ResultSet rs = null;
@@ -193,7 +193,8 @@ public class CitaGatewayImpl implements CitaGateway {
 	    c = Jdbc.getCurrentConnection();
 
 	    pst = c.prepareStatement(PACIENTE_ACUDIDO);
-	    pst.setString(1, idCita);
+	    pst.setString(1, estadoAsistencia);
+	    pst.setString(2, idCita);
 
 	    pst.execute();
 	} catch (SQLException e) {
