@@ -15,7 +15,7 @@ public interface CitaGateway extends Gateway<CitaRecord> {
 
     void asignarHoraSalida(String idCita, LocalTime horaSalida);
 
-    void setPacienteAcudido(String idCita);
+    void setPacienteAcudido(String idCita, String estadoAsistencia);
 
     List<CitaRecord> getCitasDelDia(Date dia);
 
