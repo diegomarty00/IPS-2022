@@ -9,14 +9,18 @@ import java.util.Optional;
 
 import org.hsqldb.lib.ArrayUtil;
 
+import business.BusinessFactory;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.MedicoCitaRecord;
 import persistencia.cita.impl.CitaGatewayImpl;
 import persistencia.cita.impl.MedicoCitaGatewayImpl;
+import persistencia.especialidad.EspecialidadCitaRecord;
+import persistencia.especialidad.impl.EspecialidadCitaGatewayImpl;
 import persistencia.medico.MedicoRecord;
 import persistencia.medico.impl.MedicoGatewayImpl;
 import persistencia.paciente.PacienteRecord;
 import persistencia.paciente.impl.PacienteGatewayImpl;
+import util.BusinessException;
 import util.mail.EnviarMail;
 
 public class CrearCita {
@@ -50,56 +54,114 @@ public class CrearCita {
 		return idm; 
 	}
 	
-	private List<String> sacarDatosContacto(String dni){
+	public PacienteRecord sacarDatosContacto(String dni){
 		List<String> li = new ArrayList<>();
 		PacienteGatewayImpl pa = new PacienteGatewayImpl();
 		PacienteRecord p = pa.findById(dni).get();
-		li.add(p.getCorreo());
-		li.add(String.valueOf( p.getTelefono()));
 		
-		return li ; 
+		
+		return p ; 
 	}
 	
-	public void crearCita(String paciente, boolean urgencia,String lugar, String año , String mes , String dia, String horaE, String horaS) {
+	public void crearCita(String paciente, boolean urgencia,String lugar, String anio , String mes , String dia, String horaE, String horaS,String correo, String num,
+			String otros, boolean prio) {
 		String dni = parsePaciente(paciente);
-		List<String> contacto = sacarDatosContacto(dni);
-		String correo = contacto.get(0);
-		String num = contacto.get(1);
-		LocalDate fecha = toFecha(año, mes , dia);
+		LocalDate fecha = toFecha(anio, mes , dia);
 		ci.dniPaciente= dni;
 		ci.idCita = String.valueOf(nextid);
 		ci.correoPaciente = correo;
 		ci.telefonoPaciente = num;
 		ci.urgente = urgencia;
-		ci.pacienteAcudido = false ;
+		ci.pacienteAcudido = "Asistencia Sin Asignar" ;
 		ci.lugar = lugar;
 		ci.fecha = fecha;
 		ci.horaEntradaEstimada = LocalTime.parse(horaE);
 		ci.horaSalidaEstimada = LocalTime.parse(horaS);
-		CitaGatewayImpl cg = new CitaGatewayImpl();
-		cg.add(ci);
+		ci.otros = otros;
+		ci.prioritario = prio;
+		almacena();
+		
 	}
 	
-	private LocalDate toFecha(String año, String mes, String dia) {
+	public boolean comprovarChoqueCitas(String anio, String dia, String mes, String hI, String hF) {
+		CitaGatewayImpl cg = new CitaGatewayImpl();
+		LocalTime inicio = LocalTime.parse(hI);
+		LocalTime fin = LocalTime.parse(hF);
 		
-		return LocalDate.parse(año+"-"+mes+"-"+dia);
+		try {
+			List<CitaRecord> citas = BusinessFactory.forCitaService().getCitasDelDia(Integer.valueOf(anio), Integer.valueOf(mes), Integer.valueOf(dia));
+			if(citas.size() == 0) return false; 
+			for(int i = 0 ;i < citas.size(); i++) {
+				CitaRecord ci = citas.get(i);
+				LocalTime hi = ci.horaEntradaEstimada;
+				LocalTime hf = ci.horaSalidaEstimada;
+				if(hi.compareTo(fin) > 0) {
+					
+				}else if(hf.compareTo(inicio) < 0 ) {
+				
+				}else {
+					return true;
+				}
+				
+			}
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return false ;
 	}
-
-	public void crearCita(String paciente, boolean urgencia,String lugar) {
-		String dni = parsePaciente(paciente);
-		List<String> contacto = sacarDatosContacto(dni);
-		String correo = contacto.get(0);
-		String num = contacto.get(1);
-		ci.dniPaciente= dni;
-		ci.idCita = String.valueOf(nextid);
-		ci.correoPaciente = correo;
-		ci.telefonoPaciente = num;
-		ci.urgente = urgencia;
-		ci.pacienteAcudido = false ;
-		ci.lugar = lugar;
+	
+	
+	
+	public List<CitaRecord> citasChoque(String anio, String dia, String mes, String hI, String hF){
+		List<CitaRecord> lista = new ArrayList<>();
+		CitaGatewayImpl cg = new CitaGatewayImpl();
+		LocalTime inicio = LocalTime.parse(hI);
+		LocalTime fin = LocalTime.parse(hF);
+		try {
+			List<CitaRecord> citas = BusinessFactory.forCitaService().getCitasDelDia(Integer.valueOf(anio), Integer.valueOf(mes), Integer.valueOf(dia));
+			for(int i = 0 ;i < citas.size(); i++) {
+				CitaRecord ci = citas.get(i);
+				LocalTime hi = ci.horaEntradaEstimada;
+				LocalTime hf = ci.horaSalidaEstimada;
+				if(hi.compareTo(fin) > 0 || hf.compareTo(inicio) < 0  || ci.prioritario) {
+					
+				}else {
+					lista.add(ci);
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return lista ;
+	}
+	
+	private void almacena() {
 		CitaGatewayImpl cg = new CitaGatewayImpl();
 		cg.add(ci);
 	}
+	private LocalDate toFecha(String anio, String mes, String dia) {
+		
+		return LocalDate.parse(anio+"-"+mes+"-"+dia);
+	}
+
+//	public void crearCita(String paciente, boolean urgencia,String lugar) {
+//		String dni = parsePaciente(paciente);
+//		List<String> contacto = sacarDatosContacto(dni);
+//		String correo = contacto.get(0);
+//		String num = contacto.get(1);
+//		ci.dniPaciente= dni;
+//		ci.idCita = String.valueOf(nextid);
+//		ci.correoPaciente = correo;
+//		ci.telefonoPaciente = num;
+//		ci.urgente = urgencia;
+//		ci.pacienteAcudido = false ;
+//		ci.lugar = lugar;
+//		CitaGatewayImpl cg = new CitaGatewayImpl();
+//		cg.add(ci);
+//	}
 	public void crearCitaMedico(String med) {
 		
 		int idm = parseMed(med);
@@ -112,6 +174,12 @@ public class CrearCita {
 		if (ci.urgente)
 			enviarCorreo(idm);
 		
+	}
+	
+	public void crearCitaEspecialidad(EspecialidadCitaRecord es) {
+		EspecialidadCitaGatewayImpl ec = new EspecialidadCitaGatewayImpl();
+		es.idCita = String.valueOf(nextid);
+		ec.add(es);
 	}
 	
 	private void enviarCorreo(int idm) {

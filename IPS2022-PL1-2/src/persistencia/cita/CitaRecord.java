@@ -15,14 +15,15 @@ public class CitaRecord {
 	public boolean urgente;
 	public LocalTime horaEntradaEstimada;
 	public LocalTime horaSalidaEstimada;
-	public boolean pacienteAcudido;
+	public String pacienteAcudido;
 	public LocalTime horaEntradaReal;
 	public LocalTime horaSalidaReal;
 	public LocalDate fecha;
 	public String correoPaciente; 
 	public String telefonoPaciente; 
 	public String lugar;
-	
+	public String otros;
+	public boolean prioritario;
 	public PacienteRecord getPacienteAsociado() {
 		try {
 			return BusinessFactory.forPacienteService().getByDni(dniPaciente).get();

@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import persistencia.JornadaAssembler;
 import persistencia.PersistenceException;
 import persistencia.admin.AdminGateway;
+import persistencia.admin.JornadaComunRecord;
 import persistencia.admin.JornadaRecord;
 import persistencia.admin.MedicoRecord;
 import util.jdbc.Jdbc;
@@ -17,8 +19,11 @@ import util.jdbc.Jdbc;
 public class AdminGatewayImpl implements AdminGateway {
 
     private static final String ALL_MEDICOS = "SELECT * from MEDICO";
-    private static final String AÑADIR_JORNADAS = "insert into JORNADA values (?, ?, ?, ?, ?)";
+    private static final String ANIADIR_JORNADAS = "insert into JORNADA values (?, ?, ?, ?, ?)";
     private static final String CONTAR_JORNADAS = "SELECT count(*) from JORNADA";
+    private static final String ANIADIR_JORNADASCOMUNES = "insert into JornadaComun values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String CONTAR_JORNADASCOMUNES = "SELECT count(*) from JornadaComun";
+    private static final String FINDBYMEDICOS = "SELECT * from JORNADA where idmedico = ?";
 
     @Override
     public void add(MedicoRecord t) {
@@ -73,7 +78,7 @@ public class AdminGatewayImpl implements AdminGateway {
     }
 
     @Override
-    public void añadirJornadas(JornadaRecord jornada) {
+    public void aniadirJornadas(JornadaRecord jornada) {
 
 	Connection c = null;
 	PreparedStatement pst = null;
@@ -85,7 +90,7 @@ public class AdminGatewayImpl implements AdminGateway {
 	    pst_count = c.prepareStatement(CONTAR_JORNADAS);
 
 	    rs = pst_count.executeQuery();
-	    pst = c.prepareStatement(AÑADIR_JORNADAS);
+	    pst = c.prepareStatement(ANIADIR_JORNADAS);
 	    rs.next();
 	    pst.setInt(1, rs.getInt(1));
 	    pst.setInt(2, jornada.idMedico);
@@ -108,4 +113,61 @@ public class AdminGatewayImpl implements AdminGateway {
 
     }
 
+    @Override
+    public void crearJornadas(JornadaComunRecord jornada) {
+
+	Connection c = null;
+	PreparedStatement pst = null;
+	PreparedStatement pst_count = null;
+	ResultSet rs = null;
+	String resultado = "";
+	try {
+	    System.out.println(jornada);
+	    c = Jdbc.getCurrentConnection();
+	    pst_count = c.prepareStatement(CONTAR_JORNADASCOMUNES);
+
+	    rs = pst_count.executeQuery();
+
+	    pst = c.prepareStatement(ANIADIR_JORNADASCOMUNES);
+
+	    rs.next();
+	    pst.setInt(1, rs.getInt(1));
+	    pst.setString(2, jornada.nombre);
+	    pst.setString(3, jornada.listado(resultado, jornada.lunes));
+	    pst.setString(4, jornada.listado(resultado, jornada.martes));
+	    pst.setString(5, jornada.listado(resultado, jornada.miercoles));
+	    pst.setString(6, jornada.listado(resultado, jornada.jueves));
+	    pst.setString(7, jornada.listado(resultado, jornada.viernes));
+	    pst.setString(8, jornada.listado(resultado, jornada.sabado));
+	    pst.setString(9, jornada.listado(resultado, jornada.domingo));
+	    pst.executeUpdate();
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(pst);
+	    Jdbc.close(rs, pst_count);
+	}
+    }
+
+    @Override
+    public List<JornadaRecord> findByMedico(String idMedico) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	List<JornadaRecord> jornadas = new ArrayList<>();
+	try {
+	    c = Jdbc.getCurrentConnection();
+
+	    pst = c.prepareStatement(FINDBYMEDICOS);
+	    pst.setString(1, idMedico);
+	    rs = pst.executeQuery();
+
+	    jornadas = JornadaAssembler.toJornadaList(rs);
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+	return jornadas;
+    }
 }
