@@ -100,8 +100,14 @@ public class VentanaCitasA<E> extends JFrame {
     private JSpinner spNme;
     private JButton btAniadirE;
     private JList listEspecialistas;
-    private JTextField textField;
+    private JTextField txtEnfermero;
     private JPanel panel_17;
+    private JComboBox cbEspecialidad_1;
+    private JPanel panel_16_1;
+    private JSpinner spNme_1;
+    private JButton btAniadirE_1;
+    private JTextField txtEnfermeros;
+    private JList<? extends E> listEnfermeros;
     /**
      * Create the frame.
      */
@@ -218,7 +224,7 @@ public class VentanaCitasA<E> extends JFrame {
 	    panel.add(getLbPacientes());
 	    panel.add(getLbMedicos());
 	    panel.add(getTxtElegirEspecialidad());
-	    panel.add(getTextField());
+	    panel.add(getTxtEnfermero());
 	    panel.add(getLbLugar());
 	    panel.add(getLbFecha());
 	    panel.add(getLbHorario());
@@ -669,10 +675,12 @@ public class VentanaCitasA<E> extends JFrame {
 	private JPanel getPanel_14() {
 		if (panel_14 == null) {
 			panel_14 = new JPanel();
-			panel_14.setLayout(new GridLayout(3, 1, 0, 0));
+			panel_14.setLayout(new GridLayout(5, 1, 0, 0));
 			panel_14.add(getListMedicos());
 			panel_14.add(getLblNewLabel());
 			panel_14.add(getListEspecialistas());
+			panel_14.add(getTxtEnfermeros());
+			panel_14.add(getListEnfermeros());
 		}
 		return panel_14;
 	}
@@ -765,17 +773,68 @@ public class VentanaCitasA<E> extends JFrame {
 		}
 		return listEspecialistas;
 	}
-	private JTextField getTextField() {
-		if (textField == null) {
-			textField = new JTextField();
-			textField.setColumns(10);
+	private JTextField getTxtEnfermero() {
+		if (txtEnfermero == null) {
+			txtEnfermero = new JTextField();
+			txtEnfermero.setText("Enfermero");
+			txtEnfermero.setFont(new Font("Times New Roman", Font.BOLD, 16));
+			txtEnfermero.setEditable(false);
+			txtEnfermero.setColumns(10);
 		}
-		return textField;
+		return txtEnfermero;
 	}
 	private JPanel getPanel_17() {
 		if (panel_17 == null) {
 			panel_17 = new JPanel();
+			panel_17.setLayout(new BorderLayout(0, 0));
+			panel_17.add(getCbEspecialidad_1());
+			panel_17.add(getPanel_16_1(), BorderLayout.EAST);
 		}
 		return panel_17;
+	}
+	private JComboBox getCbEspecialidad_1() {
+		if (cbEspecialidad_1 == null) {
+			cbEspecialidad_1 = new JComboBox();
+		}
+		return cbEspecialidad_1;
+	}
+	private JPanel getPanel_16_1() {
+		if (panel_16_1 == null) {
+			panel_16_1 = new JPanel();
+			panel_16_1.setLayout(new BorderLayout(0, 0));
+			panel_16_1.add(getSpNme_1(), BorderLayout.WEST);
+			panel_16_1.add(getBtAniadirE_1(), BorderLayout.EAST);
+		}
+		return panel_16_1;
+	}
+	private JSpinner getSpNme_1() {
+		if (spNme_1 == null) {
+			spNme_1 = new JSpinner();
+		}
+		return spNme_1;
+	}
+	private JButton getBtAniadirE_1() {
+		if (btAniadirE_1 == null) {
+			btAniadirE_1 = new JButton("A\u00F1adir ");
+		}
+		return btAniadirE_1;
+	}
+	private JTextField getTxtEnfermeros() {
+		if (txtEnfermeros == null) {
+			txtEnfermeros = new JTextField();
+			txtEnfermeros.setBorder(null);
+			txtEnfermeros.setEnabled(false);
+			txtEnfermeros.setEditable(false);
+			txtEnfermeros.setText("Enfermeros");
+			txtEnfermeros.setFont(new Font("Times New Roman", Font.BOLD, 14));
+			txtEnfermeros.setColumns(10);
+		}
+		return txtEnfermeros;
+	}
+	private JList<? extends E> getListEnfermeros() {
+		if (listEnfermeros == null) {
+			listEnfermeros = new JList();
+		}
+		return listEnfermeros;
 	}
 }
