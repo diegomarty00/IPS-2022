@@ -86,13 +86,13 @@ public class PacienteGatewayImpl implements PacienteGateway {
 	}
 
 	@Override
-	public List<HistorialRecord> getHistorial(String dniPaciente) {
+	public HistorialRecord getHistorial(String dniPaciente) {
 		Connection c = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
 		
 		try {
-			c = Jdbc.getCurrentConnection();
+			c = Jdbc.getConnection();
 			
 			pst = c.prepareStatement(HISTORIAL_DNI);
 			pst.setString(1, dniPaciente);
@@ -101,7 +101,7 @@ public class PacienteGatewayImpl implements PacienteGateway {
 			
 			rs = pst.executeQuery();
 			
-			return RecordAssembler.toHistorialList(rs);
+			return RecordAssembler.toHistorialRecord(rs).get();
 		} catch (SQLException e) {
 			throw new PersistenceException(e);
 		} finally {

@@ -1,38 +1,27 @@
 package persistencia.paciente;
 
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import persistencia.PersistenceFactory;
+import persistencia.cita.CausaRecord;
+import persistencia.cita.CitaRecord;
+import persistencia.cita.PrescripcionRecord;
 
 public class HistorialRecord {
 
-	private String idHistorial;
-	private String titulo;
-	private String descripcion;
+	private int idHistorial;
 	private String dniPaciente;
-	private int idMedico;
-	private LocalDate fecha;
+	private List<CitaRecord> citas;
+	private List<CausaRecord> causas;
+	private List<PrescripcionRecord> prescripciones;
 	
-	public String getIdHistorial() {
+	public int getIdHistorial() {
 		return idHistorial;
 	}
 
-	public void setIdHistorial(String idHistorial) {
+	public void setIdHistorial(int idHistorial) {
 		this.idHistorial = idHistorial;
-	}
-
-	public String getTitulo() {
-		return titulo;
-	}
-
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
 	}
 
 	public String getDniPaciente() {
@@ -42,25 +31,35 @@ public class HistorialRecord {
 	public void setDniPaciente(String dniPaciente) {
 		this.dniPaciente = dniPaciente;
 	}
-
-	public int getIdMedico() {
-		return idMedico;
+	
+	public List<CitaRecord> getCitas() {
+		if (citas!=null) {
+			return PersistenceFactory.forCita().findByHistorialId(idHistorial);
+		}
+		return citas;
 	}
 
-	public void setIdMedico(int idMedico) {
-		this.idMedico = idMedico;
+	public List<CausaRecord> getCausas() {
+		if (causas!=null) {
+			List<CausaRecord> myCausas = new ArrayList<>();
+			for (CitaRecord cita : getCitas()) {
+				myCausas.addAll(PersistenceFactory.forCita().getCausas(cita.idCita));
+			}
+			return myCausas;
+		}
+		return causas;
 	}
 
-	public LocalDate getFecha() {
-		return fecha;
+	public List<PrescripcionRecord> getPrescripciones() {
+		if (prescripciones!=null) {
+			List<PrescripcionRecord> myPrescripciones = new ArrayList<>();
+			for (CitaRecord cita : getCitas()) {
+				myPrescripciones.addAll(PersistenceFactory.forCita().getPrescripciones(cita.idCita));
+			}
+			return myPrescripciones;
+		}
+		return prescripciones;
 	}
 
-	public void setFecha(LocalDate fecha) {
-		this.fecha = fecha;
-	}
-
-	public String toString() {
-		return getTitulo()+": "+getDescripcion()+". Fecha: "+getFecha().toString();
-	}
 	
 }

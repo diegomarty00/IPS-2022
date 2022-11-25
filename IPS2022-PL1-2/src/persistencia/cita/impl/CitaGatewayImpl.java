@@ -25,6 +25,7 @@ public class CitaGatewayImpl implements CitaGateway {
     private static final String CITAS_DEL_DIA = "SELECT * from CITA where FECHA = ?";
 	private static final String FIND_CAUSAS_FROM_CITA = "SELECT * from CAUSA where IDCITA = ?";
 	private static final String FIND_PRESCRIPCIONES_FROM_CITA = "SELECT * from PRESCRIPCION where IDCITA = ?";
+	private static final String FIN_BY_HISTORIAL_ID = "SELECT * FROM CITA WHERE IDHISTORIAL = ?";
 
     private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
     private static String ASIGNAR_NUEVO_HORARIO = "update CITA set HORA_ENTRADA_ESTIMADA = ? , HORA_SALIDA_ESTIMADA = ?  where idcita = ?";
@@ -139,7 +140,29 @@ public class CitaGatewayImpl implements CitaGateway {
 	}
     }
 
-    
+    @Override
+    public List<CitaRecord> findByHistorialId(int idHistorial) {
+    	Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+			c = Jdbc.getConnection();
+			
+			pst = c.prepareStatement(FIN_BY_HISTORIAL_ID);
+			pst.setInt(1, idHistorial);
+			
+			rs = pst.executeQuery();			
+
+			return RecordAssembler.toCitaList(rs);
+
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+
+    }
     
     @Override
     public void asignarHoraEntrada(String idCita, LocalTime horaEntrada) {
