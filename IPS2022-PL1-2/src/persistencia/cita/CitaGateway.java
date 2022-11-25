@@ -15,7 +15,7 @@ public interface CitaGateway extends Gateway<CitaRecord> {
 
     void asignarHoraSalida(String idCita, LocalTime horaSalida);
 
-    void setPacienteAcudido(String idCita);
+    void setPacienteAcudido(String idCita, String estadoAsistencia);
 
     List<CitaRecord> getCitasDelDia(Date dia);
 
@@ -28,4 +28,12 @@ public interface CitaGateway extends Gateway<CitaRecord> {
     List<CausaRecord> getCausas(String idCita);
     
     void removeCausa(int idCausa);
+
+	List<PrescripcionRecord> getPrescripciones(String idCita);
+	
+	int getLastId(String tabla, String columnName);
+
+	void insertarPrescripcion(PrescripcionRecord presc);
+
+	void deletePrescripcion(PrescripcionRecord presc);
 }

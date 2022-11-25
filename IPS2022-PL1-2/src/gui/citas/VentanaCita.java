@@ -7,13 +7,16 @@ import java.awt.event.ActionListener;
 import java.time.LocalTime;
 import java.util.List;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
@@ -23,14 +26,13 @@ import javax.swing.event.ChangeListener;
 
 import business.BusinessFactory;
 import business.cita.CitaService;
-import business.cita.impl.CitaServiceImpl;
 import persistencia.PersistenceFactory;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
+import persistencia.cita.PrescripcionRecord;
 import persistencia.cita.impl.CitaGatewayImpl;
 import persistencia.paciente.PacienteRecord;
 import util.BusinessException;
-import javax.swing.JList;
 
 public class VentanaCita extends JFrame {
 
@@ -47,7 +49,6 @@ public class VentanaCita extends JFrame {
 	CitaRecord cita;
 	PacienteRecord pacienteAsociado;
 	CitaService citaService;
-	private JCheckBox chckbxPacienteAcudido;
 	private JLabel lblCita;
 	private JLabel lblHoraEntrada;
 	private JLabel lblDosPuntosEntrada;
@@ -59,8 +60,15 @@ public class VentanaCita extends JFrame {
 	private JButton btnVerHistorial;
 	private JLabel lblCausas;
 	private JButton btnSeleccionarCausas;
-	private JList<CausaRecord> list;
+	private JList<CausaRecord> listCausas;
 	private DefaultListModel<CausaRecord> modeloCausas;
+	private JLabel lblPrescripciones;
+	private JList<PrescripcionRecord> listPrescripciones;
+	private DefaultListModel<PrescripcionRecord> modeloPrescripciones;
+	private JButton btnSeleccionarPrescripciones;
+	private JScrollPane scrollPane_1;
+	private JScrollPane scrollPane;
+	private JComboBox cbAsistencia;
 
 	/**
 	 * Launch the application.
@@ -90,12 +98,15 @@ public class VentanaCita extends JFrame {
 		citaService = BusinessFactory.forCitaService();
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 626, 434);
+		setBounds(100, 100, 788, 458);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		modeloCausas = new DefaultListModel<>();
 		updateModeloCausas();
+		
+		modeloPrescripciones = new DefaultListModel<>();
+		updateModeloPrescripciones();
 		
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -107,7 +118,6 @@ public class VentanaCita extends JFrame {
 
 		SpinnerModel smHoraEntrada = new SpinnerNumberModel((cita.horaEntradaReal!=null)?cita.horaEntradaReal.getHour():00, 00, 23, 1);
 		spnHoraEntrada = new JSpinner(smHoraEntrada);
-		spnHoraEntrada.setVisible(cita.pacienteAcudido);
 		spnHoraEntrada.setBounds(118, 105, 37, 20);
 		spnHoraEntrada.addChangeListener(new ChangeListener() {
 			@Override
@@ -118,19 +128,16 @@ public class VentanaCita extends JFrame {
 		contentPane.add(spnHoraEntrada);
 
 		lblHoraEntrada = new JLabel("Hora de entrada");
-		lblHoraEntrada.setVisible(cita.pacienteAcudido);
 		lblHoraEntrada.setBounds(10, 111, 98, 14);
 		contentPane.add(lblHoraEntrada);
 
 		lblDosPuntosEntrada = new JLabel(":");
-		lblDosPuntosEntrada.setVisible(cita.pacienteAcudido);
 		lblDosPuntosEntrada.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblDosPuntosEntrada.setBounds(158, 107, 46, 14);;
 		contentPane.add(lblDosPuntosEntrada);
 		
 		SpinnerModel smMinutosEntrada = new SpinnerNumberModel((cita.horaEntradaReal!=null)?cita.horaEntradaReal.getMinute():00, 00, 59, 1);
 		spnMinutosEntrada = new JSpinner(smMinutosEntrada);
-		spnMinutosEntrada.setVisible(cita.pacienteAcudido);
 		spnMinutosEntrada.setBounds(165, 105, 36, 20);
 		spnMinutosEntrada.addChangeListener(new ChangeListener() {
 			@Override
@@ -141,18 +148,16 @@ public class VentanaCita extends JFrame {
 		contentPane.add(spnMinutosEntrada);
 
 		btnSetHoraEntrada = new JButton("Establecer hora entrada");
-		btnSetHoraEntrada.setVisible(cita.pacienteAcudido);
 		btnSetHoraEntrada.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				establecerHoraEntrada();
 			}
 		});
-		btnSetHoraEntrada.setBounds(273, 104, 158, 30);
+		btnSetHoraEntrada.setBounds(273, 104, 188, 30);
 		contentPane.add(btnSetHoraEntrada);
 
 		SpinnerModel smHoraSalida = new SpinnerNumberModel((cita.horaSalidaReal!=null)?cita.horaSalidaReal.getHour():00, 00, 23, 1);
 		spnHoraSalida = new JSpinner(smHoraSalida);
-		spnHoraSalida.setVisible(cita.pacienteAcudido);
 		spnHoraSalida.setBounds(118, 150, 37, 20);
 		spnHoraSalida.addChangeListener(new ChangeListener() {
 			@Override
@@ -163,19 +168,16 @@ public class VentanaCita extends JFrame {
 		contentPane.add(spnHoraSalida);
 
 		lblHoraSalida = new JLabel("Hora de salida");
-		lblHoraSalida.setVisible(cita.pacienteAcudido);
 		lblHoraSalida.setBounds(10, 155, 98, 14);
 		contentPane.add(lblHoraSalida);
 
 		lblDosPuntosSalida = new JLabel(":");
-		lblDosPuntosSalida.setVisible(cita.pacienteAcudido);
 		lblDosPuntosSalida.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblDosPuntosSalida.setBounds(158, 151, 46, 14);
 		contentPane.add(lblDosPuntosSalida);
 
 		SpinnerModel smMinutosSalida = new SpinnerNumberModel((cita.horaSalidaReal!=null)?cita.horaSalidaReal.getMinute():00, 00, 59, 1);
 		spnMinutosSalida = new JSpinner(smMinutosSalida);
-		spnMinutosSalida.setVisible(cita.pacienteAcudido);
 		spnMinutosSalida.setBounds(168, 150, 36, 20);
 		spnMinutosSalida.addChangeListener(new ChangeListener() {
 			@Override
@@ -186,13 +188,12 @@ public class VentanaCita extends JFrame {
 		contentPane.add(spnMinutosSalida);
 
 		btnSetHoraSalida = new JButton("Establecer hora salida");
-		btnSetHoraSalida.setVisible(cita.pacienteAcudido);
 		btnSetHoraSalida.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				establecerHoraSalida();
 			}
 		});
-		btnSetHoraSalida.setBounds(273, 145, 158, 30);
+		btnSetHoraSalida.setBounds(273, 145, 188, 30);
 		contentPane.add(btnSetHoraSalida);
 
 		btnCerrarCita = new JButton("Cerrar cita");
@@ -201,13 +202,24 @@ public class VentanaCita extends JFrame {
 				cerrarCita();
 			}
 		});
-		btnCerrarCita.setBounds(486, 371, 124, 23);
+		btnCerrarCita.setBounds(635, 395, 124, 23);
 		contentPane.add(btnCerrarCita);
-		contentPane.add(getChckbxPacienteAcudido());
 		contentPane.add(getBtnVerHistorial());
 		contentPane.add(getLblCausas());
 		contentPane.add(getBtnSeleccionarCausas());
-		contentPane.add(getList());
+		contentPane.add(getLblPrescripciones());
+		contentPane.add(getBtnSeleccionarPrescripciones());
+		
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(399, 252, 310, 127);
+		contentPane.add(scrollPane_1);
+		scrollPane_1.setViewportView(getListPrescripciones());
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(23, 250, 310, 129);
+		contentPane.add(scrollPane);
+		scrollPane.setViewportView(getListCausas());
+		contentPane.add(getCbAsistencia());
 	}
 
 	private void updateModeloCausas() {
@@ -215,6 +227,14 @@ public class VentanaCita extends JFrame {
 		List<CausaRecord> causas = PersistenceFactory.forCita().getCausas(cita.idCita);
 		for (CausaRecord causa : causas) {
 			modeloCausas.addElement(causa);
+		}
+	}
+	
+	private void updateModeloPrescripciones() {
+		modeloPrescripciones.clear();
+		List<PrescripcionRecord> prescripciones = PersistenceFactory.forCita().getPrescripciones(cita.idCita);
+		for (PrescripcionRecord prescripcion : prescripciones) {
+			modeloPrescripciones.addElement(prescripcion);
 		}
 	}
 
@@ -246,7 +266,7 @@ public class VentanaCita extends JFrame {
 					citaService.asignarHoraSalida(cita.idCita, (Integer) spnHoraSalida.getValue(),
 							(Integer) spnMinutosSalida.getValue());
 				
-				citaService.pacienteAcudido(cita.idCita);
+				citaService.pacienteAcudido(cita.idCita, (String)cbAsistencia.getSelectedItem());
 				dispose();
 			}
 			else {
@@ -269,34 +289,7 @@ public class VentanaCita extends JFrame {
 		}
 		return true;
 	}
-	private JCheckBox getChckbxPacienteAcudido() {
-		if (chckbxPacienteAcudido == null) {
-			chckbxPacienteAcudido = new JCheckBox("Paciente Acudido");
-			chckbxPacienteAcudido.setSelected(cita.pacienteAcudido);
-			chckbxPacienteAcudido.setBounds(10, 76, 129, 23);
-			chckbxPacienteAcudido.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					changeVisibility();
-				}
-			});
-		}
-		return chckbxPacienteAcudido;
-	}
 	
-	private void changeVisibility() {
-		spnHoraEntrada.setVisible(!spnHoraEntrada.isVisible());
-		spnMinutosEntrada.setVisible(!spnMinutosEntrada.isVisible());
-		spnHoraSalida.setVisible(!spnHoraSalida.isVisible());
-		spnMinutosSalida.setVisible(!spnMinutosSalida.isVisible());
-		lblDosPuntosEntrada.setVisible(!lblDosPuntosEntrada.isVisible());
-		lblDosPuntosSalida.setVisible(!lblDosPuntosSalida.isVisible());
-		lblHoraEntrada.setVisible(!lblHoraEntrada.isVisible());
-		lblHoraSalida.setVisible(!lblHoraSalida.isVisible());
-		btnSetHoraEntrada.setVisible(!btnSetHoraEntrada.isVisible());
-		btnSetHoraSalida.setVisible(!btnSetHoraSalida.isVisible());
-	}
 	private JButton getBtnVerHistorial() {
 		if (btnVerHistorial == null) {
 			btnVerHistorial = new JButton("Ver Historial");
@@ -306,7 +299,7 @@ public class VentanaCita extends JFrame {
 					v.setVisible(true);
 				}
 			});
-			btnVerHistorial.setBounds(506, 34, 104, 23);
+			btnVerHistorial.setBounds(655, 34, 104, 23);
 		}
 		return btnVerHistorial;
 	}
@@ -326,7 +319,7 @@ public class VentanaCita extends JFrame {
 					openVentCausas();
 				}			
 			});
-			btnSeleccionarCausas.setBounds(198, 223, 124, 20);
+			btnSeleccionarCausas.setBounds(186, 223, 181, 20);
 		}
 		return btnSeleccionarCausas;
 	}
@@ -337,11 +330,51 @@ public class VentanaCita extends JFrame {
 		this.dispose();
 	}
 	
-	private JList<CausaRecord> getList() {
-		if (list == null) {
-			list = new JList<CausaRecord>(modeloCausas);
-			list.setBounds(10, 252, 310, 127);
+	private JList<CausaRecord> getListCausas() {
+		if (listCausas == null) {
+			listCausas = new JList<CausaRecord>(modeloCausas);
 		}
-		return list;
+		return listCausas;
+	}
+	private JLabel getLblPrescripciones() {
+		if (lblPrescripciones == null) {
+			lblPrescripciones = new JLabel("Prescripciones");
+			lblPrescripciones.setFont(new Font("Tahoma", Font.PLAIN, 16));
+			lblPrescripciones.setBounds(399, 211, 166, 41);
+		}
+		return lblPrescripciones;
+	}
+	private JList<PrescripcionRecord> getListPrescripciones() {
+		if (listPrescripciones == null) {
+			listPrescripciones = new JList<PrescripcionRecord>(modeloPrescripciones);
+		}
+		return listPrescripciones;
+	}
+	private JButton getBtnSeleccionarPrescripciones() {
+		if (btnSeleccionarPrescripciones == null) {
+			btnSeleccionarPrescripciones = new JButton("Seleccionar Prescripciones");
+			btnSeleccionarPrescripciones.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					openVentPresc();
+				}
+			});
+			btnSeleccionarPrescripciones.setBounds(545, 223, 200, 20);
+		}
+		return btnSeleccionarPrescripciones;
+	}
+	
+	private void openVentPresc() {
+		VentanaPrescripciones ventPresc = new VentanaPrescripciones(cita);
+		ventPresc.setVisible(true);
+		this.dispose();
+	}
+	private JComboBox getCbAsistencia() {
+		if (cbAsistencia == null) {
+			cbAsistencia = new JComboBox();
+			cbAsistencia.setModel(new DefaultComboBoxModel(new String[] {"Asistencia Sin Asignar", "Paciente Acudido", "Paciente No Acudido"}));
+			cbAsistencia.setBounds(10, 72, 188, 22);
+			cbAsistencia.setSelectedItem(cita.pacienteAcudido);
+		}
+		return cbAsistencia;
 	}
 }

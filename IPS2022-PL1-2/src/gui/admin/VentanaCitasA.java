@@ -55,7 +55,7 @@ public class VentanaCitasA<E> extends JFrame {
     private JLabel lbHorario;
     private JPanel pDer;
     private JLabel lbMedicosSelccionados;
-    private JButton jbAñadir;
+    private JButton jbAniadir;
     private JPanel panelComboBox;
     private JComboBox cbPacinte;
     private JComboBox cbMedicos;
@@ -82,8 +82,8 @@ public class VentanaCitasA<E> extends JFrame {
     private JPanel panel_11;
     private JPanel panel_12;
     private JPanel panel_13;
-    private JLabel lbAño;
-    private JComboBox cbAño;
+    private JLabel lbAnio;
+    private JComboBox cbAnio;
     private JLabel lbMes;
     private JComboBox cbMes;
     private JLabel lbDia;
@@ -179,7 +179,7 @@ public class VentanaCitasA<E> extends JFrame {
 			int si = eslist.size();
 		    if (size > 0|| si > 0 ) {
 			CrearCita cc = new CrearCita();
-				if (cbAño.getSelectedIndex() != -1
+				if (cbAnio.getSelectedIndex() != -1
 					&& cbMes.getSelectedIndex() != -1
 					&& cbDia.getSelectedIndex() != -1
 					&& cbHoraInicio.getSelectedIndex() != -1
@@ -188,7 +188,7 @@ public class VentanaCitasA<E> extends JFrame {
 						DatosCita frame = new DatosCita(cbPacinte.getSelectedItem().toString(),
 								jChBUrgente.isSelected(),
 							    cbLugar.getSelectedItem().toString(),
-							    cbAño.getSelectedItem().toString(),
+							    cbAnio.getSelectedItem().toString(),
 							    cbMes.getSelectedItem().toString(),
 							    cbDia.getSelectedItem().toString(),
 							    cbHoraInicio.getSelectedItem().toString(),
@@ -285,11 +285,11 @@ public class VentanaCitasA<E> extends JFrame {
 	return lbMedicosSelccionados;
     }
 
-    private JButton getJbAñadir() {
-	if (jbAñadir == null) {
-	    jbAñadir = new JButton("A\u00F1adir");
+    private JButton getJbAniadir() {
+	if (jbAniadir == null) {
+	    jbAniadir = new JButton("A\u00F1adir");
 
-	    jbAñadir.addActionListener(new ActionListener() {
+	    jbAniadir.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 			if(cbMedicos.getSelectedIndex() > 0 ) {
 			    String me = cbMedicos.getSelectedItem().toString();
@@ -304,9 +304,9 @@ public class VentanaCitasA<E> extends JFrame {
 			}
 		}
 	    });
-	    jbAñadir.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+	    jbAniadir.setFont(new Font("Times New Roman", Font.PLAIN, 12));
 	}
-	return jbAñadir;
+	return jbAniadir;
     }
 
     private JPanel getPanelComboBox() {
@@ -505,7 +505,7 @@ public class VentanaCitasA<E> extends JFrame {
     private JPanel getPanel_8() {
 	if (panel_8 == null) {
 	    panel_8 = new JPanel();
-	    panel_8.add(getJbAñadir());
+	    panel_8.add(getJbAniadir());
 	}
 	return panel_8;
     }
@@ -545,8 +545,8 @@ public class VentanaCitasA<E> extends JFrame {
 	if (panel_11 == null) {
 	    panel_11 = new JPanel();
 	    panel_11.setLayout(new GridLayout(2, 0, 0, 0));
-	    panel_11.add(getLbAño());
-	    panel_11.add(getCbAño());
+	    panel_11.add(getLbAnio());
+	    panel_11.add(getCbAnio());
 	}
 	return panel_11;
     }
@@ -571,25 +571,25 @@ public class VentanaCitasA<E> extends JFrame {
 	return panel_13;
     }
 
-    private JLabel getLbAño() {
-	if (lbAño == null) {
-	    lbAño = new JLabel("A\u00F1o");
-	    lbAño.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-	    lbAño.setHorizontalAlignment(SwingConstants.CENTER);
+    private JLabel getLbAnio() {
+	if (lbAnio == null) {
+	    lbAnio = new JLabel("A\u00F1o");
+	    lbAnio.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+	    lbAnio.setHorizontalAlignment(SwingConstants.CENTER);
 	}
-	return lbAño;
+	return lbAnio;
     }
 
-    private JComboBox getCbAño() {
-	if (cbAño == null) {
-	    cbAño = new JComboBox();
+    private JComboBox getCbAnio() {
+	if (cbAnio == null) {
+	    cbAnio = new JComboBox();
 	    DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
 	    for (int i = 2022; i < 2051; i++) {
 		mod.addElement(i);
 	    }
-	    cbAño.setModel(mod);
+	    cbAnio.setModel(mod);
 	}
-	return cbAño;
+	return cbAnio;
     }
 
     private JLabel getLbMes() {

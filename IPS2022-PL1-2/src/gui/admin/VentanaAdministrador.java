@@ -69,9 +69,9 @@ public class VentanaAdministrador extends JFrame {
 			btJornadas = new JButton("Asignar Jornadas");
 			btJornadas.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					AsignarciónJornadasLaborales ven;
+					AsignarcionJornadasLaborales ven;
 					try {
-						ven = new AsignarciónJornadasLaborales();
+						ven = new AsignarcionJornadasLaborales();
 						ven.setVisible(true);
 					} catch (BusinessException e1) {
 						e1.printStackTrace();

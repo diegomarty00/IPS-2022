@@ -72,7 +72,7 @@ public class CrearCita {
 		ci.correoPaciente = correo;
 		ci.telefonoPaciente = num;
 		ci.urgente = urgencia;
-		ci.pacienteAcudido = false ;
+		ci.pacienteAcudido = "Asistencia Sin Asignar" ;
 		ci.lugar = lugar;
 		ci.fecha = fecha;
 		ci.horaEntradaEstimada = LocalTime.parse(horaE);
@@ -142,9 +142,9 @@ public class CrearCita {
 		CitaGatewayImpl cg = new CitaGatewayImpl();
 		cg.add(ci);
 	}
-	private LocalDate toFecha(String año, String mes, String dia) {
+	private LocalDate toFecha(String anio, String mes, String dia) {
 		
-		return LocalDate.parse(año+"-"+mes+"-"+dia);
+		return LocalDate.parse(anio+"-"+mes+"-"+dia);
 	}
 
 //	public void crearCita(String paciente, boolean urgencia,String lugar) {

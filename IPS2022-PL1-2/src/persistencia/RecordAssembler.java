@@ -9,6 +9,7 @@ import java.util.Optional;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.MedicoCitaRecord;
+import persistencia.cita.PrescripcionRecord;
 import persistencia.medico.MedicoRecord;
 import persistencia.paciente.HistorialRecord;
 import persistencia.paciente.PacienteRecord;
@@ -78,7 +79,7 @@ public class RecordAssembler {
 		if(rs.getTime("HORA_SALIDA_ESTIMADA") != null) 
 			cita.horaSalidaEstimada = rs.getTime("HORA_SALIDA_ESTIMADA").toLocalTime();
 		
-		cita.pacienteAcudido = rs.getBoolean("PACIENTE_ACUDIDO");
+		cita.pacienteAcudido = rs.getString("PACIENTE_ACUDIDO");
 		if (rs.getTime("HORA_ENTRADA_REAL") != null)
 			cita.horaEntradaReal = rs.getTime("HORA_ENTRADA_REAL").toLocalTime();
 		if (rs.getTime("HORA_SALIDA_REAL") != null)
@@ -118,6 +119,16 @@ public class RecordAssembler {
 	private static CausaRecord resultSetToCausaRecord(ResultSet rs) throws SQLException {
 		return new CausaRecord(rs.getInt("IDCAUSA"), rs.getString("TITULO"), rs.getTime("HORA_ASIGNACION").toLocalTime(),
 				rs.getDate("FECHA_ASIGNACION").toLocalDate(), rs.getString("IDCITA"));
+	}
+
+	private static PrescripcionRecord resultSetToPrescripcionRecord(ResultSet rs) throws SQLException {
+		if (rs.getString("TIPO").equalsIgnoreCase("MEDICAMENTO"))
+			return new PrescripcionRecord(rs.getInt("IDPRESCRIPCION"), rs.getString("TITULO"), rs.getString("TIPO"), 
+					rs.getString("CANTIDAD"), rs.getString("INTERVALO_DOSIS"), rs.getString("DURACION"), rs.getString("OBSERVACIONES"),
+					rs.getTime("HORA_ASIGNACION").toLocalTime(), rs.getDate("FECHA_ASIGNACION").toLocalDate(), rs.getString("IDCITA"));
+		else 
+			return new PrescripcionRecord(rs.getInt("IDPRESCRIPCION"), rs.getString("TITULO"), rs.getString("TIPO"), rs.getString("OBSERVACIONES"),
+					rs.getTime("HORA_ASIGNACION").toLocalTime(), rs.getDate("FECHA_ASIGNACION").toLocalDate(), rs.getString("IDCITA"));
 	}
 
 	public static Optional<CitaRecord> toCitaRecord(ResultSet rs) throws SQLException {
@@ -161,6 +172,13 @@ public class RecordAssembler {
 		List<CausaRecord> list = new ArrayList<CausaRecord>();
 		while (rs.next())
 			list.add(resultSetToCausaRecord(rs));
+		return list;
+	}
+
+	public static List<PrescripcionRecord> toPrescripcionList(ResultSet rs) throws SQLException {
+		List<PrescripcionRecord> list = new ArrayList<PrescripcionRecord>();
+		while (rs.next())
+			list.add(resultSetToPrescripcionRecord(rs));
 		return list;
 	}
 	

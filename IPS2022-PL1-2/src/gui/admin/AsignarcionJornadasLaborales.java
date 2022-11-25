@@ -32,11 +32,11 @@ import persistencia.admin.JornadaRecord;
 import persistencia.admin.MedicoRecord;
 import util.BusinessException;
 
-public class AsignarciónJornadasLaborales extends JFrame {
+public class AsignarcionJornadasLaborales extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private JPanel panelDíaSemana;
+    private JPanel panelDiaSemana;
     private JCheckBox chckbxLunes;
     private JCheckBox chckbxMartes;
     private JCheckBox chckbxMiercoles;
@@ -81,7 +81,7 @@ public class AsignarciónJornadasLaborales extends JFrame {
 	EventQueue.invokeLater(new Runnable() {
 	    public void run() {
 		try {
-		    AsignarciónJornadasLaborales frame = new AsignarciónJornadasLaborales();
+		    AsignarcionJornadasLaborales frame = new AsignarcionJornadasLaborales();
 		    frame.setVisible(true);
 		} catch (Exception e) {
 		    e.printStackTrace();
@@ -95,7 +95,7 @@ public class AsignarciónJornadasLaborales extends JFrame {
      * 
      * @throws BusinessException
      */
-    public AsignarciónJornadasLaborales() throws BusinessException {
+    public AsignarcionJornadasLaborales() throws BusinessException {
 	setResizable(false);
 	setTitle("Asignaci\u00F3n Jornadas Laborales - Manual");
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -104,7 +104,7 @@ public class AsignarciónJornadasLaborales extends JFrame {
 	contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 	setContentPane(contentPane);
 	contentPane.setLayout(null);
-	contentPane.add(getPanelDíaSemana());
+	contentPane.add(getPanelDiaSemana());
 	contentPane.add(getPanelInicioJornada());
 	contentPane.add(getPanelHoraJornada());
 	contentPane.add(getPanelFinJornada());
@@ -114,23 +114,23 @@ public class AsignarciónJornadasLaborales extends JFrame {
 	contentPane.add(getBtnCancelar());
     }
 
-    private JPanel getPanelDíaSemana() {
-	if (panelDíaSemana == null) {
-	    panelDíaSemana = new JPanel();
-	    panelDíaSemana.setBounds(20, 104, 322, 83);
-	    panelDíaSemana
+    private JPanel getPanelDiaSemana() {
+	if (panelDiaSemana == null) {
+	    panelDiaSemana = new JPanel();
+	    panelDiaSemana.setBounds(20, 104, 322, 83);
+	    panelDiaSemana
 		    .setBorder(new TitledBorder(null, "D\u00EDas de la semana",
 
 			    TitledBorder.LEFT, TitledBorder.TOP, null, null));
-	    panelDíaSemana.add(getChckbxLunes());
-	    panelDíaSemana.add(getChckbxMartes());
-	    panelDíaSemana.add(getChckbxMiercoles());
-	    panelDíaSemana.add(getChckbxJueves());
-	    panelDíaSemana.add(getChckbxViernes());
-	    panelDíaSemana.add(getChckbxSabado());
-	    panelDíaSemana.add(getChckbxDomingo());
+	    panelDiaSemana.add(getChckbxLunes());
+	    panelDiaSemana.add(getChckbxMartes());
+	    panelDiaSemana.add(getChckbxMiercoles());
+	    panelDiaSemana.add(getChckbxJueves());
+	    panelDiaSemana.add(getChckbxViernes());
+	    panelDiaSemana.add(getChckbxSabado());
+	    panelDiaSemana.add(getChckbxDomingo());
 	}
-	return panelDíaSemana;
+	return panelDiaSemana;
     }
 
     private JCheckBox getChckbxLunes() {
@@ -427,8 +427,8 @@ public class AsignarciónJornadasLaborales extends JFrame {
 			if (getListMedicos().getSelectedValuesList()
 				.size() == 0)
 			    JOptionPane.showMessageDialog(null,
-				    "Por favor, seleccione a algún médico al que quiera añadirle una jornada",
-				    "Error - Médico no seleccionado", 0);
+				    "Por favor, seleccione a algï¿½n mï¿½dico al que quiera aï¿½adirle una jornada",
+				    "Error - Mï¿½dico no seleccionado", 0);
 		    } catch (HeadlessException e2) {
 			e2.printStackTrace();
 		    } catch (BusinessException e2) {
@@ -446,8 +446,8 @@ public class AsignarciónJornadasLaborales extends JFrame {
 					jornada.fin = indicarFin();
 					asignarDias(jornada);
 					JOptionPane.showMessageDialog(null,
-						"Se han añadido las jornadas correctamente.",
-						"Asignación realizada", 1);
+						"Se han aï¿½adido las jornadas correctamente.",
+						"Asignaciï¿½n realizada", 1);
 				    }
 				}
 
@@ -677,15 +677,15 @@ public class AsignarciónJornadasLaborales extends JFrame {
 		&& !getChckbxSabado().isSelected()
 		&& !getChckbxDomingo().isSelected()) {
 	    JOptionPane.showMessageDialog(null,
-		    "Por favor, seleccione al menos un día de la semana para añadir a la jornada",
-		    "Error - Días de la semana no escogidos", 0);
+		    "Por favor, seleccione al menos un dï¿½a de la semana para aï¿½adir a la jornada",
+		    "Error - Dï¿½as de la semana no escogidos", 0);
 	    return false;
 	}
 
 	if (indicarFin().compareTo(indicarInicio()) <= 0) {
 	    JOptionPane.showMessageDialog(null,
-		    "Por favor, comprueba de que la fecha de incio de jornada sea menor que la de finalización de la misma",
-		    "Error - Mala finalización de jornadas", 0);
+		    "Por favor, comprueba de que la fecha de incio de jornada sea menor que la de finalizaciï¿½n de la misma",
+		    "Error - Mala finalizaciï¿½n de jornadas", 0);
 	    return false;
 	}
 	return true;
