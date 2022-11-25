@@ -10,6 +10,7 @@ import business.cita.operaciones.CrearCita;
 import business.cita.operaciones.ModificarHoras;
 import gui.admin.DatosCita.ProcesarAccion;
 import persistencia.cita.CitaRecord;
+import persistencia.enfermero.EnfermeroCitaRecord;
 import persistencia.especialidad.EspecialidadCitaRecord;
 
 import javax.swing.JLabel;
@@ -58,18 +59,21 @@ public class CitaPrioritaria extends JFrame {
 	private DefaultListModel<CitaRecord> modelo = new DefaultListModel<>();
 	DefaultListModel<EspecialidadCitaRecord> eslist;
 	private DefaultListModel<String> modjlist;
+	private DefaultListModel<EnfermeroCitaRecord> enflist;
 	private ProcesarAccion pa= new ProcesarAccion(); 
 	private List<String> listaH = setHorasL();
 	/**
 	 * Create the frame.
 	 * @param eslist 
+	 * @param enflist 
 	 * @param  
 	 */
 	public CitaPrioritaria(CrearCita cc,DatosCita a ,String paciente, boolean urgencia,String lugar, String anio , String mes , String dia, String horaE, String horaS,DefaultListModel<String> modjlist,
-			String email, String telf,String otros,boolean prioridad, DefaultListModel<EspecialidadCitaRecord> eslist) {
+			String email, String telf,String otros,boolean prioridad, DefaultListModel<EspecialidadCitaRecord> eslist, DefaultListModel<EnfermeroCitaRecord> enflist) {
 		this.cc = cc;
 		this.eslist = eslist;
 		dc = a;
+		this.enflist = enflist;
 		this.paciente = paciente;
 		this.urgente = urgencia;
 		this.lugar = lugar;
@@ -292,6 +296,10 @@ public class CitaPrioritaria extends JFrame {
 		    if(eslist !=null) {
 		    	for(int i = 0 ; i < eslist.size() ; i++)
 		    		cc.crearCitaEspecialidad(eslist.get(i));
+		    }
+		    if(enflist !=null) {
+		    	for(int i = 0 ; i < enflist.size() ; i++)
+		    		cc.crearCitaEnfermero(enflist.get(i));
 		    }
 		    
 		    deletet();

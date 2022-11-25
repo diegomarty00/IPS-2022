@@ -20,9 +20,9 @@ import util.jdbc.Jdbc;
 
 public class CitaGatewayImpl implements CitaGateway {
 
-    private static final String FIN_BY_CITA_ID = "SELECT * from CITA where IDCITA = ?";
-    private static final String PROXIMAS_CITAS = "SELECT * from CITA where fecha >= ?";
-    private static final String CITAS_DEL_DIA = "SELECT * from CITA where FECHA = ?";
+    private static final String FIN_BY_CITA_ID = "SELECT * from CITA where IDCITA = ? AND CONFIRMADA = true";
+    private static final String PROXIMAS_CITAS = "SELECT * from CITA where fecha >= ? AND CONFIRMADA = true";
+    private static final String CITAS_DEL_DIA = "SELECT * from CITA where FECHA = ? AND CONFIRMADA = true";
 	private static final String FIND_CAUSAS_FROM_CITA = "SELECT * from CAUSA where IDCITA = ?";
 	private static final String FIND_PRESCRIPCIONES_FROM_CITA = "SELECT * from PRESCRIPCION where IDCITA = ?";
 
@@ -34,7 +34,7 @@ public class CitaGatewayImpl implements CitaGateway {
     private static String DELETE_CAUSA= "DELETE FROM Causa WHERE IDCAUSA = ?";
     private static String ADD_PRESCRIPCION = "INSERT INTO PRESCRIPCION values (?,?,?,?,?,?,?,?,?,?)";
     private static String DELETE_PRESCRIPCION = "DELETE FROM PRESCRIPCION WHERE IDPRESCRIPCION = ?";
-    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static String MODIFICAR_CONTACTO = "update CITA set CORREO_PACIENTE = ? , TELEFONO_PACIENTE = ? where idcita = ?";
     
 	
@@ -78,6 +78,7 @@ public class CitaGatewayImpl implements CitaGateway {
 			pst.setString(12, t.lugar);
 			pst.setString(13, t.otros);
 			pst.setBoolean(14, t.prioritario);
+			pst.setBoolean(15, t.confirmada);
 
 	    pst.execute();
 	} catch (SQLException e) {
@@ -93,7 +94,7 @@ public class CitaGatewayImpl implements CitaGateway {
 
     }
 
-	private static String findAll = "SELECT * FROM PUBLIC.cita";
+	private static String findAll = "SELECT * FROM PUBLIC.cita WHERE CONFIRMADA = true";
 	@Override
 	public List<CitaRecord> findAll() {
 		Connection c = null;

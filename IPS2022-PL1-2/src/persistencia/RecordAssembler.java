@@ -44,14 +44,22 @@ public class RecordAssembler {
 		return med;
 	}
 	
+	
+	
 	public static EnfermeroRecord rsToEnfermero(ResultSet r) throws SQLException {
 		EnfermeroRecord enf = new EnfermeroRecord();
 		enf.idEnfermero = r.getInt("idenfermero");
 		enf.nombre = r.getString("nombre");
 		enf.apellidos = r.getString("apellidos");
 		
-		
 		return enf;
+	}
+	
+	public static Optional<EnfermeroRecord> rsToEnfermeroO(ResultSet r) throws SQLException {
+		if (r.next()) {
+			return Optional.of(rsToEnfermero(r));
+		} else
+			return Optional.ofNullable(null);
 	}
 	
 	public static Optional<MedicoRecord> rsToMedicoO(ResultSet r) throws SQLException {
@@ -101,6 +109,7 @@ public class RecordAssembler {
 		cita.lugar = rs.getString("LUGAR_CITA");
 		cita.otros = rs.getString("OTROS");
 		cita.prioritario = rs.getBoolean("PRIORITARIO");
+		cita.confirmada = rs.getBoolean("CONFIRMADA");
 
 		return cita;
 	}
@@ -115,6 +124,8 @@ public class RecordAssembler {
 		
 		return paciente;
 	}
+	
+	
 	
 	private static HistorialRecord resultSetToHistorialRecord(ResultSet rs) throws SQLException {
 		HistorialRecord historial = new HistorialRecord();

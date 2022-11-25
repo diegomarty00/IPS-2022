@@ -33,10 +33,27 @@ public class EnfermeroGatewayImpl implements EnfermeroGateway {
 		
 	}
 
+	private static final String FIN_BY_ENFERMERO_ID = "SELECT * from ENFERMERO where IDENFERMERO = ?";
 	@Override
 	public Optional<EnfermeroRecord> findById(String id) {
-		// TODO Auto-generated method stub
-		return null;
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.createThreadConnection();
+			
+			pst = c.prepareStatement(FIN_BY_ENFERMERO_ID);
+			pst.setInt(1,Integer.parseInt(id));
+
+			rs = pst.executeQuery();
+			
+			return RecordAssembler.rsToEnfermeroO(rs);
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
 	}
 
 	
