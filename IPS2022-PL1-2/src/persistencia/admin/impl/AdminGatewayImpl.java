@@ -24,6 +24,8 @@ public class AdminGatewayImpl implements AdminGateway {
     private static final String ANIADIR_JORNADASCOMUNES = "insert into JornadaComun values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String CONTAR_JORNADASCOMUNES = "SELECT count(*) from JornadaComun";
     private static final String FINDBYMEDICOS = "SELECT * from JORNADA where idmedico = ?";
+    private static final String ASIGNAR_MEDICO_CABECERA_DNI = "UPDATE PACIENTE SET idmedicocabecera = ? where dni = ?";
+    private static final String ASIGNAR_MEDICO_CABECERA_TUTOR = "UPDATE PACIENTE SET idmedicocabecera = ? where dnitutorlegal = ?";
 
     @Override
     public void add(MedicoRecord t) {
@@ -169,5 +171,41 @@ public class AdminGatewayImpl implements AdminGateway {
 	    Jdbc.close(rs, pst);
 	}
 	return jornadas;
+    }
+
+    @Override
+    public void asignarMedicoCabeceraDni(String dniPaciente, int idMedico) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	try {
+	    c = Jdbc.getCurrentConnection();
+	    pst = c.prepareStatement(ASIGNAR_MEDICO_CABECERA_DNI);
+	    pst.setString(2, dniPaciente);
+	    pst.setInt(1, idMedico);
+	    pst.executeUpdate();
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+    }
+
+    @Override
+    public void asignarMedicoCabeceraTutor(String dniTutor, int idMedico) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	try {
+	    c = Jdbc.getCurrentConnection();
+	    pst = c.prepareStatement(ASIGNAR_MEDICO_CABECERA_TUTOR);
+	    pst.setString(2, dniTutor);
+	    pst.setInt(1, idMedico);
+	    pst.executeUpdate();
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
     }
 }
