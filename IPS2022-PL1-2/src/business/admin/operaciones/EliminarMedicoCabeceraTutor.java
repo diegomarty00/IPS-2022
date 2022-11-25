@@ -4,25 +4,23 @@ import persistencia.PersistenceFactory;
 import util.BusinessException;
 import util.command.Command;
 
-public class AsignarMedicoCabeceraTutor implements Command<Void> {
+public class EliminarMedicoCabeceraTutor implements Command<Void> {
 
     private String dniTutor;
-    private int idMedico;
     private String name;
     private String surname;
 
-    public AsignarMedicoCabeceraTutor(String dniTutor, String name,
-	    String surname, int idMedico) {
+    public EliminarMedicoCabeceraTutor(String dniTutor, String name,
+	    String surname) {
 	this.dniTutor = dniTutor;
 	this.name = name;
 	this.surname = surname;
-	this.idMedico = idMedico;
     }
 
     @Override
     public Void execute() throws BusinessException {
-	PersistenceFactory.forAdmin().asignarMedicoCabeceraTutor(dniTutor, name,
-		surname, idMedico);
+	PersistenceFactory.forAdmin().eliminarMedicoCabeceraTutor(dniTutor,
+		name, surname);
 	return null;
     }
 

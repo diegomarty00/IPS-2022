@@ -26,4 +26,9 @@ public interface AdminGateway extends Gateway<MedicoRecord> {
 
     Optional<PacienteRecord> findByPacienteDni(String dni);
 
+    void eliminarMedicoCabeceraDni(String dniPaciente);
+
+    void eliminarMedicoCabeceraTutor(String dniTutor, String name,
+	    String surname);
+
 }

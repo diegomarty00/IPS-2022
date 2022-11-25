@@ -22,4 +22,15 @@ public interface AdminService {
 
     List<JornadaRecord> listarJornadasMedico(String idMedico)
 	    throws BusinessException;
+
+    void asignarMedicoCabeceraTutor(String dniTutor, String name,
+	    String surname, int idMedico) throws BusinessException;
+
+    void asignarMedicoCabeceraDni(String dni, int idMedico)
+	    throws BusinessException;
+
+    void eliminarMedicoCabeceraDni(String dni) throws BusinessException;
+
+    void eliminarMedicoCabeceraTutor(String dniTutor, String name,
+	    String surname) throws BusinessException;
 }

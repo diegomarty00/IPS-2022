@@ -28,6 +28,8 @@ public class AdminGatewayImpl implements AdminGateway {
     private static final String FINDBYMEDICOS = "SELECT * from JORNADA where idmedico = ?";
     private static final String ASIGNAR_MEDICO_CABECERA_DNI = "UPDATE PACIENTE SET idmedicocabecera = ? where dni = ?";
     private static final String ASIGNAR_MEDICO_CABECERA_TUTOR = "UPDATE PACIENTE SET idmedicocabecera = ? where dnitutorlegal = ? and (name = ? and surname = ?)";
+    private static final String ELIMINAR_MEDICO_CABECERA_DNI = "UPDATE PACIENTE SET idmedicocabecera = NULL where dni = ?";
+    private static final String ELIMINAR_MEDICO_CABECERA_TUTOR = "UPDATE PACIENTE SET idmedicocabecera = NULL where dnitutorlegal = ? and (name = ? and surname = ?)";
     private static final String BUSCAR_PACIENTE_TUTOR = "SELECT * FROM PACIENTE where dnitutorlegal = ? and (name = ? and surname = ?)";
     private static final String BUSCAR_PACIENTE_DNI = "SELECT * FROM PACIENTE where DNI = ? ";
 
@@ -217,6 +219,44 @@ public class AdminGatewayImpl implements AdminGateway {
     }
 
     @Override
+    public void eliminarMedicoCabeceraDni(String dniPaciente) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	try {
+	    c = Jdbc.getCurrentConnection();
+	    pst = c.prepareStatement(ELIMINAR_MEDICO_CABECERA_DNI);
+	    pst.setString(1, dniPaciente);
+	    pst.executeUpdate();
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+
+    }
+
+    @Override
+    public void eliminarMedicoCabeceraTutor(String dniTutor, String name,
+	    String surname) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	try {
+	    c = Jdbc.getCurrentConnection();
+	    pst = c.prepareStatement(ELIMINAR_MEDICO_CABECERA_TUTOR);
+	    pst.setString(1, dniTutor);
+	    pst.setString(2, name);
+	    pst.setString(3, surname);
+	    pst.executeUpdate();
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+    }
+
+    @Override
     public Optional<PacienteRecord> findByPacienteDni(String dni) {
 	Connection c = null;
 	PreparedStatement pst = null;
@@ -262,4 +302,5 @@ public class AdminGatewayImpl implements AdminGateway {
 	}
 	return result;
     }
+
 }
