@@ -100,6 +100,8 @@ public class VentanaCitasA<E> extends JFrame {
     private JSpinner spNme;
     private JButton btAniadirE;
     private JList listEspecialistas;
+    private JTextField textField;
+    private JPanel panel_17;
     /**
      * Create the frame.
      */
@@ -212,10 +214,11 @@ public class VentanaCitasA<E> extends JFrame {
     private JPanel getPanel() {
 	if (panel == null) {
 	    panel = new JPanel();
-	    panel.setLayout(new GridLayout(6, 1, 0, 0));
+	    panel.setLayout(new GridLayout(7, 1, 0, 0));
 	    panel.add(getLbPacientes());
 	    panel.add(getLbMedicos());
 	    panel.add(getTxtElegirEspecialidad());
+	    panel.add(getTextField());
 	    panel.add(getLbLugar());
 	    panel.add(getLbFecha());
 	    panel.add(getLbHorario());
@@ -312,13 +315,15 @@ public class VentanaCitasA<E> extends JFrame {
     private JPanel getPanelComboBox() {
 	if (panelComboBox == null) {
 	    panelComboBox = new JPanel();
-	    panelComboBox.setLayout(new GridLayout(6, 1, 0, 0));
+	    panelComboBox.setLayout(new GridLayout(7, 1, 0, 0));
 	    panelComboBox.add(getComboBox_2());
 	    panelComboBox.add(getComboBox_1_1());
 	    panelComboBox.add(getPanel_15());
+	    panelComboBox.add(getPanel_17());
 	    panelComboBox.add(getComboBox_2_1());
 	    panelComboBox.add(getPanel_10());
 	    panelComboBox.add(getPanel_2());
+	    
 	}
 	return panelComboBox;
     }
@@ -759,5 +764,18 @@ public class VentanaCitasA<E> extends JFrame {
 			listEspecialistas.setModel(eslist);
 		}
 		return listEspecialistas;
+	}
+	private JTextField getTextField() {
+		if (textField == null) {
+			textField = new JTextField();
+			textField.setColumns(10);
+		}
+		return textField;
+	}
+	private JPanel getPanel_17() {
+		if (panel_17 == null) {
+			panel_17 = new JPanel();
+		}
+		return panel_17;
 	}
 }
