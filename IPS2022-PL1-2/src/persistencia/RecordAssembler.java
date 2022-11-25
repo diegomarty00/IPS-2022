@@ -10,6 +10,7 @@ import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.MedicoCitaRecord;
 import persistencia.cita.PrescripcionRecord;
+import persistencia.enfermero.EnfermeroRecord;
 import persistencia.medico.MedicoRecord;
 import persistencia.paciente.HistorialRecord;
 import persistencia.paciente.PacienteRecord;
@@ -41,6 +42,16 @@ public class RecordAssembler {
 		med.correo = r.getString("correo");
 		
 		return med;
+	}
+	
+	public static EnfermeroRecord rsToEnfermero(ResultSet r) throws SQLException {
+		EnfermeroRecord enf = new EnfermeroRecord();
+		enf.idEnfermero = r.getInt("idenfermero");
+		enf.nombre = r.getString("nombre");
+		enf.apellidos = r.getString("apellidos");
+		
+		
+		return enf;
 	}
 	
 	public static Optional<MedicoRecord> rsToMedicoO(ResultSet r) throws SQLException {
@@ -180,6 +191,14 @@ public class RecordAssembler {
 		while (rs.next())
 			list.add(resultSetToPrescripcionRecord(rs));
 		return list;
+	}
+
+	public static List<EnfermeroRecord> toEnfermeroList(ResultSet rs) throws SQLException {
+		List<EnfermeroRecord> list = new ArrayList<>();
+		while(rs.next()) {
+			list.add(rsToEnfermero(rs));
+		}
+		return list ;
 	}
 	
 }

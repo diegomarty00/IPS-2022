@@ -24,6 +24,8 @@ import javax.swing.border.EmptyBorder;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import business.cita.operaciones.CrearCita;
+import persistencia.enfermero.EnfermeroRecord;
+import persistencia.enfermero.impl.EnfermeroGatewayImpl;
 import persistencia.especialidad.EspecialidadCitaGateway;
 import persistencia.especialidad.EspecialidadCitaRecord;
 import persistencia.especialidad.EspecialidadRecord;
@@ -78,6 +80,7 @@ public class VentanaCitasA<E> extends JFrame {
     private JList listMedicos;
     private DefaultListModel<String> modjlist = new DefaultListModel<>();
     private DefaultListModel<EspecialidadCitaRecord> eslist =  new DefaultListModel<>();
+    
     private JPanel panel_10;
     private JPanel panel_11;
     private JPanel panel_12;
@@ -102,7 +105,7 @@ public class VentanaCitasA<E> extends JFrame {
     private JList listEspecialistas;
     private JTextField txtEnfermero;
     private JPanel panel_17;
-    private JComboBox cbEspecialidad_1;
+    private JComboBox cbEnfermeros;
     private JPanel panel_16_1;
     private JSpinner spNme_1;
     private JButton btAniadirE_1;
@@ -793,10 +796,17 @@ public class VentanaCitasA<E> extends JFrame {
 		return panel_17;
 	}
 	private JComboBox getCbEspecialidad_1() {
-		if (cbEspecialidad_1 == null) {
-			cbEspecialidad_1 = new JComboBox();
+		if (cbEnfermeros == null) {
+			cbEnfermeros = new JComboBox();
+			DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+		    EnfermeroGatewayImpl e = new EnfermeroGatewayImpl();
+		    List<EnfermeroRecord> l = e.findAll();
+		    for (int i = 0; i < l.size(); i++) {
+			mod.addElement(l.get(i));
+		    }
+		    cbEnfermeros.setModel(mod);
 		}
-		return cbEspecialidad_1;
+		return cbEnfermeros;
 	}
 	private JPanel getPanel_16_1() {
 		if (panel_16_1 == null) {
@@ -823,7 +833,6 @@ public class VentanaCitasA<E> extends JFrame {
 		if (txtEnfermeros == null) {
 			txtEnfermeros = new JTextField();
 			txtEnfermeros.setBorder(null);
-			txtEnfermeros.setEnabled(false);
 			txtEnfermeros.setEditable(false);
 			txtEnfermeros.setText("Enfermeros");
 			txtEnfermeros.setFont(new Font("Times New Roman", Font.BOLD, 14));
