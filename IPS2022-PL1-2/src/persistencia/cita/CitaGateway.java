@@ -36,4 +36,6 @@ public interface CitaGateway extends Gateway<CitaRecord> {
 	void insertarPrescripcion(PrescripcionRecord presc);
 
 	void deletePrescripcion(PrescripcionRecord presc);
+	
+	void removeCita(String idCita);
 }

@@ -65,6 +65,27 @@ public class EspecialidadCitaGatewayImpl implements EspecialidadCitaGateway {
 		return null;
 	}
 	
+	private static String REMOVEEC= "DELETE* FROM ESPECIALIDADCITA WHERE IDCITA = ?";
+
+	@Override
+	public void removeEspecialidadC(String idCita) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getConnection();
+			
+			pst = c.prepareStatement(REMOVEEC);
+			pst.setString(1,  idCita);
+			pst.execute();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+	}
+	
 	
 
 }

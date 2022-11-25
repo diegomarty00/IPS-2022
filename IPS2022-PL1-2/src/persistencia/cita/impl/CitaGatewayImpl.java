@@ -454,4 +454,25 @@ public class CitaGatewayImpl implements CitaGateway {
 		    Jdbc.close(rs, pst);
 		}
 	}
+	
+	private static String REMOVEC= "DELETE* FROM CITA WHERE IDCITA = ?";
+
+	@Override
+	public void removeCita(String idCita) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getConnection();
+			
+			pst = c.prepareStatement(REMOVEC);
+			pst.setString(1,  idCita);
+			pst.execute();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+	}
 }

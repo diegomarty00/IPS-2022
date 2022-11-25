@@ -82,5 +82,28 @@ public class MedicoCitaGatewayImpl implements MedicoCitaGateway {
 			Jdbc.close(rs, pst);
 		}
 	}
+	
+	private static String REMOVEMC= "DELETE* FROM MEDICOCITA WHERE IDCITA = ?";
+
+	@Override
+	public void removeMedicocitas(String idCita) {
+		// TODO Auto-generated method stub
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getConnection();
+			
+			pst = c.prepareStatement(REMOVEMC);
+			pst.setString(1,  idCita);
+			pst.execute();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+		
+	}
 
 }
