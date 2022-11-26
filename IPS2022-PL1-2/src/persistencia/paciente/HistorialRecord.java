@@ -33,14 +33,14 @@ public class HistorialRecord {
 	}
 	
 	public List<CitaRecord> getCitas() {
-		if (citas!=null) {
+		if (citas==null) {
 			return PersistenceFactory.forCita().findByHistorialId(idHistorial);
 		}
 		return citas;
 	}
 
 	public List<CausaRecord> getCausas() {
-		if (causas!=null) {
+		if (causas==null) {
 			List<CausaRecord> myCausas = new ArrayList<>();
 			for (CitaRecord cita : getCitas()) {
 				myCausas.addAll(PersistenceFactory.forCita().getCausas(cita.idCita));
@@ -51,7 +51,7 @@ public class HistorialRecord {
 	}
 
 	public List<PrescripcionRecord> getPrescripciones() {
-		if (prescripciones!=null) {
+		if (prescripciones==null) {
 			List<PrescripcionRecord> myPrescripciones = new ArrayList<>();
 			for (CitaRecord cita : getCitas()) {
 				myPrescripciones.addAll(PersistenceFactory.forCita().getPrescripciones(cita.idCita));
