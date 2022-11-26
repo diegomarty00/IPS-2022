@@ -24,10 +24,10 @@ public class CitaGatewayImpl implements CitaGateway {
     private static final String FIN_BY_CITA_ID = "SELECT * from CITA where IDCITA = ? AND CONFIRMADA = true";
     private static final String PROXIMAS_CITAS = "SELECT * from CITA where fecha >= ? AND CONFIRMADA = true";
     private static final String CITAS_DEL_DIA = "SELECT * from CITA where FECHA = ? AND CONFIRMADA = true";
-	private static final String FIND_CAUSAS_FROM_CITA = "SELECT * from CAUSA where IDCITA = ?";
-	private static final String FIND_PRESCRIPCIONES_FROM_CITA = "SELECT * from PRESCRIPCION where IDCITA = ?";
+	private static final String FIND_CAUSAS_FROM_CITA = "SELECT * from CAUSA where IDCITA = ? ORDER BY FECHA_ASIGNACION ASC";
+	private static final String FIND_PRESCRIPCIONES_FROM_CITA = "SELECT * from PRESCRIPCION where IDCITA = ? ORDER BY FECHA_ASIGNACION ASC";
 	private static final String FIN_BY_HISTORIAL_ID = "SELECT * FROM CITA WHERE IDHISTORIAL = ?";
-	private static final String FIND_VACUNAS_FROM_CITA = "SELECT * FROM VACUNA WHERE IDCITA = ?";
+	private static final String FIND_VACUNAS_FROM_CITA = "SELECT * FROM VACUNA WHERE IDCITA = ? ORDER BY FECHAAPROXIMADA ASC";
 
     private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
     private static String ASIGNAR_NUEVO_HORARIO = "update CITA set HORA_ENTRADA_ESTIMADA = ? , HORA_SALIDA_ESTIMADA = ?  where idcita = ?";

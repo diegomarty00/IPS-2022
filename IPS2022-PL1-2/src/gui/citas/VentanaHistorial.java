@@ -221,10 +221,21 @@ public class VentanaHistorial extends JFrame {
 	private JButton getBtnVerCalendarioVacunacion() {
 		if (btnVerCalendarioVacunacion == null) {
 			btnVerCalendarioVacunacion = new JButton("Ver calendario vacunacion");
+			btnVerCalendarioVacunacion.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					verCalendarioVacunacion();
+				}
+			});
 			btnVerCalendarioVacunacion.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			btnVerCalendarioVacunacion.setBounds(471, 580, 203, 23);
 		}
 		return btnVerCalendarioVacunacion;
+	}
+	
+	private void verCalendarioVacunacion() {
+		VentanaCalendarioVacunacion v = new VentanaCalendarioVacunacion(paciente, null);
+		v.setVisible(true);
+		dispose();
 	}
 	
 	private void vacunar() {
