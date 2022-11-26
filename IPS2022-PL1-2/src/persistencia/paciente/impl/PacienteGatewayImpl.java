@@ -12,12 +12,14 @@ import persistencia.RecordAssembler;
 import persistencia.paciente.HistorialRecord;
 import persistencia.paciente.PacienteGateway;
 import persistencia.paciente.PacienteRecord;
+import persistencia.paciente.VacunaRecord;
 import util.jdbc.Jdbc;
 
 public class PacienteGatewayImpl implements PacienteGateway {
 
 	private static final String PACIENTE_DNI = "SELECT * from PACIENTE where DNI = ?";
 	private static final String HISTORIAL_DNI = "SELECT * from HISTORIAL where DNIPACIENTE = ?";
+	private static final String VACUNAR = "INSERT INTO VACUNA values ()";
 
 	@Override
 	public void add(PacienteRecord t) {
@@ -95,6 +97,30 @@ public class PacienteGatewayImpl implements PacienteGateway {
 			c = Jdbc.getConnection();
 			
 			pst = c.prepareStatement(HISTORIAL_DNI);
+			pst.setString(1, dniPaciente);
+
+			pst.execute();
+			
+			rs = pst.executeQuery();
+			
+			return RecordAssembler.toHistorialRecord(rs).get();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
+	public void vacunar(VacunaRecord vacuna) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getConnection();
+			
+			pst = c.prepareStatement(VACUNAR);
 			pst.setString(1, dniPaciente);
 
 			pst.execute();

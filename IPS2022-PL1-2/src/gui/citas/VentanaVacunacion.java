@@ -19,6 +19,8 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaVacunacion extends JFrame {
 
@@ -180,8 +182,17 @@ public class VentanaVacunacion extends JFrame {
 	private JButton getBtnTerminarVacuna() {
 		if (btnTerminarVacuna == null) {
 			btnTerminarVacuna = new JButton("Terminar vacuna");
+			btnTerminarVacuna.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					vacunar();
+				}
+			});
 			btnTerminarVacuna.setBounds(430, 300, 122, 23);
 		}
 		return btnTerminarVacuna;
+	}
+	
+	private void vacunar() {
+		
 	}
 }
