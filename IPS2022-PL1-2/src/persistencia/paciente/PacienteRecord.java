@@ -1,5 +1,7 @@
 package persistencia.paciente;
 
+import java.util.Objects;
+
 public class PacienteRecord {
 	
 	private String dniPaciente;
@@ -14,6 +16,22 @@ public class PacienteRecord {
 	public void setDniPaciente(String dniPaciente) {
 		this.dniPaciente = dniPaciente;
 	}
+	@Override
+	public int hashCode() {
+		return Objects.hash(dniPaciente);
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PacienteRecord other = (PacienteRecord) obj;
+		return Objects.equals(dniPaciente, other.dniPaciente);
+	}
+	
 	public String getNombre() {
 		return nombre;
 	}

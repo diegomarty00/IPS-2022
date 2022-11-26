@@ -42,6 +42,7 @@ TELEFONO_PACIENTE INT NOT NULL,
 LUGAR_CITA VARCHAR(255) NOT NULL,
 OTROS VARCHAR(255),
 PRIORITARIO BIT,
+CONFIRMADA BIT NOT NULL, 
 CONSTRAINT PK_CITA PRIMARY KEY (IDCITA),
 CONSTRAINT FK_CITA_HISTORIAL FOREIGN KEY (IDHISTORIAL) REFERENCES HISTORIAL (IDHISTORIAL),
 CONSTRAINT FK_CITA_PACIENTE FOREIGN KEY (DNIPACIENTE) REFERENCES PACIENTE (DNI)
@@ -53,6 +54,13 @@ CREATE TABLE MEDICO(
  apellidos varchar(20) NOT NULL,
  correo varchar(50) NOT NULL,
  PRIMARY KEY (idmedico));
+ 
+ CREATE TABLE ENFERMERO(
+ idenfermero INT NOT NULL,
+ nombre varchar(20) NOT NULL,
+ apellidos varchar(20) NOT NULL,
+ PRIMARY KEY (idenfermero));
+ 
 
 CREATE TABLE MEDICOCITA(
 IDCITA VARCHAR(255) NOT NULL,
@@ -119,14 +127,24 @@ CONSTRAINT FK_ESPECIALIDADCITA_CITA FOREIGN KEY (IDCITA) REFERENCES CITA (IDCITA
 CONSTRAINT FK_ESPECIALIDADCITA_ESPECIALIDAD FOREIGN KEY (IDESPECIALIDAD) REFERENCES ESPECIALIDAD (IDESPECIALIDAD)
 )
 
+
+CREATE TABLE ENFERMEROCITA(
+IDCITA VARCHAR(255) NOT NULL,
+IDENFERMERO INT NOT NULL,
+NENFERMEROS INT ,
+CONSTRAINT PK_ENFERMEROCITA PRIMARY KEY (IDCITA,IDENFERMERO),
+CONSTRAINT FK_ENFERMEROCITA_CITA FOREIGN KEY (IDCITA) REFERENCES CITA (IDCITA),
+CONSTRAINT FK_ENFERMEROCITA_ENFERMERO FOREIGN KEY (IDENFERMERO) REFERENCES ENFERMERO (IDENFERMERO)
+)
+
 INSERT INTO PACIENTE values ('560483D', 'Jesus', 'Martin', 'jesus@martin.es', 666432)
 INSERT INTO PACIENTE values ('535732D', 'Marta', 'Martin', 'marta@martin.es', 357522)
 
 INSERT INTO HISTORIAL values (1, '560483D')
 INSERT INTO HISTORIAL values (2, '535732D')
 
-INSERT INTO CITA values ('1', '560483D', 1, 0, '12:30:00', '13:00:00', 'Asistencia Sin Asignar', null, null, '2022-10-14', 'jesus@martin.es', 666432,'consulta_1','',0)
-INSERT INTO CITA values ('2', '535732D', 2, 0, '12:30:00', '13:00:00', 'Asistencia Sin Asignar', null, null, '2022-10-17', 'marta@martin.es', 357522,'consulta_1','',0)
+INSERT INTO CITA values ('1', '560483D', 1, 0, '12:30:00', '13:00:00', 'Asistencia Sin Asignar', null, null, '2022-10-14', 'jesus@martin.es', 666432,'consulta_1','',0,1)
+INSERT INTO CITA values ('2', '535732D', 2, 0, '12:30:00', '13:00:00', 'Asistencia Sin Asignar', null, null, '2022-10-17', 'marta@martin.es', 357522,'consulta_1','',0,1)
 
 INSERT INTO CAUSA values (1, 'Vomitos', '12:36:56', '2022-10-14', '1')
 
@@ -136,6 +154,10 @@ INSERT INTO MEDICO values (1, 'Julia', 'Lopez', 'lopezjulia@gmail.com')
 INSERT INTO medico (idmedico,nombre,apellidos,correo) VALUES (12,'Felipe','Garcia Gomez','felipegarciagomez5@gmail.com');
 INSERT INTO medico (idmedico,nombre,apellidos,correo) VALUES (13,'Diego','Martínez Menéndez ','felipegarciagomez5@gmail.com');
 INSERT INTO medico (idmedico,nombre,apellidos,correo) VALUES (14,'Sergio' ,'Mate Suarez','felipegarciagomez5@gmail.com');
+
+
+INSERT INTO enfermero (idenfermero,nombre,apellidos,correo) VALUES (1,'Enfermero','');
+INSERT INTO enfermero (idenfermero,nombre,apellidos,correo) VALUES (2,'Felipe','Garcia Gomez');
 
 INSERT INTO "PUBLIC"."ESPECIALIDAD" ( "IDESPECIALIDAD" ) VALUES ( 'Traumatologia');
 INSERT INTO "PUBLIC"."ESPECIALIDAD" ( "IDESPECIALIDAD" ) VALUES ( 'Primaria');

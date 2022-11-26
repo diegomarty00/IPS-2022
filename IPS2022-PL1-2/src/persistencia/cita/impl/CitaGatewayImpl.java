@@ -20,9 +20,9 @@ import util.jdbc.Jdbc;
 
 public class CitaGatewayImpl implements CitaGateway {
 
-    private static final String FIN_BY_CITA_ID = "SELECT * from CITA where IDCITA = ?";
-    private static final String PROXIMAS_CITAS = "SELECT * from CITA where fecha >= ?";
-    private static final String CITAS_DEL_DIA = "SELECT * from CITA where FECHA = ?";
+    private static final String FIN_BY_CITA_ID = "SELECT * from CITA where IDCITA = ? AND CONFIRMADA = true";
+    private static final String PROXIMAS_CITAS = "SELECT * from CITA where fecha >= ? AND CONFIRMADA = true";
+    private static final String CITAS_DEL_DIA = "SELECT * from CITA where FECHA = ? AND CONFIRMADA = true";
 	private static final String FIND_CAUSAS_FROM_CITA = "SELECT * from CAUSA where IDCITA = ?";
 	private static final String FIND_PRESCRIPCIONES_FROM_CITA = "SELECT * from PRESCRIPCION where IDCITA = ?";
 	private static final String FIN_BY_HISTORIAL_ID = "SELECT * FROM CITA WHERE IDHISTORIAL = ?";
@@ -38,7 +38,10 @@ public class CitaGatewayImpl implements CitaGateway {
     private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static String MODIFICAR_CONTACTO = "update CITA set CORREO_PACIENTE = ? , TELEFONO_PACIENTE = ? where idcita = ?";
     
+    
 	
+    
+    
 	@Override
 	public void add(CitaRecord t) {
 		Connection c = null;
@@ -74,12 +77,13 @@ public class CitaGatewayImpl implements CitaGateway {
 			}else {
 				pst.setDate(10, null);
 			}
-			
+		  
 			pst.setString(11, t.correoPaciente);
 			pst.setInt(12,Integer.parseInt(t.telefonoPaciente));
 			pst.setString(13, t.lugar);
 			pst.setString(14, t.otros);
 			pst.setBoolean(15, t.prioritario);
+			pst.setBoolean(16, t.confirmada);
 
 	    pst.execute();
 	} catch (SQLException e) {
@@ -95,7 +99,9 @@ public class CitaGatewayImpl implements CitaGateway {
 
     }
 
-	private static String findAll = "SELECT * FROM PUBLIC.cita";
+    
+    
+	private static String findAll = "SELECT * FROM PUBLIC.cita WHERE CONFIRMADA = true";
 	@Override
 	public List<CitaRecord> findAll() {
 		Connection c = null;
@@ -321,6 +327,32 @@ public class CitaGatewayImpl implements CitaGateway {
     }
 }
 
+
+
+	private static String MODIFICAR_CITA = "update CITA set DNIPACIENTE = ? , URGENTE = ?,HORA_ENTRADA_ESTIMADA = ?,"
+		+ " HORA_SALIDA_ESTIMADA = ?,FECHA = ?,LUGAR_CITA = ?,PRIORITARIO = ?   where idcita = ?";
+	@Override
+	public void ModificarTodo(CitaRecord cit) {
+		Connection c = null;
+		PreparedStatement pst = null;
+    try {
+		    c = Jdbc.createThreadConnection();
+		    pst = c.prepareStatement(MODIFICAR_CITA);
+		    pst.setString(8, cit.idCita);
+		    pst.setString(1,cit.dniPaciente);
+		    pst.setBoolean(2, cit.urgente);
+		    pst.setTime(3, Time.valueOf(cit.horaEntradaEstimada));
+		    pst.setTime(4, Time.valueOf(cit.horaSalidaEstimada));
+		    pst.setDate(5, Date.valueOf(cit.fecha));
+		    pst.setString(6, cit.lugar);
+		    pst.setBoolean(7, cit.prioritario);
+		    pst.execute();
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(pst);
+    }
+	}
 	
 	@Override
 	public void insertarCausa(String idCita, String titulo, Time hora, Date fecha) {
@@ -475,6 +507,27 @@ public class CitaGatewayImpl implements CitaGateway {
 		    throw new PersistenceException(e);
 		} finally {
 		    Jdbc.close(rs, pst);
+		}
+	}
+	
+	private static String REMOVEC= "DELETE FROM CITA WHERE IDCITA = ?";
+
+	@Override
+	public void removeCita(String idCita) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getConnection();
+			
+			pst = c.prepareStatement(REMOVEC);
+			pst.setString(1,  idCita);
+			pst.execute();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
 		}
 	}
 }

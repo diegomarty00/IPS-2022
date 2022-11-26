@@ -14,6 +14,9 @@ import persistencia.cita.CitaRecord;
 import persistencia.cita.MedicoCitaRecord;
 import persistencia.cita.impl.CitaGatewayImpl;
 import persistencia.cita.impl.MedicoCitaGatewayImpl;
+import persistencia.enfermero.EnfermeroCitaGateway;
+import persistencia.enfermero.EnfermeroCitaRecord;
+import persistencia.enfermero.impl.EnfermeroCitaGatewayImpl;
 import persistencia.especialidad.EspecialidadCitaRecord;
 import persistencia.especialidad.impl.EspecialidadCitaGatewayImpl;
 import persistencia.medico.MedicoRecord;
@@ -82,6 +85,7 @@ public class CrearCita {
 		ci.horaSalidaEstimada = LocalTime.parse(horaS);
 		ci.otros = otros;
 		ci.prioritario = prio;
+		ci.confirmada = true;
 		almacena();
 
 	}
@@ -193,5 +197,11 @@ public class CrearCita {
 		String mensaje = "" + medic.nombre + " " + medic.apellidos + " Tiene usted una cita urgente en la " + ""
 				+ ci.lugar + " con el paciete " + nombre;
 		EnviarMail.enviaMail(medic.correo, mensaje);
+	}
+
+	public void crearCitaEnfermero(EnfermeroCitaRecord enfermeroCitaRecord) {
+		EnfermeroCitaGatewayImpl ec = new EnfermeroCitaGatewayImpl();
+		enfermeroCitaRecord.idCita = String.valueOf(nextid);
+		ec.add(enfermeroCitaRecord);
 	}
 }

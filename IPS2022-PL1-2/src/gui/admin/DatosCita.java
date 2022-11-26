@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 
 import business.cita.operaciones.CrearCita;
 import business.cita.operaciones.ObtenerPacientes;
+import persistencia.enfermero.EnfermeroCitaRecord;
 import persistencia.especialidad.EspecialidadCitaRecord;
 import persistencia.paciente.PacienteRecord;
 
@@ -41,15 +42,17 @@ public class DatosCita extends JFrame {
 	private boolean urgente;
 	private boolean prioritario;
 	private DefaultListModel<String> modjlist;
+	private DefaultListModel<EnfermeroCitaRecord> enflist;
 	DefaultListModel<EspecialidadCitaRecord> eslist;
 	ProcesarAccion p = new ProcesarAccion();
 	private PacienteRecord pa;
 	/**
 	 * Create the frame.
 	 * @param eslist 
+	 * @param enflist 
 	 */
 	public DatosCita(String paciente, boolean urgencia,String lugar, String anio , String mes , String dia, String horaE, String horaS,DefaultListModel<String> modjlist,
-			boolean prioridad, DefaultListModel<EspecialidadCitaRecord> eslist) {
+			boolean prioridad, DefaultListModel<EspecialidadCitaRecord> eslist, DefaultListModel<EnfermeroCitaRecord> enflist) {
 		this.paciente = paciente;
 		this.urgente = urgencia;
 		this.eslist = eslist;
@@ -61,6 +64,7 @@ public class DatosCita extends JFrame {
 		this.hF = horaS;
 		this.modjlist = modjlist;
 		this.prioritario = prioridad;
+		this.enflist = enflist;
 		pa =  ObtenerPacientes.sacarDatosContacto(ObtenerPacientes.parsePaciente(paciente));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
@@ -184,6 +188,10 @@ public class DatosCita extends JFrame {
 			    	for(int i = 0 ; i < eslist.size() ; i++)
 			    		cc.crearCitaEspecialidad(eslist.get(i));
 			    }
+		    	if(enflist !=null) {
+			    	for(int i = 0 ; i < enflist.size() ; i++)
+			    		cc.crearCitaEnfermero(enflist.get(i));
+			    }
 		    	delete();
 		    }else if(prioritario && !cc.comprovarChoqueCitas(anio,dia,mes ,hI,hF)) {
 		    	cc.crearCita(paciente,
@@ -206,6 +214,10 @@ public class DatosCita extends JFrame {
 			    	for(int i = 0 ; i < eslist.size() ; i++)
 			    		cc.crearCitaEspecialidad(eslist.get(i));
 			    }
+		    	if(enflist !=null) {
+			    	for(int i = 0 ; i < enflist.size() ; i++)
+			    		cc.crearCitaEnfermero(enflist.get(i));
+			    }
 		    	delete();
 		    }else {
 		    	CitaPrioritaria cp = new CitaPrioritaria(cc,ob(),paciente,
@@ -217,7 +229,7 @@ public class DatosCita extends JFrame {
 					    hI,
 					    hF,modjlist,
 					    tfEmail.getText(),
-					    tfTelf.getText(),tfOtros.getText(),prioritario,eslist);
+					    tfTelf.getText(),tfOtros.getText(),prioritario,eslist,enflist);
 		    	cp.setVisible(true);
 		    }
 		}

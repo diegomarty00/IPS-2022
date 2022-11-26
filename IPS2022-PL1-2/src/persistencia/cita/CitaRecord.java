@@ -26,7 +26,8 @@ public class CitaRecord {
 	public String otros;
 	public boolean prioritario;
 	public PacienteRecord pacienteAsociado;
-	
+	public boolean confirmada;
+
 	public PacienteRecord getPacienteAsociado() {
 		try {
 			if (pacienteAsociado!=null)
