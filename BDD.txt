@@ -3,6 +3,8 @@ DROP TABLE IF EXISTS HISTORIAL CASCADE;
 DROP TABLE IF EXISTS CITA CASCADE;
 DROP TABLE IF EXISTS MEDICO CASCADE;
 DROP TABLE IF EXISTS MEDICOCITA CASCADE;
+DROP TABLE IF EXISTS ENFERMERO CASCADE;
+DROP TABLE IF EXISTS ENFERMEROCITA CASCADE;
 DROP TABLE IF EXISTS MEDICOESPECIALIDAD CASCADE;
 DROP TABLE IF EXISTS JORNADA CASCADE;
 DROP TABLE IF EXISTS CAUSA CASCADE;
@@ -59,6 +61,7 @@ CREATE TABLE MEDICO(
  idenfermero INT NOT NULL,
  nombre varchar(20) NOT NULL,
  apellidos varchar(20) NOT NULL,
+ correo varchar(50) NOT NULL,
  PRIMARY KEY (idenfermero));
  
 
@@ -156,8 +159,8 @@ INSERT INTO medico (idmedico,nombre,apellidos,correo) VALUES (13,'Diego','Martí
 INSERT INTO medico (idmedico,nombre,apellidos,correo) VALUES (14,'Sergio' ,'Mate Suarez','felipegarciagomez5@gmail.com');
 
 
-INSERT INTO enfermero (idenfermero,nombre,apellidos,correo) VALUES (1,'Enfermero','');
-INSERT INTO enfermero (idenfermero,nombre,apellidos,correo) VALUES (2,'Felipe','Garcia Gomez');
+INSERT INTO enfermero (idenfermero,nombre,apellidos,correo) VALUES (1,'Enfermero','','enfer@mero.com');
+INSERT INTO enfermero (idenfermero,nombre,apellidos,correo) VALUES (2,'Felipe','Garcia Gomez','felipegarciagomez5@gmail.com');
 
 INSERT INTO "PUBLIC"."ESPECIALIDAD" ( "IDESPECIALIDAD" ) VALUES ( 'Traumatologia');
 INSERT INTO "PUBLIC"."ESPECIALIDAD" ( "IDESPECIALIDAD" ) VALUES ( 'Primaria');
