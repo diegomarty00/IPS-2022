@@ -170,10 +170,11 @@ public class SelectorCitasModificar extends JFrame {
 
 	private JButton getBtEliminar() {
 		if (btEliminar == null) {
-			btEliminar = new JButton("Cancelar");
+			btEliminar = new JButton("Cancelar Cita");
 			btEliminar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					eliminarCita();
+					searchCitas();
 				}
 			});
 			btEliminar.setFont(new Font("Times New Roman", Font.BOLD, 14));

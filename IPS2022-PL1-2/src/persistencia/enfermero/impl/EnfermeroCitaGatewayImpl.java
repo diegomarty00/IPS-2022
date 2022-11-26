@@ -63,7 +63,7 @@ public class EnfermeroCitaGatewayImpl implements EnfermeroCitaGateway {
 		return null;
 	}
 	
-	private static String REMOVEEC= "DELETE* FROM ENFERMEROCITA WHERE IDCITA = ?";
+	private static String REMOVEEC= "DELETE FROM ENFERMEROCITA WHERE IDCITA = ?";
 
 	@Override
 	public void removeEnfermeroCita(String idCita) {

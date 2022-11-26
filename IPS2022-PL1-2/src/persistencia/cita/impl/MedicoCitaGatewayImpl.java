@@ -106,7 +106,7 @@ public class MedicoCitaGatewayImpl implements MedicoCitaGateway {
 		}
 	}
 	
-	private static String REMOVEMC= "DELETE* FROM MEDICOCITA WHERE IDCITA = ?";
+	private static String REMOVEMC= "DELETE FROM MEDICOCITA WHERE IDCITA = ?";
 
 	@Override
 	public void removeMedicocitas(String idCita) {

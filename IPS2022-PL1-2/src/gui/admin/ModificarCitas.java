@@ -218,7 +218,7 @@ public class ModificarCitas extends JFrame {
 	    	
 	    
 	    private void close() {
-	    	this.close();
+	    	delete();
 	    }
 	    
 	    private JPanel getPanel() {
@@ -429,6 +429,7 @@ public class ModificarCitas extends JFrame {
 		    panel_4.setLayout(new GridLayout(2, 0, 0, 0));
 		    panel_4.add(getCbHoraInicio());
 		    panel_4.add(getCbHoraFinal());
+		    cbHoraInicio.setSelectedItem(cita.horaEntradaEstimada.toString());
 		}
 		return panel_4;
 	    }
@@ -635,7 +636,7 @@ public class ModificarCitas extends JFrame {
 		if (cbMes == null) {
 		    cbMes = new JComboBox();
 		    cbMes.setModel(new DefaultComboBoxModel(new String[] {"01", "02", "03", "04", "05", "07", "08", "09", "10", "11", "12"}));
-		    cbMes.setSelectedIndex(cita.fecha.getMonthValue());
+		    cbMes.setSelectedIndex(cita.fecha.getMonthValue()-1);
 		}
 		return cbMes;
 	    }
@@ -662,7 +663,7 @@ public class ModificarCitas extends JFrame {
 		    	}
 		    }
 		    cbDia.setModel(mod);
-		    cbDia.setSelectedIndex(cita.fecha.getDayOfMonth());
+		    cbDia.setSelectedIndex(cita.fecha.getDayOfMonth()-1);
 		    
 		}
 		return cbDia;

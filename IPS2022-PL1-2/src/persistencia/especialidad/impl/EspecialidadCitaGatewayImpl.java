@@ -65,7 +65,7 @@ public class EspecialidadCitaGatewayImpl implements EspecialidadCitaGateway {
 		return null;
 	}
 	
-	private static String REMOVEEC= "DELETE* FROM ESPECIALIDADCITA WHERE IDCITA = ?";
+	private static String REMOVEEC= "DELETE FROM ESPECIALIDADCITA WHERE IDCITA = ?";
 
 	@Override
 	public void removeEspecialidadC(String idCita) {

@@ -319,8 +319,9 @@ public class CitaGatewayImpl implements CitaGateway {
 		    pst.setBoolean(2, cit.urgente);
 		    pst.setTime(3, Time.valueOf(cit.horaEntradaEstimada));
 		    pst.setTime(4, Time.valueOf(cit.horaSalidaEstimada));
-		    pst.setString(5, cit.lugar);
-		    pst.setBoolean(6, cit.prioritario);
+		    pst.setDate(5, Date.valueOf(cit.fecha));
+		    pst.setString(6, cit.lugar);
+		    pst.setBoolean(7, cit.prioritario);
 		    pst.execute();
 		} catch (SQLException e) {
 		    throw new PersistenceException(e);
@@ -485,7 +486,7 @@ public class CitaGatewayImpl implements CitaGateway {
 		}
 	}
 	
-	private static String REMOVEC= "DELETE* FROM CITA WHERE IDCITA = ?";
+	private static String REMOVEC= "DELETE FROM CITA WHERE IDCITA = ?";
 
 	@Override
 	public void removeCita(String idCita) {
