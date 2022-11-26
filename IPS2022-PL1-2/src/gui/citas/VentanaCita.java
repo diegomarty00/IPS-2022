@@ -77,6 +77,7 @@ public class VentanaCita extends JFrame {
 	private JButton btnVerCalendarioVacunas;
 	private JList<VacunaRecord> listVacunas;
 	private DefaultListModel<VacunaRecord> modeloVacunas;
+	private JButton btnSolicitarCita;
 
 	/**
 	 * Launch the application.
@@ -235,6 +236,7 @@ public class VentanaCita extends JFrame {
 		contentPane.add(getBtnVacunar());
 		contentPane.add(getScrollPaneVacunas());
 		contentPane.add(getBtnVerCalendarioVacunas());
+		contentPane.add(getBtnSolicitarCita());
 	}
 
 	private void updateModeloCausas() {
@@ -446,8 +448,22 @@ public class VentanaCita extends JFrame {
 		}
 		return btnVerCalendarioVacunas;
 	}
-	
-	private void verCalendarioVacunas() {
+
+	private JButton getBtnSolicitarCita() {
+		if (btnSolicitarCita == null) {
+			btnSolicitarCita = new JButton("Solicitar Cita");
+			btnSolicitarCita.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					SolicitarCita frame = new SolicitarCita(pacienteAsociado);
+					frame.setVisible(true);
+				}
+			});
+			btnSolicitarCita.setBounds(467, 565, 118, 23);
+		}
+		return btnSolicitarCita;
+  }
+
+  private void verCalendarioVacunas() {
 		VentanaCalendarioVacunacion v = new VentanaCalendarioVacunacion(pacienteAsociado, cita);
 		v.setVisible(true);
 		this.dispose();

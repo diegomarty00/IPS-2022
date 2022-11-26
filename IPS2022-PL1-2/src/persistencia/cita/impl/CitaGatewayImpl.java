@@ -37,7 +37,7 @@ public class CitaGatewayImpl implements CitaGateway {
     private static String DELETE_CAUSA= "DELETE FROM Causa WHERE IDCAUSA = ?";
     private static String ADD_PRESCRIPCION = "INSERT INTO PRESCRIPCION values (?,?,?,?,?,?,?,?,?,?)";
     private static String DELETE_PRESCRIPCION = "DELETE FROM PRESCRIPCION WHERE IDPRESCRIPCION = ?";
-    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static String MODIFICAR_CONTACTO = "update CITA set CORREO_PACIENTE = ? , TELEFONO_PACIENTE = ? where idcita = ?";
     
     

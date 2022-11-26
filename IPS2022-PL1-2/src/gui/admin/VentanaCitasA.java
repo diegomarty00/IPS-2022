@@ -184,7 +184,7 @@ public class VentanaCitasA<E> extends JFrame {
 	return jbConfirmar;
     }
     	
-    class ProcesarAccion implements ActionListener{
+    public class ProcesarAccion implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
