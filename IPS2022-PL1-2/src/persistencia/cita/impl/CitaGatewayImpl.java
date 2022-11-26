@@ -35,7 +35,7 @@ public class CitaGatewayImpl implements CitaGateway {
     private static String DELETE_CAUSA= "DELETE FROM Causa WHERE IDCAUSA = ?";
     private static String ADD_PRESCRIPCION = "INSERT INTO PRESCRIPCION values (?,?,?,?,?,?,?,?,?,?)";
     private static String DELETE_PRESCRIPCION = "DELETE FROM PRESCRIPCION WHERE IDPRESCRIPCION = ?";
-    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static String MODIFICAR_CONTACTO = "update CITA set CORREO_PACIENTE = ? , TELEFONO_PACIENTE = ? where idcita = ?";
     
 	
@@ -51,34 +51,35 @@ public class CitaGatewayImpl implements CitaGateway {
 			pst = c.prepareStatement(ADD_CITA);
 			pst.setString(1,  t.idCita);
 			pst.setNString(2, t.dniPaciente);
-			pst.setBoolean(3, t.urgente);
+			pst.setInt(3, t.idHistorial);
+			pst.setBoolean(4, t.urgente);
 			if(t.horaEntradaEstimada != null ) {
-				pst.setTime(4,Time.valueOf(t.horaEntradaEstimada));
+				pst.setTime(5,Time.valueOf(t.horaEntradaEstimada));
 				
 			}else {
-				pst.setTime(4,null);
+				pst.setTime(5,null);
 			}
 			if (t.horaSalidaEstimada != null) {
-				pst.setTime(5, Time.valueOf(t.horaSalidaEstimada));
+				pst.setTime(6, Time.valueOf(t.horaSalidaEstimada));
 			}else {
-				pst.setTime(5, null);
+				pst.setTime(6, null);
 			}
 			
 			
-			pst.setString(6, t.pacienteAcudido);
-			pst.setTime(7,null);
-			pst.setTime(8, null);
+			pst.setString(7, t.pacienteAcudido);
+			pst.setTime(8,null);
+			pst.setTime(9, null);
 			if(t.fecha != null ) {
-				pst.setDate(9, Date.valueOf(t.fecha));
+				pst.setDate(10, Date.valueOf(t.fecha));
 			}else {
-				pst.setDate(9, null);
+				pst.setDate(10, null);
 			}
 			
-			pst.setString(10, t.correoPaciente);
-			pst.setInt(11,Integer.parseInt(t.telefonoPaciente));
-			pst.setString(12, t.lugar);
-			pst.setString(13, t.otros);
-			pst.setBoolean(14, t.prioritario);
+			pst.setString(11, t.correoPaciente);
+			pst.setInt(12,Integer.parseInt(t.telefonoPaciente));
+			pst.setString(13, t.lugar);
+			pst.setString(14, t.otros);
+			pst.setBoolean(15, t.prioritario);
 
 	    pst.execute();
 	} catch (SQLException e) {
@@ -139,7 +140,7 @@ public class CitaGatewayImpl implements CitaGateway {
 	    Jdbc.close(rs, pst);
 	}
     }
-
+    
     @Override
     public List<CitaRecord> findByHistorialId(int idHistorial) {
     	Connection c = null;
@@ -354,7 +355,7 @@ public class CitaGatewayImpl implements CitaGateway {
     try {
 		    c = Jdbc.createThreadConnection();
 
-		    pst = c.prepareStatement("SELECT MAX("+columnName+") FROM "+tabla);
+		    pst = c.prepareStatement("SELECT NVL(MAX("+columnName+"), 0) FROM "+tabla);
 
 		    rs = pst.executeQuery();
 		    rs.next();
