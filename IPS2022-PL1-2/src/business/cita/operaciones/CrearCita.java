@@ -89,6 +89,28 @@ public class CrearCita {
 		almacena();
 
 	}
+	
+	public void SolicitarCita(String paciente, boolean urgencia, String lugar, String anio, String mes, String dia,
+			String horaE, String horaS, String correo, String num, boolean prio) {
+		String dni = parsePaciente(paciente);
+		LocalDate fecha = toFecha(anio, mes, dia);
+		ci.dniPaciente = dni;
+		ci.idCita = String.valueOf(nextid);
+		ci.idHistorial = getHistorial(dni);
+		ci.correoPaciente = correo;
+		ci.telefonoPaciente = num;
+		ci.urgente = urgencia;
+		ci.pacienteAcudido = "Asistencia Sin Asignar";
+		ci.lugar = lugar;
+		ci.fecha = fecha;
+		ci.horaEntradaEstimada = LocalTime.parse(horaE);
+		ci.horaSalidaEstimada = LocalTime.parse(horaS);
+		ci.prioritario = prio;
+		ci.confirmada = false;
+		
+		almacena();
+
+	}
 
 	public boolean comprovarChoqueCitas(String anio, String dia, String mes, String hI, String hF) {
 		CitaGatewayImpl cg = new CitaGatewayImpl();
