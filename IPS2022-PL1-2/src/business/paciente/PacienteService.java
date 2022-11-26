@@ -11,5 +11,5 @@ public interface PacienteService {
 
 	Optional<PacienteRecord> getByDni(String dni) throws BusinessException;
 
-	List<HistorialRecord> getHistorialPaciente(String dniPaciente) throws BusinessException;
+	HistorialRecord getHistorialPaciente(String dniPaciente) throws BusinessException;
 }

@@ -12,6 +12,7 @@ public class CitaRecord {
 	
 	public String idCita;
 	public String dniPaciente;
+	public int idHistorial;
 	public boolean urgente;
 	public LocalTime horaEntradaEstimada;
 	public LocalTime horaSalidaEstimada;
@@ -24,9 +25,13 @@ public class CitaRecord {
 	public String lugar;
 	public String otros;
 	public boolean prioritario;
+	public PacienteRecord pacienteAsociado;
 	public boolean confirmada;
+
 	public PacienteRecord getPacienteAsociado() {
 		try {
+			if (pacienteAsociado!=null)
+				return pacienteAsociado;
 			return BusinessFactory.forPacienteService().getByDni(dniPaciente).get();
 		} catch (BusinessException e) {
 			e.printStackTrace();

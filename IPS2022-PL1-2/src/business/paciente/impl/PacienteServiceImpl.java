@@ -20,7 +20,7 @@ public class PacienteServiceImpl implements PacienteService{
 	}
 
 	@Override
-	public List<HistorialRecord> getHistorialPaciente(String dniPaciente) throws BusinessException {
+	public HistorialRecord getHistorialPaciente(String dniPaciente) throws BusinessException {
 		CommandExecutor c = new CommandExecutor();
 		return c.execute(new GetHistorialPaciente(dniPaciente));
 	}
