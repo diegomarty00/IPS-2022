@@ -18,8 +18,11 @@ import persistencia.cita.CitaRecord;
 import persistencia.cita.PrescripcionRecord;
 import persistencia.paciente.HistorialRecord;
 import persistencia.paciente.PacienteRecord;
+import persistencia.paciente.VacunaRecord;
 import util.BusinessException;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class VentanaHistorial extends JFrame {
 
@@ -42,9 +45,9 @@ public class VentanaHistorial extends JFrame {
 	private JList<HistorialRecord> listDiagnosticos;
 	private JScrollPane scrollPanelVacunas;
 	private JLabel lblVacunas;
-	private JList<HistorialRecord> listVacunas;
+	private JList<VacunaRecord> listVacunas;
 	private JButton btnVacunar;
-	private JButton btnNewButton;
+	private JButton btnVerCalendarioVacunacion;
 
 	/**
 	 * Create the frame.
@@ -69,10 +72,10 @@ public class VentanaHistorial extends JFrame {
 		contentPane.add(getLblPrescricpiones());
 //		contentPane.add(getScrollPaneDiagnosticos());
 //		contentPane.add(getLblDiagnosticos());
-//		contentPane.add(getScrollPanelVacunas());
-//		contentPane.add(getLblVacunas());
-//		contentPane.add(getBtnVacunar());
-//		contentPane.add(getBtnNewButton());
+		contentPane.add(getScrollPanelVacunas());
+		contentPane.add(getLblVacunas());
+		contentPane.add(getBtnVacunar());
+		contentPane.add(getBtnVerCalendarioVacunacion());
 		
 	}
 	
@@ -194,26 +197,39 @@ public class VentanaHistorial extends JFrame {
 		}
 		return lblVacunas;
 	}
-	private JList<HistorialRecord> getListVacunas() {
+	private JList<VacunaRecord> getListVacunas() {
 		if (listVacunas == null) {
-			listVacunas = new JList();
+			DefaultListModel<VacunaRecord> modelo = new DefaultListModel<>();
+			modelo.addAll(historial.getVacunasRealizadas());
+			listVacunas = new JList(modelo);
 		}
 		return listVacunas;
 	}
 	private JButton getBtnVacunar() {
 		if (btnVacunar == null) {
 			btnVacunar = new JButton("Vacunar");
+			btnVacunar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					vacunar();
+				}
+			});
 			btnVacunar.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			btnVacunar.setBounds(471, 546, 89, 23);
 		}
 		return btnVacunar;
 	}
-	private JButton getBtnNewButton() {
-		if (btnNewButton == null) {
-			btnNewButton = new JButton("Ver calendario vacunacion");
-			btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
-			btnNewButton.setBounds(471, 580, 173, 23);
+	private JButton getBtnVerCalendarioVacunacion() {
+		if (btnVerCalendarioVacunacion == null) {
+			btnVerCalendarioVacunacion = new JButton("Ver calendario vacunacion");
+			btnVerCalendarioVacunacion.setFont(new Font("Tahoma", Font.PLAIN, 12));
+			btnVerCalendarioVacunacion.setBounds(471, 580, 203, 23);
 		}
-		return btnNewButton;
+		return btnVerCalendarioVacunacion;
+	}
+	
+	private void vacunar() {
+		VentanaVacunacion v = new VentanaVacunacion(paciente, null, null);
+		v.setVisible(true);
+		this.dispose();
 	}
 }

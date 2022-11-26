@@ -31,7 +31,9 @@ import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.PrescripcionRecord;
 import persistencia.cita.impl.CitaGatewayImpl;
+import persistencia.paciente.HistorialRecord;
 import persistencia.paciente.PacienteRecord;
+import persistencia.paciente.VacunaRecord;
 import util.BusinessException;
 
 public class VentanaCita extends JFrame {
@@ -66,9 +68,15 @@ public class VentanaCita extends JFrame {
 	private JList<PrescripcionRecord> listPrescripciones;
 	private DefaultListModel<PrescripcionRecord> modeloPrescripciones;
 	private JButton btnSeleccionarPrescripciones;
-	private JScrollPane scrollPane_1;
-	private JScrollPane scrollPane;
+	private JScrollPane scrollPanePrescripciones;
+	private JScrollPane scrollPaneCausas;
 	private JComboBox cbAsistencia;
+	private JLabel lblVacunas;
+	private JButton btnVacunar;
+	private JScrollPane scrollPaneVacunas;
+	private JButton btnVerCalendarioVacunas;
+	private JList<VacunaRecord> listVacunas;
+	private DefaultListModel<VacunaRecord> modeloVacunas;
 
 	/**
 	 * Launch the application.
@@ -98,7 +106,7 @@ public class VentanaCita extends JFrame {
 		citaService = BusinessFactory.forCitaService();
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 788, 458);
+		setBounds(100, 100, 788, 628);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -107,6 +115,9 @@ public class VentanaCita extends JFrame {
 		
 		modeloPrescripciones = new DefaultListModel<>();
 		updateModeloPrescripciones();
+		
+		modeloVacunas = new DefaultListModel<>();
+		updateModeloVacunas();
 		
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -202,7 +213,7 @@ public class VentanaCita extends JFrame {
 				cerrarCita();
 			}
 		});
-		btnCerrarCita.setBounds(635, 395, 124, 23);
+		btnCerrarCita.setBounds(635, 565, 124, 23);
 		contentPane.add(btnCerrarCita);
 		contentPane.add(getBtnVerHistorial());
 		contentPane.add(getLblCausas());
@@ -210,16 +221,20 @@ public class VentanaCita extends JFrame {
 		contentPane.add(getLblPrescripciones());
 		contentPane.add(getBtnSeleccionarPrescripciones());
 		
-		scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(399, 252, 310, 127);
-		contentPane.add(scrollPane_1);
-		scrollPane_1.setViewportView(getListPrescripciones());
+		scrollPanePrescripciones = new JScrollPane();
+		scrollPanePrescripciones.setBounds(399, 252, 310, 127);
+		contentPane.add(scrollPanePrescripciones);
+		scrollPanePrescripciones.setViewportView(getListPrescripciones());
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setBounds(23, 250, 310, 129);
-		contentPane.add(scrollPane);
-		scrollPane.setViewportView(getListCausas());
+		scrollPaneCausas = new JScrollPane();
+		scrollPaneCausas.setBounds(23, 250, 310, 129);
+		contentPane.add(scrollPaneCausas);
+		scrollPaneCausas.setViewportView(getListCausas());
 		contentPane.add(getCbAsistencia());
+		contentPane.add(getLblVacunas());
+		contentPane.add(getBtnVacunar());
+		contentPane.add(getScrollPaneVacunas());
+		contentPane.add(getBtnVerCalendarioVacunas());
 	}
 
 	private void updateModeloCausas() {
@@ -236,6 +251,12 @@ public class VentanaCita extends JFrame {
 		for (PrescripcionRecord prescripcion : prescripciones) {
 			modeloPrescripciones.addElement(prescripcion);
 		}
+	}
+	
+	private void updateModeloVacunas() {
+		modeloVacunas.clear();
+		List<VacunaRecord> vacunas = PersistenceFactory.forCita().getVacunas(cita.idCita);
+		modeloVacunas.addAll(vacunas);
 	}
 
 	private void establecerHoraEntrada() {
@@ -376,5 +397,48 @@ public class VentanaCita extends JFrame {
 			cbAsistencia.setSelectedItem(cita.pacienteAcudido);
 		}
 		return cbAsistencia;
+	}
+	private JLabel getLblVacunas() {
+		if (lblVacunas == null) {
+			lblVacunas = new JLabel("Vacunas");
+			lblVacunas.setFont(new Font("Tahoma", Font.PLAIN, 16));
+			lblVacunas.setBounds(399, 413, 70, 41);
+		}
+		return lblVacunas;
+	}
+	private JButton getBtnVacunar() {
+		if (btnVacunar == null) {
+			btnVacunar = new JButton("Vacunar");
+			btnVacunar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) { 
+					vacunar();
+				}
+			});
+			btnVacunar.setBounds(467, 425, 98, 20);
+		}
+		return btnVacunar;
+	}
+	
+	private void vacunar() {
+		VentanaVacunacion v = new VentanaVacunacion(pacienteAsociado, cita, null);
+		v.setVisible(true);
+		this.dispose();
+	}
+	
+	private JScrollPane getScrollPaneVacunas() {
+		if (scrollPaneVacunas == null) {
+			scrollPaneVacunas = new JScrollPane();
+			scrollPaneVacunas.setBounds(401, 452, 310, 65);
+			listVacunas = new JList<VacunaRecord>(modeloVacunas);
+			scrollPaneVacunas.setViewportView(listVacunas);
+		}
+		return scrollPaneVacunas;
+	}
+	private JButton getBtnVerCalendarioVacunas() {
+		if (btnVerCalendarioVacunas == null) {
+			btnVerCalendarioVacunas = new JButton("Ver calendario vacunas");
+			btnVerCalendarioVacunas.setBounds(568, 424, 177, 23);
+		}
+		return btnVerCalendarioVacunas;
 	}
 }

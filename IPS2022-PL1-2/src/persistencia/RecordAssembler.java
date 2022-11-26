@@ -2,6 +2,8 @@ package persistencia;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +16,7 @@ import persistencia.enfermero.EnfermeroRecord;
 import persistencia.medico.MedicoRecord;
 import persistencia.paciente.HistorialRecord;
 import persistencia.paciente.PacienteRecord;
+import persistencia.paciente.VacunaRecord;
 
 public class RecordAssembler {
 	
@@ -44,7 +47,17 @@ public class RecordAssembler {
 		return med;
 	}
 	
-	
+	private static VacunaRecord rsToVacuna(ResultSet rs) throws SQLException {
+		int idVac = rs.getInt("IDVACUNA");
+		int idHist = rs.getInt("IDHISTORIAL");
+		String idCita = rs.getString("IDCITA");
+		LocalDate fechaReal = (rs.getDate("FECHAREAL")==null ? null : rs.getDate("FECHAREAL").toLocalDate());
+		LocalDate fechaAprox = (rs.getDate("FECHAAPROXIMADA")==null ? null : rs.getDate("FECHAAPROXIMADA").toLocalDate());
+		LocalTime hora = (rs.getTime("HORA")==null ? null: rs.getTime("HORA").toLocalTime());
+		String dosis = rs.getString("DOSIS");
+		boolean refuerzo = rs.getBoolean("REFUERZO");
+		return new VacunaRecord(idVac, idHist, idCita, fechaReal, fechaAprox, hora, dosis, refuerzo);
+	}
 	
 	public static EnfermeroRecord rsToEnfermero(ResultSet r) throws SQLException {
 		EnfermeroRecord enf = new EnfermeroRecord();
@@ -208,5 +221,12 @@ public class RecordAssembler {
 		}
 		return list ;
 	}
-	
+
+	public static List<VacunaRecord> toVacunaList(ResultSet rs) throws SQLException {
+		List<VacunaRecord> vacunas = new ArrayList<>();
+		while(rs.next()) {
+			vacunas.add(rsToVacuna(rs));
+		}
+		return vacunas;
+	}
 }

@@ -1,30 +1,36 @@
 package gui.citas;
 
-import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
-import persistencia.PersistenceFactory;
-import persistencia.paciente.HistorialRecord;
-import persistencia.paciente.PacienteRecord;
-import javax.swing.JLabel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JTextField;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.border.EmptyBorder;
+
+import business.BusinessFactory;
+import persistencia.PersistenceFactory;
+import persistencia.cita.CitaRecord;
+import persistencia.paciente.HistorialRecord;
+import persistencia.paciente.PacienteRecord;
+import persistencia.paciente.VacunaRecord;
+import util.BusinessException;
 
 public class VentanaVacunacion extends JFrame {
 
 	private HistorialRecord historial;
+	private CitaRecord cita;
+	private VacunaRecord vacuna;
 	private PacienteRecord paciente;
 	
 	private static LocalDate today = LocalDate.now();
@@ -49,9 +55,12 @@ public class VentanaVacunacion extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaVacunacion(HistorialRecord historial) {
-		this.historial=historial;
-		paciente =PersistenceFactory.forPaciente().findById(historial.getDniPaciente()).get();
+	public VentanaVacunacion(PacienteRecord paciente, CitaRecord cita, VacunaRecord vacuna) {
+		setResizable(false);
+		this.historial=PersistenceFactory.forPaciente().getHistorial(paciente.getDniPaciente());
+		this.cita=cita;
+		this.vacuna=vacuna;
+		this.paciente=paciente;
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 609, 378);
@@ -176,6 +185,8 @@ public class VentanaVacunacion extends JFrame {
 			txtDosis.setFont(new Font("Tahoma", Font.PLAIN, 12));
 			txtDosis.setBounds(32, 223, 193, 26);
 			txtDosis.setColumns(10);
+			if (vacuna!=null)
+				txtDosis.setText(vacuna.getDosis());
 		}
 		return txtDosis;
 	}
@@ -187,12 +198,56 @@ public class VentanaVacunacion extends JFrame {
 					vacunar();
 				}
 			});
-			btnTerminarVacuna.setBounds(430, 300, 122, 23);
+			btnTerminarVacuna.setBounds(411, 300, 141, 23);
 		}
 		return btnTerminarVacuna;
 	}
 	
 	private void vacunar() {
-		
+		if (!checkFields() || !confirm())
+			return;
+		VacunaRecord myVacuna;
+		LocalDate fecha = LocalDate.of((Integer) getSpnYear().getValue(), (Integer) getSpnMes().getValue(), (Integer) getSpnDia().getValue());
+		LocalTime hora = LocalTime.of((Integer) getSpnHora().getValue(), (Integer) getSpnMes().getValue());
+		if (vacuna!=null) {
+			vacuna.setFechaReal(fecha);
+			vacuna.setHora(hora);
+			myVacuna=vacuna;
+		} else {
+			int nextId = PersistenceFactory.forCita().getLastId("VACUNA", "IDVACUNA")+1;
+			String idCita = ((cita==null) ? null : cita.idCita);
+			String dosis = getTxtDosis().getText();
+			boolean refuerzo = getChckbxRefuerzo().isSelected();
+			myVacuna = new VacunaRecord(nextId, historial.getIdHistorial(), idCita, fecha, fecha, hora, dosis, refuerzo);
+		}
+		try {
+			BusinessFactory.forPacienteService().vacunar(myVacuna);
+		} catch (BusinessException e) {
+			e.printStackTrace();
+		} finally {
+			if (cita!=null) {
+				VentanaCita v = new VentanaCita(cita);
+				v.setVisible(true);
+			} else {
+				VentanaHistorial v = new VentanaHistorial(paciente);
+				v.setVisible(true);
+			}
+			dispose();
+		}
+	}
+	
+	private boolean confirm() {
+		int result = JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea confirmar la vacuna? No podrá modificarla despues");
+		if (result == JOptionPane.YES_OPTION)
+			return true;
+		return false;
+	}
+	
+	private boolean checkFields() {
+		if (getTxtDosis().getText().equals("")) {
+			JOptionPane.showMessageDialog(this, "Por favor, indique que dosis va a aplicar");
+			return false;
+		}
+		return true;
 	}
 }
