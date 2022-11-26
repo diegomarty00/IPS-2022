@@ -207,39 +207,47 @@ public class VentanaVacunacion extends JFrame {
 		if (!checkFields() || !confirm())
 			return;
 		VacunaRecord myVacuna;
-		LocalDate fecha = LocalDate.of((Integer) getSpnYear().getValue(), (Integer) getSpnMes().getValue(), (Integer) getSpnDia().getValue());
+		LocalDate fechaReal = LocalDate.of((Integer) getSpnYear().getValue(), (Integer) getSpnMes().getValue(), (Integer) getSpnDia().getValue());
 		LocalTime hora = LocalTime.of((Integer) getSpnHora().getValue(), (Integer) getSpnMes().getValue());
 		if (vacuna!=null) {
-			vacuna.setFechaReal(fecha);
-			vacuna.setHora(hora);
-			myVacuna=vacuna;
+			myVacuna=new VacunaRecord(vacuna.getIdVacuna(), vacuna.getIdHistorial(), vacuna.getIdCita(), fechaReal, 
+					vacuna.getFechaAproximada(), hora, vacuna.getDosis(), vacuna.isRefuerzo());
 		} else {
 			int nextId = PersistenceFactory.forCita().getLastId("VACUNA", "IDVACUNA")+1;
 			String idCita = ((cita==null) ? null : cita.idCita);
 			String dosis = getTxtDosis().getText();
 			boolean refuerzo = getChckbxRefuerzo().isSelected();
-			myVacuna = new VacunaRecord(nextId, historial.getIdHistorial(), idCita, fecha, fecha, hora, dosis, refuerzo);
+			myVacuna = new VacunaRecord(nextId, historial.getIdHistorial(), idCita, fechaReal, fechaReal, hora, dosis, refuerzo);
 		}
 		try {
 			BusinessFactory.forPacienteService().vacunar(myVacuna);
 		} catch (BusinessException e) {
 			e.printStackTrace();
 		} finally {
-			if (cita!=null) {
-				VentanaCita v = new VentanaCita(cita);
-				v.setVisible(true);
-			} else {
-				VentanaHistorial v = new VentanaHistorial(paciente);
-				v.setVisible(true);
-			}
-			dispose();
+			cerrar();
 		}
+	}
+	
+	private void cerrar() {
+		if (cita!=null) {
+			VentanaCita v = new VentanaCita(cita);
+			v.setVisible(true);
+		} else if (vacuna.getHora()!=null || vacuna.getFechaAproximada()!=null){
+			VentanaCalendarioVacunacion v = new VentanaCalendarioVacunacion(paciente, cita);
+			v.setVisible(true);
+		} else {
+			VentanaHistorial v = new VentanaHistorial(paciente);
+			v.setVisible(true);
+		}
+		dispose();
 	}
 	
 	private boolean confirm() {
 		int result = JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea confirmar la vacuna? No podrá modificarla despues");
 		if (result == JOptionPane.YES_OPTION)
 			return true;
+		else if (result == JOptionPane.NO_OPTION)
+			cerrar();
 		return false;
 	}
 	

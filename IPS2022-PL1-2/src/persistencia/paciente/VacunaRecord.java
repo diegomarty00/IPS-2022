@@ -14,13 +14,13 @@ public class VacunaRecord {
 	private String dosis;
 	private boolean refuerzo;
 	
-	public VacunaRecord(int idVacuna, int idHistorial, String idCita, LocalDate fecha, LocalDate fechaAproximada,
+	public VacunaRecord(int idVacuna, int idHistorial, String idCita, LocalDate fechaReal, LocalDate fechaAproximada,
 			LocalTime hora, String dosis, boolean refuerzo) {
 		super();
 		this.idVacuna = idVacuna;
 		this.idHistorial = idHistorial;
 		this.idCita = idCita;
-		this.fechaReal = fecha;
+		this.fechaReal = fechaReal;
 		this.fechaAproximada = fechaAproximada;
 		this.hora = hora;
 		this.dosis = dosis;
