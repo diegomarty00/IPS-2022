@@ -15,6 +15,8 @@ public class HistorialRecord {
 	private List<CitaRecord> citas;
 	private List<CausaRecord> causas;
 	private List<PrescripcionRecord> prescripciones;
+	private List<VacunaRecord> vacunasRealizadas;
+	private List<VacunaRecord> calendarioVacunas;
 	
 	public int getIdHistorial() {
 		return idHistorial;
@@ -34,7 +36,7 @@ public class HistorialRecord {
 	
 	public List<CitaRecord> getCitas() {
 		if (citas==null) {
-			return PersistenceFactory.forCita().findByHistorialId(idHistorial);
+			citas = PersistenceFactory.forCita().findByHistorialId(idHistorial);
 		}
 		return citas;
 	}
@@ -45,7 +47,7 @@ public class HistorialRecord {
 			for (CitaRecord cita : getCitas()) {
 				myCausas.addAll(PersistenceFactory.forCita().getCausas(cita.idCita));
 			}
-			return myCausas;
+			causas = myCausas;
 		}
 		return causas;
 	}
@@ -56,10 +58,34 @@ public class HistorialRecord {
 			for (CitaRecord cita : getCitas()) {
 				myPrescripciones.addAll(PersistenceFactory.forCita().getPrescripciones(cita.idCita));
 			}
-			return myPrescripciones;
+			prescripciones = myPrescripciones;
 		}
 		return prescripciones;
 	}
 
-	
+	public List<VacunaRecord> getVacunasRealizadas() {
+		if (vacunasRealizadas==null) {
+			List<VacunaRecord> allVacunas = PersistenceFactory.forPaciente().getVacunas(idHistorial);
+			List<VacunaRecord> myVacunasRealizadas = new ArrayList<>();
+			for (VacunaRecord vacuna : allVacunas) {
+				if (vacuna.getFechaReal()!=null && vacuna.getHora()!=null)
+					myVacunasRealizadas.add(vacuna);
+			}
+			vacunasRealizadas=myVacunasRealizadas;
+		}
+		return vacunasRealizadas;
+	}
+
+	public List<VacunaRecord> getCalendarioVacunas() {
+		if (calendarioVacunas==null) {
+			List<VacunaRecord> allVacunas = PersistenceFactory.forPaciente().getVacunas(idHistorial);
+			List<VacunaRecord> myCalendarioVacunas = new ArrayList<>();
+			for (VacunaRecord vacuna : allVacunas) {
+				if (vacuna.getFechaReal()==null || vacuna.getHora()==null)
+					myCalendarioVacunas.add(vacuna);
+			}
+			calendarioVacunas=myCalendarioVacunas;
+		}
+		return calendarioVacunas;
+	}
 }
