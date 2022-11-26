@@ -62,6 +62,7 @@ public class CitaPrioritaria extends JFrame {
 	private DefaultListModel<EnfermeroCitaRecord> enflist;
 	private ProcesarAccion pa= new ProcesarAccion(); 
 	private List<String> listaH = setHorasL();
+	private JButton btModificar;
 	/**
 	 * Create the frame.
 	 * @param eslist 
@@ -104,6 +105,7 @@ public class CitaPrioritaria extends JFrame {
 		contentPane.add(getBtConfimar());
 		contentPane.add(getBtCancelar());
 		contentPane.add(getBtFinalizar());
+		contentPane.add(getBtModificar());
 	}
 	private JLabel getLbDescriptivo() {
 		if (lbDescriptivo == null) {
@@ -114,13 +116,13 @@ public class CitaPrioritaria extends JFrame {
 		}
 		return lbDescriptivo;
 	}
-	private JList getJlCitas() {
+	private JList<CitaRecord> getJlCitas() {
 		if (jlCitas == null) {
 			asignarModelo();
 			jlCitas = new JList();
 			jlCitas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			jlCitas.setModel(modelo);
-			jlCitas.setBounds(10, 58, 489, 147);
+			jlCitas.setBounds(10, 52, 469, 147);
 		}
 		return jlCitas;
 	}
@@ -305,6 +307,19 @@ public class CitaPrioritaria extends JFrame {
 		    deletet();
 		}
 	}
-	
-	
+	private JButton getBtModificar() {
+		if (btModificar == null) {
+			btModificar = new JButton("Modificar");
+			btModificar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					ModificarCitas frame = new ModificarCitas(getJlCitas().getSelectedValue());
+					frame.setVisible(true);
+					asignarModelo();
+					
+				}
+			});
+			btModificar.setBounds(489, 70, 101, 27);
+		}
+		return btModificar;
+	}
 }
