@@ -6,6 +6,9 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Closeable;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,9 +29,11 @@ import javax.swing.border.EmptyBorder;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import business.cita.operaciones.CrearCita;
+import business.cita.operaciones.ModificarCita;
 import gui.admin.VentanaCitasA.ProcesarAccion;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.MedicoCitaRecord;
+import persistencia.cita.impl.MedicoCitaGatewayImpl;
 import persistencia.enfermero.EnfermeroCitaRecord;
 import persistencia.enfermero.EnfermeroRecord;
 import persistencia.enfermero.impl.EnfermeroGatewayImpl;
@@ -192,9 +197,19 @@ public class ModificarCitas extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				int size = modjlist.size();
-				int si = eslist.size();
-			    
+				cita.dniPaciente = ((PacienteRecord) getComboBox_2().getSelectedItem()).getDniPaciente();
+				cita.prioritario =  getJChBPrioritario().isSelected();
+				cita.urgente =  getRdbtnNewRadioButton().isSelected();
+				cita.horaEntradaEstimada = LocalTime.parse(cbHoraInicio.getSelectedItem().toString());
+				cita.horaSalidaEstimada = LocalTime.parse(cbHoraFinal.getSelectedItem().toString());
+				cita.fecha = toFecha(cbAnio.getSelectedItem().toString(), getCbMes().getSelectedItem().toString() , getCbDia().getSelectedItem().toString());
+				ModificarCita md = new ModificarCita(cita);
+				close();
+			}
+			
+			private LocalDate toFecha(String anio, String mes, String dia) {
+				
+				return LocalDate.parse(anio+"-"+mes+"-"+dia);
 			}
 		}
 	    	
@@ -202,7 +217,9 @@ public class ModificarCitas extends JFrame {
 	    	
 	    	
 	    
-	    
+	    private void close() {
+	    	this.close();
+	    }
 	    
 	    private JPanel getPanel() {
 		if (panel == null) {
@@ -332,10 +349,13 @@ public class ModificarCitas extends JFrame {
 		    PacienteGatewayImpl p = new PacienteGatewayImpl();
 		    List<PacienteRecord> l = p.findAll();
 		    for (int i = 0; i < l.size(); i++) {
-			mod.addElement(l.get(i).toString());
+			mod.addElement(l.get(i));
 		    }
 
 		    cbPacinte.setModel(mod);
+		    PacienteRecord pa = p.findById(cita.dniPaciente).get();
+		    cbPacinte.setSelectedItem(pa);
+		    repaint();
 		}
 		return cbPacinte;
 	    }
@@ -362,6 +382,7 @@ public class ModificarCitas extends JFrame {
 			    new String[] { "Consulta 1 ", "Consulta 2", "Consulta 3 ",
 				    "Consulta 4", "Consulta 5", "Consulta 6",
 				    "Consulta 7", "Consulta 8", "Consulta 9" }));
+		    cbLugar.setSelectedItem(cita.lugar);
 		}
 		return cbLugar;
 	    }
@@ -461,6 +482,7 @@ public class ModificarCitas extends JFrame {
 		    jChBUrgente = new JCheckBox("Cita urgente ");
 		    jChBUrgente
 			    .setFont(new Font("Times New Roman", Font.BOLD, 14));
+		    jChBUrgente.setSelected(cita.urgente);
 		}
 		return jChBUrgente;
 	    }
@@ -517,11 +539,18 @@ public class ModificarCitas extends JFrame {
 		return panel_9;
 	    }
 
+	   
+	    
 	    private JList getListMedicos() {
 		if (listMedicos == null) {
 		    listMedicos = new JList();
 
 		    listMedicos.setModel(modjlist);
+		    MedicoCitaGatewayImpl mc = new MedicoCitaGatewayImpl();
+		    List<MedicoCitaRecord> lista =  mc.findById1(cita.idCita);
+		    for(int i = 0 ; i<lista.size();i++) {
+		    	modjlist.addElement(lista.get(i));
+		    }
 		}
 		return listMedicos;
 	    }
@@ -588,6 +617,7 @@ public class ModificarCitas extends JFrame {
 			mod.addElement(i);
 		    }
 		    cbAnio.setModel(mod);
+		    cbAnio.setSelectedItem(cita.fecha.getYear());
 		}
 		return cbAnio;
 	    }
@@ -605,6 +635,7 @@ public class ModificarCitas extends JFrame {
 		if (cbMes == null) {
 		    cbMes = new JComboBox();
 		    cbMes.setModel(new DefaultComboBoxModel(new String[] {"01", "02", "03", "04", "05", "07", "08", "09", "10", "11", "12"}));
+		    cbMes.setSelectedIndex(cita.fecha.getMonthValue());
 		}
 		return cbMes;
 	    }
@@ -631,6 +662,8 @@ public class ModificarCitas extends JFrame {
 		    	}
 		    }
 		    cbDia.setModel(mod);
+		    cbDia.setSelectedIndex(cita.fecha.getDayOfMonth());
+		    
 		}
 		return cbDia;
 	    }
@@ -658,6 +691,7 @@ public class ModificarCitas extends JFrame {
 			if (jChBPrioritario == null) {
 				jChBPrioritario = new JCheckBox("Cita prioritaria");
 				jChBPrioritario.setFont(new Font("Times New Roman", Font.BOLD, 14));
+				jChBPrioritario.setSelected(cita.prioritario);
 			}
 			return jChBPrioritario;
 		}

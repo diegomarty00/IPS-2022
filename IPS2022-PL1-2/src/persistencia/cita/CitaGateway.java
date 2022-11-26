@@ -20,6 +20,8 @@ public interface CitaGateway extends Gateway<CitaRecord> {
     List<CitaRecord> getCitasDelDia(Date dia);
 
     List<CitaRecord> getCitasProximas(Date dia);
+    
+    public void ModificarTodo(CitaRecord cit);
 
     void modificarCita(String idCita, String correo, int telefono);
     

@@ -37,7 +37,10 @@ public class CitaGatewayImpl implements CitaGateway {
     private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static String MODIFICAR_CONTACTO = "update CITA set CORREO_PACIENTE = ? , TELEFONO_PACIENTE = ? where idcita = ?";
     
+    
 	
+    
+    
 	@Override
 	public void add(CitaRecord t) {
 		Connection c = null;
@@ -94,6 +97,8 @@ public class CitaGatewayImpl implements CitaGateway {
 
     }
 
+    
+    
 	private static String findAll = "SELECT * FROM PUBLIC.cita WHERE CONFIRMADA = true";
 	@Override
 	public List<CitaRecord> findAll() {
@@ -298,6 +303,31 @@ public class CitaGatewayImpl implements CitaGateway {
     }
 }
 
+
+
+	private static String MODIFICAR_CITA = "update CITA set DNIPACIENTE = ? , URGENTE = ?,HORA_ENTRADA_ESTIMADA = ?,"
+		+ " HORA_SALIDA_ESTIMADA = ?,FECHA = ?,LUGAR_CITA = ?,PRIORITARIO = ?   where idcita = ?";
+	@Override
+	public void ModificarTodo(CitaRecord cit) {
+		Connection c = null;
+		PreparedStatement pst = null;
+    try {
+		    c = Jdbc.createThreadConnection();
+		    pst = c.prepareStatement(MODIFICAR_CITA);
+		    pst.setString(8, cit.idCita);
+		    pst.setString(1,cit.dniPaciente);
+		    pst.setBoolean(2, cit.urgente);
+		    pst.setTime(3, Time.valueOf(cit.horaEntradaEstimada));
+		    pst.setTime(4, Time.valueOf(cit.horaSalidaEstimada));
+		    pst.setString(5, cit.lugar);
+		    pst.setBoolean(6, cit.prioritario);
+		    pst.execute();
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(pst);
+    }
+	}
 	
 	@Override
 	public void insertarCausa(String idCita, String titulo, Time hora, Date fecha) {
