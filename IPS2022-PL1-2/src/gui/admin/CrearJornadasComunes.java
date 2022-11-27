@@ -63,8 +63,8 @@ public class CrearJornadasComunes extends JFrame {
     private JLabel lblNNombreJornada;
     private JTextField textNombreJornada;
     private JornadaComunRecord jornada = new JornadaComunRecord();
-    private JButton btnAñadir;
-    private String añadirDia;
+    private JButton btnAniadir;
+    private String aniadirDia;
 
     /**
      * Launch the application.
@@ -104,7 +104,7 @@ public class CrearJornadasComunes extends JFrame {
 	contentPane.add(getBtnCancelar());
 	contentPane.add(getLblNNombreJornada());
 	contentPane.add(getTextNombreJornada());
-	contentPane.add(getBtnAñadir());
+	contentPane.add(getBtnAniadir());
     }
 
     private JPanel getPanelDiaSemana() {
@@ -436,12 +436,12 @@ public class CrearJornadasComunes extends JFrame {
 	return textNombreJornada;
     }
 
-    private JButton getBtnAñadir() {
-	if (btnAñadir == null) {
-	    btnAñadir = new JButton("Añadir");
-	    btnAñadir.setBackground(Color.GREEN);
-	    btnAñadir.setBounds(234, 282, 106, 23);
-	    btnAñadir.addActionListener(new ActionListener() {
+    private JButton getBtnAniadir() {
+	if (btnAniadir == null) {
+	    btnAniadir = new JButton("Añadir");
+	    btnAniadir.setBackground(Color.GREEN);
+	    btnAniadir.setBounds(234, 282, 106, 23);
+	    btnAniadir.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    if (comporbarHoras()) {
 			actualizarJornada();
@@ -456,7 +456,7 @@ public class CrearJornadasComunes extends JFrame {
 
 	    });
 	}
-	return btnAñadir;
+	return btnAniadir;
     }
 
     private boolean comporbarHoras() {
