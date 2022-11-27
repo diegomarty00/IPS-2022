@@ -58,7 +58,7 @@ public class VentanaHistorial extends JFrame {
 	 */
 	public VentanaHistorial(PacienteRecord paciente, MedicoRecord medico, EnfermeroRecord enfermero) {
 		this.paciente=paciente;
-		historial=PersistenceFactory.forPaciente().getHistorial(paciente.getDniPaciente());
+		historial=PersistenceFactory.forPaciente().getHistorial(paciente.getId());
 		this.medico=medico;
 		this.enfermero=enfermero;
 		

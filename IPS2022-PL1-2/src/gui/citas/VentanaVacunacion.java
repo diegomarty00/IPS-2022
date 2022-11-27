@@ -61,7 +61,7 @@ public class VentanaVacunacion extends JFrame {
 	 */
 	public VentanaVacunacion(PacienteRecord paciente, CitaRecord cita, VacunaRecord vacuna, MedicoRecord medico, EnfermeroRecord enfermero) {
 		setResizable(false);
-		this.historial=PersistenceFactory.forPaciente().getHistorial(paciente.getDniPaciente());
+		this.historial=PersistenceFactory.forPaciente().getHistorial(paciente.getId());
 		this.cita=cita;
 		this.vacuna=vacuna;
 		this.paciente=paciente;

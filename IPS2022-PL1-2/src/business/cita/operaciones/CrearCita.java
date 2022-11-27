@@ -32,9 +32,9 @@ public class CrearCita {
 	return lastId + 1;
     }
 
-    private int getHistorial(String dniPaciente) {
+    private int getHistorial(int idPaciente) {
 	PacienteGatewayImpl p = new PacienteGatewayImpl();
-	int idHistorial = p.getHistorial(dniPaciente).getIdHistorial();
+	int idHistorial = p.getHistorial(idPaciente).getIdHistorial();
 	return idHistorial;
     }
 
@@ -62,43 +62,42 @@ public class CrearCita {
 	return p;
     }
 
-    public void crearCita(String paciente, boolean urgencia, String lugar,
-	    String anio, String mes, String dia, String horaE, String horaS,
-	    String correo, String num, String otros, boolean prio) {
+//    public void crearCita(String paciente, boolean urgencia, String lugar,
+//	    String anio, String mes, String dia, String horaE, String horaS,
+//	    String correo, String num, String otros, boolean prio) {
+//
+//	String dni = parsePaciente(paciente);
+//	LocalDate fecha = toFecha(anio, mes, dia);
+//	PacienteGatewayImpl pa = new PacienteGatewayImpl();
+//	ci.dniPaciente = dni;
+//	ci.idHistorial = pa.getHistorial(dni).getIdHistorial();
+//	ci.idCita = String.valueOf(nextid);
+//	ci.idHistorial = getHistorial(dni);
+//	ci.correoPaciente = correo;
+//	ci.telefonoPaciente = num;
+//	ci.urgente = urgencia;
+//	ci.pacienteAcudido = "Asistencia Sin Asignar";
+//	ci.lugar = lugar;
+//	ci.fecha = fecha;
+//	ci.horaEntradaEstimada = LocalTime.parse(horaE);
+//	ci.horaSalidaEstimada = LocalTime.parse(horaS);
+//	ci.otros = otros;
+//	ci.prioritario = prio;
+//	ci.confirmada = true;
+//	almacena();
+//
+//    }
 
-	String dni = parsePaciente(paciente);
-	LocalDate fecha = toFecha(anio, mes, dia);
-	PacienteGatewayImpl pa = new PacienteGatewayImpl();
-	ci.dniPaciente = dni;
-	ci.idHistorial = pa.getHistorial(dni).getIdHistorial();
-	ci.idCita = String.valueOf(nextid);
-	ci.idHistorial = getHistorial(dni);
-	ci.correoPaciente = correo;
-	ci.telefonoPaciente = num;
-	ci.urgente = urgencia;
-	ci.pacienteAcudido = "Asistencia Sin Asignar";
-	ci.lugar = lugar;
-	ci.fecha = fecha;
-	ci.horaEntradaEstimada = LocalTime.parse(horaE);
-	ci.horaSalidaEstimada = LocalTime.parse(horaS);
-	ci.otros = otros;
-	ci.prioritario = prio;
-	ci.confirmada = true;
-	almacena();
-
-    }
-
-    public void SolicitarCita(String paciente, boolean urgencia, String lugar,
+    public void SolicitarCita(int idPaciente, boolean urgencia, String lugar,
 	    String anio, String mes, String dia, String horaE, String horaS,
 	    String correo, String num, boolean prio) {
-	String dni = parsePaciente(paciente);
 	LocalDate fecha = toFecha(anio, mes, dia);
 	PacienteGatewayImpl pa = new PacienteGatewayImpl();
-	ci.dniPaciente = dni;
+	ci.idPaciente = idPaciente;
 	ci.idCita = String.valueOf(nextid);
-	ci.idHistorial = getHistorial(dni);
+	ci.idHistorial = getHistorial(idPaciente);
 	ci.correoPaciente = correo;
-	ci.idHistorial = pa.getHistorial(dni).getIdHistorial();
+	ci.idHistorial = pa.getHistorial(idPaciente).getIdHistorial();
 	ci.telefonoPaciente = num;
 	ci.urgente = urgencia;
 	ci.pacienteAcudido = "Asistencia Sin Asignar";

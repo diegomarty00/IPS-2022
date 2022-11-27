@@ -19,8 +19,8 @@ import util.jdbc.Jdbc;
 
 public class PacienteGatewayImpl implements PacienteGateway {
 
-    private static final String PACIENTE_DNI = "SELECT * from PACIENTE where DNI = ?";
-    private static final String HISTORIAL_DNI = "SELECT * from HISTORIAL where DNIPACIENTE = ?";
+    private static final String PACIENTE_ID = "SELECT * from PACIENTE where ID = ?";
+    private static final String HISTORIAL_DNI = "SELECT * from HISTORIAL where ID = ?";
     private static final String VACUNAR = "INSERT INTO VACUNA values (?,?,?,?,?,?,?,?)";
     private static final String FIND_VACUNAS_REALIZADAS = "SELECT * FROM VACUNA WHERE IDHISTORIAL = ? ORDER BY FECHAAPROXIMADA ASC";
     private static final String CHECK_IF_EXISTS_VACUNA = "SELECT * FROM VACUNA WHERE IDVACUNA = ?";
@@ -45,7 +45,7 @@ public class PacienteGatewayImpl implements PacienteGateway {
     }
 
     @Override
-    public Optional<PacienteRecord> findById(String dni) {
+    public Optional<PacienteRecord> findById(String id) {
 	Connection c = null;
 	PreparedStatement pst = null;
 	ResultSet rs = null;
@@ -53,8 +53,8 @@ public class PacienteGatewayImpl implements PacienteGateway {
 	try {
 	    c = Jdbc.getConnection();
 
-	    pst = c.prepareStatement(PACIENTE_DNI);
-	    pst.setString(1, dni);
+	    pst = c.prepareStatement(PACIENTE_ID);
+	    pst.setInt(1, Integer.parseInt(id));
 
 	    pst.execute();
 
@@ -92,7 +92,7 @@ public class PacienteGatewayImpl implements PacienteGateway {
     }
 
     @Override
-    public HistorialRecord getHistorial(String dniPaciente) {
+    public HistorialRecord getHistorial(int idPaciente) {
 	Connection c = null;
 	PreparedStatement pst = null;
 	ResultSet rs = null;
@@ -101,7 +101,7 @@ public class PacienteGatewayImpl implements PacienteGateway {
 	    c = Jdbc.getConnection();
 
 	    pst = c.prepareStatement(HISTORIAL_DNI);
-	    pst.setString(1, dniPaciente);
+	    pst.setInt(1, idPaciente);
 
 	    pst.execute();
 

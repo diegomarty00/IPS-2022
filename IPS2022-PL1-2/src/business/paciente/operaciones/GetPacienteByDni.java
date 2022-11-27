@@ -11,8 +11,8 @@ public class GetPacienteByDni implements Command<Optional<PacienteRecord>> {
 
     private String dni;
 
-    public GetPacienteByDni(String dni) {
-	this.dni = dni;
+    public GetPacienteByDni(int id) {
+	this.dni = String.valueOf(id);
     }
 
     @Override

@@ -10,9 +10,9 @@ import util.BusinessException;
 
 public interface PacienteService {
 
-	Optional<PacienteRecord> getByDni(String dni) throws BusinessException;
+	Optional<PacienteRecord> getById(int id) throws BusinessException;
 
-	HistorialRecord getHistorialPaciente(String dniPaciente) throws BusinessException;
+	HistorialRecord getHistorialPaciente(int idPaciente) throws BusinessException;
 	
 	void vacunar(VacunaRecord vacuna) throws BusinessException;
 }

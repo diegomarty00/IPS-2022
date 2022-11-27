@@ -16,15 +16,15 @@ import util.command.CommandExecutor;
 public class PacienteServiceImpl implements PacienteService{
 
 	@Override
-	public Optional<PacienteRecord> getByDni(String dni) throws BusinessException {
+	public Optional<PacienteRecord> getById(int id) throws BusinessException {
 		CommandExecutor c = new CommandExecutor();
-		return c.execute(new GetPacienteByDni(dni));
+		return c.execute(new GetPacienteByDni(id));
 	}
 
 	@Override
-	public HistorialRecord getHistorialPaciente(String dniPaciente) throws BusinessException {
+	public HistorialRecord getHistorialPaciente(int idPaciente) throws BusinessException {
 		CommandExecutor c = new CommandExecutor();
-		return c.execute(new GetHistorialPaciente(dniPaciente));
+		return c.execute(new GetHistorialPaciente(idPaciente));
 	}
 
 	@Override

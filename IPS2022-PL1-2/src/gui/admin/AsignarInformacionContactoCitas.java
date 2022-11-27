@@ -132,7 +132,7 @@ public class AsignarInformacionContactoCitas extends JFrame {
     private void verCita(CitaRecord cita) {
 	try {
 	    Optional<PacienteRecord> paciente = BusinessFactory
-		    .forPacienteService().getByDni(cita.dniPaciente);
+		    .forPacienteService().getById(cita.idPaciente);
 	    idCita = cita.idCita;
 	    getTextNombre().setText(paciente.get().getNombre() + " "
 		    + paciente.get().getApellidos());

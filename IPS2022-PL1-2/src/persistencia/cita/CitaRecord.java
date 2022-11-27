@@ -10,7 +10,7 @@ import util.BusinessException;
 public class CitaRecord {
 
     public String idCita;
-    public String dniPaciente;
+    public int idPaciente;
     public int idHistorial;
     public boolean urgente;
     public LocalTime horaEntradaEstimada;
@@ -31,7 +31,7 @@ public class CitaRecord {
 	try {
 	    if (pacienteAsociado != null)
 		return pacienteAsociado;
-	    return BusinessFactory.forPacienteService().getByDni(dniPaciente)
+	    return BusinessFactory.forPacienteService().getById(idPaciente)
 		    .get();
 	} catch (BusinessException e) {
 	    e.printStackTrace();

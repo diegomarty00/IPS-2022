@@ -113,7 +113,7 @@ public class RecordAssembler {
 	CitaRecord cita = new CitaRecord();
 
 	cita.idCita = rs.getString("IDCITA");
-	cita.dniPaciente = rs.getString("DNIPACIENTE");
+	cita.idPaciente = rs.getInt("IDPACIENTE");
 	cita.idHistorial = rs.getInt("IDHISTORIAL");
 	cita.urgente = rs.getBoolean("URGENTE");
 	if (rs.getTime("HORA_ENTRADA_ESTIMADA") != null)
