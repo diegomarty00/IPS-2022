@@ -2,13 +2,13 @@ package persistencia.cita;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Optional;
 
 import business.BusinessFactory;
 import persistencia.paciente.PacienteRecord;
 import util.BusinessException;
 
 public class CitaRecord {
+
 	
 	public String idCita;
 	public String dniPaciente;
@@ -42,5 +42,16 @@ public class CitaRecord {
 	public String toString() {
 		PacienteRecord pacienteAsociado = getPacienteAsociado();
 		return pacienteAsociado.getNombre()+" "+pacienteAsociado.getApellidos()+" "+horaEntradaEstimada.toString()+" - "+horaSalidaEstimada.toString();
+
 	}
+	return null;
+    }
+
+    public String toString() {
+	PacienteRecord pacienteAsociado = getPacienteAsociado();
+	return pacienteAsociado.getNombre() + " "
+		+ pacienteAsociado.getApellidos() + " "
+		+ horaEntradaEstimada.toString() + " - "
+		+ horaSalidaEstimada.toString();
+    }
 }

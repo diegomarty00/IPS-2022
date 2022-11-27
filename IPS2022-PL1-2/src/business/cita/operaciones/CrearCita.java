@@ -1,13 +1,9 @@
 package business.cita.operaciones;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import org.hsqldb.lib.ArrayUtil;
 
 import business.BusinessFactory;
 import persistencia.cita.CitaRecord;
@@ -23,7 +19,6 @@ import persistencia.medico.MedicoRecord;
 import persistencia.medico.impl.MedicoGatewayImpl;
 import persistencia.paciente.PacienteRecord;
 import persistencia.paciente.impl.PacienteGatewayImpl;
-import util.BusinessException;
 import util.mail.EnviarMail;
 
 public class CrearCita {
@@ -182,6 +177,18 @@ public class CrearCita {
 
 		return LocalDate.parse(anio + "-" + mes + "-" + dia);
 	}
+	return lista;
+    }
+
+    private void almacena() {
+	CitaGatewayImpl cg = new CitaGatewayImpl();
+	cg.add(ci);
+    }
+
+    private LocalDate toFecha(String anio, String mes, String dia) {
+
+	return LocalDate.parse(anio + "-" + mes + "-" + dia);
+    }
 
 //	public void crearCita(String paciente, boolean urgencia,String lugar) {
 //		String dni = parsePaciente(paciente);
@@ -198,6 +205,7 @@ public class CrearCita {
 //		CitaGatewayImpl cg = new CitaGatewayImpl();
 //		cg.add(ci);
 //	}
+
 	public void crearCitaMedico(String med) {
 
 		int idm = parseMed(med);
@@ -231,4 +239,5 @@ public class CrearCita {
 		enfermeroCitaRecord.idCita = String.valueOf(nextid);
 		ec.add(enfermeroCitaRecord);
 	}
+
 }

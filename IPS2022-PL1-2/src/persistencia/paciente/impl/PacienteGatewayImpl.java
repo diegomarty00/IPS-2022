@@ -26,72 +26,72 @@ public class PacienteGatewayImpl implements PacienteGateway {
 	private static final String CHECK_IF_EXISTS_VACUNA = "SELECT * FROM VACUNA WHERE IDVACUNA = ?";
 	private static final String UPDATE_VACUNA = "UPDATE VACUNA SET IDCITA = ?, FECHAREAL = ?, HORA = ?, DOSIS = ?, REFUERZO = ? WHERE IDVACUNA = ?";
 
-	@Override
-	public void add(PacienteRecord t) {
-		// TODO Auto-generated method stub
-		
+    @Override
+    public void add(PacienteRecord t) {
+	// TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void remove(String id) {
+	// TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void update(PacienteRecord t) {
+	// TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public Optional<PacienteRecord> findById(String dni) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+
+	try {
+	    c = Jdbc.getConnection();
+
+	    pst = c.prepareStatement(PACIENTE_DNI);
+	    pst.setString(1, dni);
+
+	    pst.execute();
+
+	    rs = pst.executeQuery();
+
+	    return RecordAssembler.toPacienteRecord(rs);
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
 	}
+    }
 
-	@Override
-	public void remove(String id) {
-		// TODO Auto-generated method stub
-		
+    private static String findAll = "SELECT * FROM PUBLIC.PACIENTE";
+
+    @Override
+    public List<PacienteRecord> findAll() {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+
+	try {
+	    c = Jdbc.getConnection();
+
+	    pst = c.prepareStatement(findAll);
+	    rs = pst.executeQuery();
+
+	    return RecordAssembler.toPacienteList(rs);
+
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
 	}
+    }
 
-	@Override
-	public void update(PacienteRecord t) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Optional<PacienteRecord> findById(String dni) {
-		Connection c = null;
-		PreparedStatement pst = null;
-		ResultSet rs = null;
-		
-		try {
-			c = Jdbc.getConnection();
-			
-			pst = c.prepareStatement(PACIENTE_DNI);
-			pst.setString(1, dni);
-
-			pst.execute();
-			
-			rs = pst.executeQuery();
-			
-			return RecordAssembler.toPacienteRecord(rs);
-		} catch (SQLException e) {
-			throw new PersistenceException(e);
-		} finally {
-			Jdbc.close(rs, pst);
-		}
-	}
-
-	private static String findAll = "SELECT * FROM PUBLIC.PACIENTE";
-	@Override
-	public List<PacienteRecord> findAll() {
-		Connection c = null;
-		PreparedStatement pst = null;
-		ResultSet rs = null;
-
-		try {
-			c = Jdbc.getConnection();
-			
-			pst = c.prepareStatement(findAll);
-			rs = pst.executeQuery();
-			
-			
-
-			return RecordAssembler.toPacienteList(rs);
-
-		} catch (SQLException e) {
-			throw new PersistenceException(e);
-		} finally {
-			Jdbc.close(rs, pst);
-		}
-	}
-
+    
 	@Override
 	public HistorialRecord getHistorial(String dniPaciente) {
 		Connection c = null;
@@ -115,6 +115,7 @@ public class PacienteGatewayImpl implements PacienteGateway {
 			Jdbc.close(rs, pst);
 		}
 	}
+    }
 
 	
 	@Override

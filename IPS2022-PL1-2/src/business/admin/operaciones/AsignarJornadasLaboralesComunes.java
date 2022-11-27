@@ -3,7 +3,7 @@ package business.admin.operaciones;
 import persistencia.PersistenceFactory;
 import persistencia.admin.JornadaComunRecord;
 import persistencia.admin.JornadaRecord;
-import persistencia.admin.MedicoRecord;
+import persistencia.medico.MedicoRecord;
 import util.BusinessException;
 import util.command.Command;
 

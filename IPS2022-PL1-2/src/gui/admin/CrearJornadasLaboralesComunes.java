@@ -29,7 +29,7 @@ import javax.swing.border.TitledBorder;
 
 import business.BusinessFactory;
 import persistencia.admin.JornadaRecord;
-import persistencia.admin.MedicoRecord;
+import persistencia.medico.MedicoRecord;
 import util.BusinessException;
 
 public class CrearJornadasLaboralesComunes extends JFrame {
@@ -442,7 +442,7 @@ public class CrearJornadasLaboralesComunes extends JFrame {
 				if (getListMedicos().getSelectedValues()[i]
 					.toString().equals(medico.toString())) {
 				    if (comprobacionesBasicas()) {
-					jornada.idMedico = medico.id;
+					jornada.idMedico = medico.idMedico;
 					jornada.inicio = indicarInicio();
 					jornada.fin = indicarFin();
 					asignarDias(jornada);
