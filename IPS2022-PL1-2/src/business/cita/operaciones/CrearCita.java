@@ -70,9 +70,12 @@ public class CrearCita {
 
 	public void crearCita(String paciente, boolean urgencia, String lugar, String anio, String mes, String dia,
 			String horaE, String horaS, String correo, String num, String otros, boolean prio) {
+		
 		String dni = parsePaciente(paciente);
 		LocalDate fecha = toFecha(anio, mes, dia);
+		PacienteGatewayImpl pa = new PacienteGatewayImpl();
 		ci.dniPaciente = dni;
+		ci.idHistorial = pa.getHistorial(dni).getIdHistorial();
 		ci.idCita = String.valueOf(nextid);
 		ci.idHistorial = getHistorial(dni);
 		ci.correoPaciente = correo;
@@ -94,10 +97,12 @@ public class CrearCita {
 			String horaE, String horaS, String correo, String num, boolean prio) {
 		String dni = parsePaciente(paciente);
 		LocalDate fecha = toFecha(anio, mes, dia);
+		PacienteGatewayImpl pa = new PacienteGatewayImpl();
 		ci.dniPaciente = dni;
 		ci.idCita = String.valueOf(nextid);
 		ci.idHistorial = getHistorial(dni);
 		ci.correoPaciente = correo;
+		ci.idHistorial = pa.getHistorial(dni).getIdHistorial();
 		ci.telefonoPaciente = num;
 		ci.urgente = urgencia;
 		ci.pacienteAcudido = "Asistencia Sin Asignar";

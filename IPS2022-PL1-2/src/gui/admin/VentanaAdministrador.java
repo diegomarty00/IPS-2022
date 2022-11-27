@@ -100,7 +100,7 @@ public class VentanaAdministrador extends JFrame {
 	}
 	private JButton getBtModificarCitas() {
 		if (btModificarCitas == null) {
-			btModificarCitas = new JButton("Crear cita");
+			btModificarCitas = new JButton("Modificar Cita o Cancelar");
 			btModificarCitas.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					SelectorCitasModificar frame = new SelectorCitasModificar();
