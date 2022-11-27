@@ -5,6 +5,8 @@ import java.util.List;
 public class JornadaComunRecord {
     public int idJornada;
     public String nombre;
+    public String inicio;
+    public String fin;
     public List<String> lunes;
     public List<String> martes;
     public List<String> miercoles;

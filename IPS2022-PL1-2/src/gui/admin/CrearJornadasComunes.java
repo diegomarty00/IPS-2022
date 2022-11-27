@@ -7,6 +7,7 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -27,6 +28,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 import business.BusinessFactory;
+import persistencia.admin.JornadaComunRecord;
 import persistencia.admin.JornadaRecord;
 import persistencia.medico.MedicoRecord;
 import util.BusinessException;
@@ -62,7 +64,7 @@ public class CrearJornadasComunes extends JFrame {
     private DefaultListModel<MedicoRecord> modelo = new DefaultListModel<>();
     private JLabel lblNNombreJornada;
     private JTextField textField;
-    private JornadaRecord jornada = new JornadaRecord();
+    private List<JornadaComunRecord> jornada = new ArrayList<>();
 
     /**
      * Launch the application.
@@ -273,7 +275,6 @@ public class CrearJornadasComunes extends JFrame {
 	    btnAsignar.addActionListener(new ActionListener() {
 		@SuppressWarnings("deprecation")
 		public void actionPerformed(ActionEvent e) {
-		    JornadaRecord jornada = new JornadaRecord();
 		    try {
 			if (getListResumen().getSelectedValuesList()
 				.size() == 0)
@@ -292,7 +293,7 @@ public class CrearJornadasComunes extends JFrame {
 				if (getListResumen().getSelectedValues()[i]
 					.toString().equals(medico.toString())) {
 				    if (comprobacionesBasicas()) {
-					jornada.idMedico = medico.idMedico;
+					jornada. = medico.idMedico;
 					asignarDias(jornada);
 					JOptionPane.showMessageDialog(null,
 						"Se ha creado la jornada correctamente.",
