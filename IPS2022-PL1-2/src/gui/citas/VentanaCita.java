@@ -439,10 +439,16 @@ public class VentanaCita extends JFrame {
 	private JButton getBtnVerCalendarioVacunas() {
 		if (btnVerCalendarioVacunas == null) {
 			btnVerCalendarioVacunas = new JButton("Ver calendario vacunas");
+			btnVerCalendarioVacunas.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					verCalendarioVacunas();
+				}
+			});
 			btnVerCalendarioVacunas.setBounds(568, 424, 177, 23);
 		}
 		return btnVerCalendarioVacunas;
 	}
+
 	private JButton getBtnSolicitarCita() {
 		if (btnSolicitarCita == null) {
 			btnSolicitarCita = new JButton("Solicitar Cita");
@@ -455,5 +461,11 @@ public class VentanaCita extends JFrame {
 			btnSolicitarCita.setBounds(467, 565, 118, 23);
 		}
 		return btnSolicitarCita;
+  }
+
+  private void verCalendarioVacunas() {
+		VentanaCalendarioVacunacion v = new VentanaCalendarioVacunacion(pacienteAsociado, cita);
+		v.setVisible(true);
+		this.dispose();
 	}
 }
