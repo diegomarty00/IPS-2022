@@ -163,6 +163,7 @@ INSERT INTO HISTORIAL values (2, '535732D')
 
 INSERT INTO CITA values ('1', '560483D', 1, 0, '12:30:00', '13:00:00', 'Asistencia Sin Asignar', null, null, '2022-11-14', 'jesus@martin.es', 666432,'consulta_1','',0,1)
 INSERT INTO CITA values ('2', '535732D', 2, 0, '12:30:00', '13:00:00', 'Asistencia Sin Asignar', null, null, '2022-11-17', 'marta@martin.es', 357522,'consulta_1','',0,1)
+INSERT INTO CITA values ('3', '535732D', 2, 0, '12:30:00', '13:00:00', 'Asistencia Sin Asignar', null, null, '2022-11-17', 'marta@martin.es', 357522,'consulta_1','',0,0)
 
 INSERT INTO CAUSA values (1, 'Vomitos', '12:36:56', '2022-11-14', '1')
 INSERT INTO CAUSA VALUES(2, 'Dolor inguinal', '13:45:33', '2022-11-17', '2')
