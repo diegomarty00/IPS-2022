@@ -1,7 +1,11 @@
-package gui.citas;
+package gui.admin;
 
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -18,22 +22,15 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.border.EmptyBorder;
 
 import business.BusinessFactory;
+import business.cita.operaciones.EliminarCita;
+import gui.citas.VentanaCalendarioCitas;
+import gui.citas.VentanaCita;
 import persistencia.cita.CitaRecord;
-import persistencia.enfermero.EnfermeroRecord;
-import persistencia.medico.MedicoRecord;
 import util.BusinessException;
+import javax.swing.ListSelectionModel;
 
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.sql.Date;
-import java.awt.event.ActionEvent;
+public class SelectorCitasModificar extends JFrame {
 
-public class VentanaCalendarioCitas extends JFrame {
-
-	private MedicoRecord medico;
-	private EnfermeroRecord enfermero;
-	
 	private JPanel contentPane;
 	private JLabel lblTitulo;
 	private JSpinner spnDia;
@@ -47,33 +44,15 @@ public class VentanaCalendarioCitas extends JFrame {
 	private JList<CitaRecord> list;
 	List<CitaRecord> citas;
 	private DefaultListModel<CitaRecord> modelo;
+	private JButton btEliminar;
+	private JButton btModificar;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					VentanaCalendarioCitas frame = new VentanaCalendarioCitas();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
-
-	/**
-	 * Create the frame.
-	 */
-	public VentanaCalendarioCitas(MedicoRecord medico, EnfermeroRecord enfermero) {
-		
-		this.medico=medico;
-		this.enfermero=enfermero;
-		
+	
+	public SelectorCitasModificar(){
+		setTitle("Modificar Citas ");
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 583, 463);
+		setBounds(100, 100, 588, 463);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -88,12 +67,14 @@ public class VentanaCalendarioCitas extends JFrame {
 		contentPane.add(getBtnBuscar());
 		contentPane.add(getLblFormato());
 		contentPane.add(getScrollPane());
+		contentPane.add(getBtEliminar());
+		contentPane.add(getBtModificar());
 		searchCitas();
 	}
 
 	private JLabel getLblTitulo() {
 		if (lblTitulo == null) {
-			lblTitulo = new JLabel("Consultas del día");
+			lblTitulo = new JLabel("Modifica citas");
 			lblTitulo.setFont(new Font("Tahoma", Font.PLAIN, 20));
 			lblTitulo.setBounds(10, 11, 177, 39);
 		}
@@ -143,7 +124,7 @@ public class VentanaCalendarioCitas extends JFrame {
 	private void searchCitas() {
 		try {
 			modelo.clear();
-			citas = BusinessFactory.forCitaService().getCitasDelDiaYSanitario((Integer)getSpnYear().getValue(), (Integer)getSpnMes().getValue(), (Integer)getSpnDia().getValue(), medico, enfermero);
+			citas = BusinessFactory.forCitaService().getCitasDelDia((Integer)getSpnYear().getValue(), (Integer)getSpnMes().getValue(), (Integer)getSpnDia().getValue());
 			for (CitaRecord cita : citas) {
 				modelo.addElement(cita);
 			}
@@ -163,7 +144,7 @@ public class VentanaCalendarioCitas extends JFrame {
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setBounds(10, 69, 547, 344);
+			scrollPane.setBounds(10, 69, 547, 246);
 			scrollPane.setViewportView(getList());
 		}
 		return scrollPane;
@@ -172,19 +153,55 @@ public class VentanaCalendarioCitas extends JFrame {
 	private JList<CitaRecord> getList() {
 		if (list == null) {
 			list = new JList<CitaRecord>(modelo);
+			list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			list.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent e) {
 					CitaRecord citaPulsada = (CitaRecord) list.getModel().getElementAt(list.locationToIndex(e.getPoint()));
-					verCita(citaPulsada);
+					getBtEliminar().setEnabled(true);
+					getBtModificar().setEnabled(true);
+					
 				}
 			});
 		}
 		return list;
 	}
 	
-	private void verCita(CitaRecord citaPulsada) {
-		VentanaCita v = new VentanaCita(citaPulsada, medico, enfermero);
-		v.setVisible(true);
+
+	private JButton getBtEliminar() {
+		if (btEliminar == null) {
+			btEliminar = new JButton("Cancelar Cita");
+			btEliminar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					eliminarCita();
+					searchCitas();
+				}
+			});
+			btEliminar.setFont(new Font("Times New Roman", Font.BOLD, 14));
+			btEliminar.setEnabled(false);
+			btEliminar.setBounds(10, 362, 124, 39);
+		}
+		return btEliminar;
+	}
+	
+	private void eliminarCita() {
+		CitaRecord citaPulsada = getList().getSelectedValue();
+		EliminarCita.removeCita(citaPulsada.idCita);
+	}
+	
+	private JButton getBtModificar() {
+		if (btModificar == null) {
+			btModificar = new JButton("Modificar");
+			btModificar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					ModificarCitas frame = new ModificarCitas(getList().getSelectedValue());
+					frame.setVisible(true);
+				}
+			});
+			btModificar.setEnabled(false);
+			btModificar.setFont(new Font("Times New Roman", Font.BOLD, 14));
+			btModificar.setBounds(172, 362, 124, 39);
+		}
+		return btModificar;
 	}
 }

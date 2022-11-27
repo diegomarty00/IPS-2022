@@ -10,6 +10,7 @@ import business.cita.operaciones.CrearCita;
 import business.cita.operaciones.ModificarHoras;
 import gui.admin.DatosCita.ProcesarAccion;
 import persistencia.cita.CitaRecord;
+import persistencia.enfermero.EnfermeroCitaRecord;
 import persistencia.especialidad.EspecialidadCitaRecord;
 
 import javax.swing.JLabel;
@@ -58,18 +59,22 @@ public class CitaPrioritaria extends JFrame {
 	private DefaultListModel<CitaRecord> modelo = new DefaultListModel<>();
 	DefaultListModel<EspecialidadCitaRecord> eslist;
 	private DefaultListModel<String> modjlist;
+	private DefaultListModel<EnfermeroCitaRecord> enflist;
 	private ProcesarAccion pa= new ProcesarAccion(); 
 	private List<String> listaH = setHorasL();
+	private JButton btModificar;
 	/**
 	 * Create the frame.
 	 * @param eslist 
+	 * @param enflist 
 	 * @param  
 	 */
 	public CitaPrioritaria(CrearCita cc,DatosCita a ,String paciente, boolean urgencia,String lugar, String anio , String mes , String dia, String horaE, String horaS,DefaultListModel<String> modjlist,
-			String email, String telf,String otros,boolean prioridad, DefaultListModel<EspecialidadCitaRecord> eslist) {
+			String email, String telf,String otros,boolean prioridad, DefaultListModel<EspecialidadCitaRecord> eslist, DefaultListModel<EnfermeroCitaRecord> enflist) {
 		this.cc = cc;
 		this.eslist = eslist;
 		dc = a;
+		this.enflist = enflist;
 		this.paciente = paciente;
 		this.urgente = urgencia;
 		this.lugar = lugar;
@@ -100,6 +105,7 @@ public class CitaPrioritaria extends JFrame {
 		contentPane.add(getBtConfimar());
 		contentPane.add(getBtCancelar());
 		contentPane.add(getBtFinalizar());
+		contentPane.add(getBtModificar());
 	}
 	private JLabel getLbDescriptivo() {
 		if (lbDescriptivo == null) {
@@ -110,13 +116,13 @@ public class CitaPrioritaria extends JFrame {
 		}
 		return lbDescriptivo;
 	}
-	private JList getJlCitas() {
+	private JList<CitaRecord> getJlCitas() {
 		if (jlCitas == null) {
 			asignarModelo();
 			jlCitas = new JList();
 			jlCitas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			jlCitas.setModel(modelo);
-			jlCitas.setBounds(10, 58, 489, 147);
+			jlCitas.setBounds(10, 52, 469, 147);
 		}
 		return jlCitas;
 	}
@@ -293,10 +299,27 @@ public class CitaPrioritaria extends JFrame {
 		    	for(int i = 0 ; i < eslist.size() ; i++)
 		    		cc.crearCitaEspecialidad(eslist.get(i));
 		    }
+		    if(enflist !=null) {
+		    	for(int i = 0 ; i < enflist.size() ; i++)
+		    		cc.crearCitaEnfermero(enflist.get(i));
+		    }
 		    
 		    deletet();
 		}
 	}
-	
-	
+	private JButton getBtModificar() {
+		if (btModificar == null) {
+			btModificar = new JButton("Modificar");
+			btModificar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					ModificarCitas frame = new ModificarCitas(getJlCitas().getSelectedValue());
+					frame.setVisible(true);
+					asignarModelo();
+					
+				}
+			});
+			btModificar.setBounds(489, 70, 101, 27);
+		}
+		return btModificar;
+	}
 }

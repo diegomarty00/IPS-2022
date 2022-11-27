@@ -24,6 +24,10 @@ import javax.swing.border.EmptyBorder;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import business.cita.operaciones.CrearCita;
+import persistencia.enfermero.EnfermeroCitaRecord;
+import persistencia.enfermero.EnfermeroRecord;
+import persistencia.enfermero.impl.EnfermeroCitaGatewayImpl;
+import persistencia.enfermero.impl.EnfermeroGatewayImpl;
 import persistencia.especialidad.EspecialidadCitaGateway;
 import persistencia.especialidad.EspecialidadCitaRecord;
 import persistencia.especialidad.EspecialidadRecord;
@@ -78,6 +82,8 @@ public class VentanaCitasA<E> extends JFrame {
     private JList listMedicos;
     private DefaultListModel<String> modjlist = new DefaultListModel<>();
     private DefaultListModel<EspecialidadCitaRecord> eslist =  new DefaultListModel<>();
+    private DefaultListModel<EnfermeroCitaRecord> enflist = new DefaultListModel<>();
+    
     private JPanel panel_10;
     private JPanel panel_11;
     private JPanel panel_12;
@@ -100,6 +106,14 @@ public class VentanaCitasA<E> extends JFrame {
     private JSpinner spNme;
     private JButton btAniadirE;
     private JList listEspecialistas;
+    private JTextField txtEnfermero;
+    private JPanel panel_17;
+    private JComboBox cbEnfermeros;
+    private JPanel panel_16_1;
+    private JSpinner spEnf;
+    private JButton btAniadirE_1;
+    private JTextField txtEnfermeros;
+    private JList<EnfermeroCitaRecord> listEnfermeros;
     /**
      * Create the frame.
      */
@@ -170,7 +184,7 @@ public class VentanaCitasA<E> extends JFrame {
 	return jbConfirmar;
     }
     	
-    class ProcesarAccion implements ActionListener{
+    public class ProcesarAccion implements ActionListener{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -193,7 +207,7 @@ public class VentanaCitasA<E> extends JFrame {
 							    cbDia.getSelectedItem().toString(),
 							    cbHoraInicio.getSelectedItem().toString(),
 							    cbHoraFinal.getSelectedItem().toString(),
-							    modjlist,jChBPrioritario.isSelected(),eslist);
+							    modjlist,jChBPrioritario.isSelected(),eslist,enflist);
 						frame.setVisible(true);
 				
 
@@ -212,10 +226,11 @@ public class VentanaCitasA<E> extends JFrame {
     private JPanel getPanel() {
 	if (panel == null) {
 	    panel = new JPanel();
-	    panel.setLayout(new GridLayout(6, 1, 0, 0));
+	    panel.setLayout(new GridLayout(7, 1, 0, 0));
 	    panel.add(getLbPacientes());
 	    panel.add(getLbMedicos());
 	    panel.add(getTxtElegirEspecialidad());
+	    panel.add(getTxtEnfermero());
 	    panel.add(getLbLugar());
 	    panel.add(getLbFecha());
 	    panel.add(getLbHorario());
@@ -312,13 +327,15 @@ public class VentanaCitasA<E> extends JFrame {
     private JPanel getPanelComboBox() {
 	if (panelComboBox == null) {
 	    panelComboBox = new JPanel();
-	    panelComboBox.setLayout(new GridLayout(6, 1, 0, 0));
+	    panelComboBox.setLayout(new GridLayout(7, 1, 0, 0));
 	    panelComboBox.add(getComboBox_2());
 	    panelComboBox.add(getComboBox_1_1());
 	    panelComboBox.add(getPanel_15());
+	    panelComboBox.add(getPanel_17());
 	    panelComboBox.add(getComboBox_2_1());
 	    panelComboBox.add(getPanel_10());
 	    panelComboBox.add(getPanel_2());
+	    
 	}
 	return panelComboBox;
     }
@@ -664,10 +681,12 @@ public class VentanaCitasA<E> extends JFrame {
 	private JPanel getPanel_14() {
 		if (panel_14 == null) {
 			panel_14 = new JPanel();
-			panel_14.setLayout(new GridLayout(3, 1, 0, 0));
+			panel_14.setLayout(new GridLayout(5, 1, 0, 0));
 			panel_14.add(getListMedicos());
 			panel_14.add(getLblNewLabel());
 			panel_14.add(getListEspecialistas());
+			panel_14.add(getTxtEnfermeros());
+			panel_14.add(getListEnfermeros());
 		}
 		return panel_14;
 	}
@@ -759,5 +778,102 @@ public class VentanaCitasA<E> extends JFrame {
 			listEspecialistas.setModel(eslist);
 		}
 		return listEspecialistas;
+	}
+	private JTextField getTxtEnfermero() {
+		if (txtEnfermero == null) {
+			txtEnfermero = new JTextField();
+			txtEnfermero.setText("Enfermero");
+			txtEnfermero.setFont(new Font("Times New Roman", Font.BOLD, 16));
+			txtEnfermero.setEditable(false);
+			txtEnfermero.setColumns(10);
+		}
+		return txtEnfermero;
+	}
+	private JPanel getPanel_17() {
+		if (panel_17 == null) {
+			panel_17 = new JPanel();
+			panel_17.setLayout(new BorderLayout(0, 0));
+			panel_17.add(getCbEspecialidad_1());
+			panel_17.add(getPanel_16_1(), BorderLayout.EAST);
+		}
+		return panel_17;
+	}
+	private JComboBox getCbEspecialidad_1() {
+		if (cbEnfermeros == null) {
+			cbEnfermeros = new JComboBox();
+			DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+		    EnfermeroGatewayImpl e = new EnfermeroGatewayImpl();
+		    List<EnfermeroRecord> l = e.findAll();
+		    for (int i = 0; i < l.size(); i++) {
+			mod.addElement(l.get(i));
+		    }
+		    cbEnfermeros.setModel(mod);
+		}
+		return cbEnfermeros;
+	}
+	private JPanel getPanel_16_1() {
+		if (panel_16_1 == null) {
+			panel_16_1 = new JPanel();
+			panel_16_1.setLayout(new BorderLayout(0, 0));
+			panel_16_1.add(getSpEnf(), BorderLayout.WEST);
+			panel_16_1.add(getBtAniadirE_1(), BorderLayout.EAST);
+		}
+		return panel_16_1;
+	}
+	private JSpinner getSpEnf() {
+		if (spEnf == null) {
+			spEnf = new JSpinner();
+		}
+		return spEnf;
+	}
+	private JButton getBtAniadirE_1() {
+		if (btAniadirE_1 == null) {
+			btAniadirE_1 = new JButton("A\u00F1adir ");
+			btAniadirE_1.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(cbEnfermeros.getSelectedIndex() > 0 ) {
+					    EnfermeroCitaRecord en = new EnfermeroCitaRecord();
+					    EnfermeroRecord enfermero = (EnfermeroRecord) cbEnfermeros.getSelectedItem();
+					    en.idEnfermero = enfermero.idEnfermero;
+					    en.nEnfermeros = 1;
+					   
+					    boolean b = true;
+					    for (int i = 0; i < enflist.getSize(); i++) {
+							if (en.idEnfermero == enflist.get(i).idEnfermero) {
+							    b = false;
+							}
+					    }
+					    if (b)
+						enflist.addElement(en);
+					}else if (cbEnfermeros.getSelectedIndex() == 0) {
+						EnfermeroCitaRecord en = new EnfermeroCitaRecord();
+					    EnfermeroRecord enfermero = (EnfermeroRecord) cbEnfermeros.getSelectedItem();
+					    en.idEnfermero = enfermero.idEnfermero;
+					    en.nEnfermeros = (int) spEnf.getValue();
+					    enflist.addElement(en);
+					}
+					
+				}
+			});
+		}
+		return btAniadirE_1;
+	}
+	private JTextField getTxtEnfermeros() {
+		if (txtEnfermeros == null) {
+			txtEnfermeros = new JTextField();
+			txtEnfermeros.setBorder(null);
+			txtEnfermeros.setEditable(false);
+			txtEnfermeros.setText("Enfermeros");
+			txtEnfermeros.setFont(new Font("Times New Roman", Font.BOLD, 14));
+			txtEnfermeros.setColumns(10);
+		}
+		return txtEnfermeros;
+	}
+	private JList<EnfermeroCitaRecord> getListEnfermeros() {
+		if (listEnfermeros == null) {
+			listEnfermeros = new JList();
+			listEnfermeros.setModel(enflist);
+		}
+		return listEnfermeros;
 	}
 }

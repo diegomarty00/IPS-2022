@@ -1,5 +1,4 @@
 package persistencia.paciente;
-
 import java.sql.Date;
 
 public class PacienteRecord {
@@ -109,5 +108,4 @@ public class PacienteRecord {
     public void setIdMedicoCabecera(int idMedicoCabecera) {
 	this.idMedicoCabecera = idMedicoCabecera;
     }
-
 }

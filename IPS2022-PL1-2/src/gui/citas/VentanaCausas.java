@@ -23,6 +23,8 @@ import business.cita.CitaService;
 import persistencia.PersistenceFactory;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
+import persistencia.enfermero.EnfermeroRecord;
+import persistencia.medico.MedicoRecord;
 import util.BusinessException;
 
 public class VentanaCausas extends JFrame {
@@ -40,6 +42,8 @@ public class VentanaCausas extends JFrame {
 	private JButton btnReset;
 
 	CitaRecord cita;
+	MedicoRecord medico;
+	EnfermeroRecord enfermero;
 	CitaService citaService = BusinessFactory.forCitaService();
 	
 	ArrayList<String> selectedCausas = new ArrayList<String>();
@@ -47,9 +51,10 @@ public class VentanaCausas extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaCausas(CitaRecord cita) {
+	public VentanaCausas(CitaRecord cita, MedicoRecord medico, EnfermeroRecord enfermero) {
 		this.cita = cita;
-		
+		this.medico=medico;
+		this.enfermero=enfermero;
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 606, 428);
@@ -206,7 +211,7 @@ public class VentanaCausas extends JFrame {
 		try {
 			checkSelected();
 			BusinessFactory.forCitaService().updateCausas(cita.idCita, selectedCausas);
-			VentanaCita ventanaCita = new VentanaCita(cita);
+			VentanaCita ventanaCita = new VentanaCita(cita,medico,enfermero);
 			ventanaCita.setVisible(true);
 			this.dispose();
 		} catch (BusinessException e) {

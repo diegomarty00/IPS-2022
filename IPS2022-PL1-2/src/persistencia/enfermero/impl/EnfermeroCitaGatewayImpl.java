@@ -1,4 +1,4 @@
-package persistencia.especialidad.impl;
+package persistencia.enfermero.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,17 +8,15 @@ import java.util.List;
 import java.util.Optional;
 
 import persistencia.PersistenceException;
-import persistencia.especialidad.EspecialidadCitaGateway;
-import persistencia.especialidad.EspecialidadCitaRecord;
-
+import persistencia.enfermero.EnfermeroCitaGateway;
+import persistencia.enfermero.EnfermeroCitaRecord;
 import util.jdbc.Jdbc;
 
-public class EspecialidadCitaGatewayImpl implements EspecialidadCitaGateway {
+public class EnfermeroCitaGatewayImpl implements EnfermeroCitaGateway {
 
-	private static String ADD_CITA= "INSERT INTO ESPECIALIDADCITA values (?,?,?)";
-
+	private static String ADD= "INSERT INTO ENFERMEROCITA values (?,?,?)";
 	@Override
-	public void add(EspecialidadCitaRecord t) {
+	public void add(EnfermeroCitaRecord t) {
 		Connection c = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
@@ -26,10 +24,10 @@ public class EspecialidadCitaGatewayImpl implements EspecialidadCitaGateway {
 		try {
 			c = Jdbc.getConnection();
 			
-			pst = c.prepareStatement(ADD_CITA);
+			pst = c.prepareStatement(ADD);
 			pst.setString(1,  t.idCita);
-			pst.setString(2, t.idEspecialidad);
-			pst.setInt(3, t.nMedicos);
+			pst.setInt(2, t.idEnfermero);
+			pst.setInt(3, t.nEnfermeros);
 			
 			
 
@@ -48,27 +46,27 @@ public class EspecialidadCitaGatewayImpl implements EspecialidadCitaGateway {
 	}
 
 	@Override
-	public void update(EspecialidadCitaRecord t) {
+	public void update(EnfermeroCitaRecord t) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Optional<EspecialidadCitaRecord> findById(String id) {
+	public Optional<EnfermeroCitaRecord> findById(String id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<EspecialidadCitaRecord> findAll() {
+	public List<EnfermeroCitaRecord> findAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 	
-	private static String REMOVEEC= "DELETE FROM ESPECIALIDADCITA WHERE IDCITA = ?";
+	private static String REMOVEEC= "DELETE FROM ENFERMEROCITA WHERE IDCITA = ?";
 
 	@Override
-	public void removeEspecialidadC(String idCita) {
+	public void removeEnfermeroCita(String idCita) {
 		Connection c = null;
 		PreparedStatement pst = null;
 		ResultSet rs = null;
@@ -85,7 +83,5 @@ public class EspecialidadCitaGatewayImpl implements EspecialidadCitaGateway {
 			Jdbc.close(rs, pst);
 		}
 	}
-	
-	
 
 }

@@ -1,13 +1,11 @@
 package business.paciente.operaciones;
 
-import java.util.List;
-
 import persistencia.PersistenceFactory;
 import persistencia.paciente.HistorialRecord;
 import util.BusinessException;
 import util.command.Command;
 
-public class GetHistorialPaciente implements Command<List<HistorialRecord>>{
+public class GetHistorialPaciente implements Command<HistorialRecord>{
 
 	private String dniPaciente; 
 	
@@ -17,7 +15,7 @@ public class GetHistorialPaciente implements Command<List<HistorialRecord>>{
 	}
 
 	@Override
-	public List<HistorialRecord> execute() throws BusinessException {
+	public HistorialRecord execute() throws BusinessException {
 		return PersistenceFactory.forPaciente().getHistorial(dniPaciente);
 	}
 

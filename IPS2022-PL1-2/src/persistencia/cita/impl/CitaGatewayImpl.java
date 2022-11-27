@@ -16,15 +16,22 @@ import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaGateway;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.PrescripcionRecord;
+import persistencia.enfermero.EnfermeroRecord;
+import persistencia.medico.MedicoRecord;
+import persistencia.paciente.VacunaRecord;
 import util.jdbc.Jdbc;
 
 public class CitaGatewayImpl implements CitaGateway {
 
-    private static final String FIN_BY_CITA_ID = "SELECT * from CITA where IDCITA = ?";
-    private static final String PROXIMAS_CITAS = "SELECT * from CITA where fecha >= ?";
-    private static final String CITAS_DEL_DIA = "SELECT * from CITA where FECHA = ?";
-	private static final String FIND_CAUSAS_FROM_CITA = "SELECT * from CAUSA where IDCITA = ?";
-	private static final String FIND_PRESCRIPCIONES_FROM_CITA = "SELECT * from PRESCRIPCION where IDCITA = ?";
+    private static final String FIN_BY_CITA_ID = "SELECT * from CITA where IDCITA = ? AND CONFIRMADA = true";
+    private static final String PROXIMAS_CITAS = "SELECT * from CITA where fecha >= ? AND CONFIRMADA = true";
+    private static final String CITAS_DEL_DIA = "SELECT * from CITA where FECHA = ? AND CONFIRMADA = true";
+	private static final String FIND_CAUSAS_FROM_CITA = "SELECT * from CAUSA where IDCITA = ? ORDER BY FECHA_ASIGNACION ASC";
+	private static final String FIND_PRESCRIPCIONES_FROM_CITA = "SELECT * from PRESCRIPCION where IDCITA = ? ORDER BY FECHA_ASIGNACION ASC";
+	private static final String FIN_BY_HISTORIAL_ID = "SELECT * FROM CITA WHERE IDHISTORIAL = ?";
+	private static final String FIND_VACUNAS_FROM_CITA = "SELECT * FROM VACUNA WHERE IDCITA = ? ORDER BY FECHAAPROXIMADA ASC";
+	private static final String PROXIMAS_CITAS_MEDICO = "Select * from cita where idcita in (select idcita from MEDICOCITA where idmedico =?) and fecha = ?";
+	private static final String PROXIMAS_CITAS_ENFERMERO = "Select * from cita where idcita in (select idcita from ENFERMEROCITA where idenfermero =?) and fecha = ?";;
 
     private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
     private static String ASIGNAR_NUEVO_HORARIO = "update CITA set HORA_ENTRADA_ESTIMADA = ? , HORA_SALIDA_ESTIMADA = ?  where idcita = ?";
@@ -34,10 +41,13 @@ public class CitaGatewayImpl implements CitaGateway {
     private static String DELETE_CAUSA= "DELETE FROM Causa WHERE IDCAUSA = ?";
     private static String ADD_PRESCRIPCION = "INSERT INTO PRESCRIPCION values (?,?,?,?,?,?,?,?,?,?)";
     private static String DELETE_PRESCRIPCION = "DELETE FROM PRESCRIPCION WHERE IDPRESCRIPCION = ?";
-    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static String ADD_CITA= "INSERT INTO Cita values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
     private static String MODIFICAR_CONTACTO = "update CITA set CORREO_PACIENTE = ? , TELEFONO_PACIENTE = ? where idcita = ?";
     
+    
 	
+    
+    
 	@Override
 	public void add(CitaRecord t) {
 		Connection c = null;
@@ -50,34 +60,36 @@ public class CitaGatewayImpl implements CitaGateway {
 			pst = c.prepareStatement(ADD_CITA);
 			pst.setString(1,  t.idCita);
 			pst.setNString(2, t.dniPaciente);
-			pst.setBoolean(3, t.urgente);
+			pst.setInt(3, t.idHistorial);
+			pst.setBoolean(4, t.urgente);
 			if(t.horaEntradaEstimada != null ) {
-				pst.setTime(4,Time.valueOf(t.horaEntradaEstimada));
+				pst.setTime(5,Time.valueOf(t.horaEntradaEstimada));
 				
 			}else {
-				pst.setTime(4,null);
+				pst.setTime(5,null);
 			}
 			if (t.horaSalidaEstimada != null) {
-				pst.setTime(5, Time.valueOf(t.horaSalidaEstimada));
+				pst.setTime(6, Time.valueOf(t.horaSalidaEstimada));
 			}else {
-				pst.setTime(5, null);
+				pst.setTime(6, null);
 			}
 			
 			
-			pst.setString(6, t.pacienteAcudido);
-			pst.setTime(7,null);
-			pst.setTime(8, null);
+			pst.setString(7, t.pacienteAcudido);
+			pst.setTime(8,null);
+			pst.setTime(9, null);
 			if(t.fecha != null ) {
-				pst.setDate(9, Date.valueOf(t.fecha));
+				pst.setDate(10, Date.valueOf(t.fecha));
 			}else {
-				pst.setDate(9, null);
+				pst.setDate(10, null);
 			}
-			
-			pst.setString(10, t.correoPaciente);
-			pst.setInt(11,Integer.parseInt(t.telefonoPaciente));
-			pst.setString(12, t.lugar);
-			pst.setString(13, t.otros);
-			pst.setBoolean(14, t.prioritario);
+		  
+			pst.setString(11, t.correoPaciente);
+			pst.setInt(12,Integer.parseInt(t.telefonoPaciente));
+			pst.setString(13, t.lugar);
+			pst.setString(14, t.otros);
+			pst.setBoolean(15, t.prioritario);
+			pst.setBoolean(16, t.confirmada);
 
 	    pst.execute();
 	} catch (SQLException e) {
@@ -93,7 +105,31 @@ public class CitaGatewayImpl implements CitaGateway {
 
     }
 
-	private static String findAll = "SELECT * FROM PUBLIC.cita";
+    private static String findAllNc = "SELECT * FROM PUBLIC.cita WHERE CONFIRMADA = false";
+	@Override
+	public List<CitaRecord> findAllNc() {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+			c = Jdbc.getConnection();
+			
+			pst = c.prepareStatement(findAllNc);
+			rs = pst.executeQuery();
+			
+			
+
+			return RecordAssembler.toCitaList(rs);
+
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+	}
+    
+    private static String findAll = "SELECT * FROM PUBLIC.cita WHERE CONFIRMADA = true";
 	@Override
 	public List<CitaRecord> findAll() {
 		Connection c = null;
@@ -138,8 +174,30 @@ public class CitaGatewayImpl implements CitaGateway {
 	    Jdbc.close(rs, pst);
 	}
     }
-
     
+    @Override
+    public List<CitaRecord> findByHistorialId(int idHistorial) {
+    	Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+			c = Jdbc.getConnection();
+			
+			pst = c.prepareStatement(FIN_BY_HISTORIAL_ID);
+			pst.setInt(1, idHistorial);
+			
+			rs = pst.executeQuery();			
+
+			return RecordAssembler.toCitaList(rs);
+
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+
+    }
     
     @Override
     public void asignarHoraEntrada(String idCita, LocalTime horaEntrada) {
@@ -297,6 +355,32 @@ public class CitaGatewayImpl implements CitaGateway {
     }
 }
 
+
+
+	private static String MODIFICAR_CITA = "update CITA set DNIPACIENTE = ? , URGENTE = ?,HORA_ENTRADA_ESTIMADA = ?,"
+		+ " HORA_SALIDA_ESTIMADA = ?,FECHA = ?,LUGAR_CITA = ?,PRIORITARIO = ?   where idcita = ?";
+	@Override
+	public void ModificarTodo(CitaRecord cit) {
+		Connection c = null;
+		PreparedStatement pst = null;
+    try {
+		    c = Jdbc.createThreadConnection();
+		    pst = c.prepareStatement(MODIFICAR_CITA);
+		    pst.setString(8, cit.idCita);
+		    pst.setString(1,cit.dniPaciente);
+		    pst.setBoolean(2, cit.urgente);
+		    pst.setTime(3, Time.valueOf(cit.horaEntradaEstimada));
+		    pst.setTime(4, Time.valueOf(cit.horaSalidaEstimada));
+		    pst.setDate(5, Date.valueOf(cit.fecha));
+		    pst.setString(6, cit.lugar);
+		    pst.setBoolean(7, cit.prioritario);
+		    pst.execute();
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(pst);
+    }
+	}
 	
 	@Override
 	public void insertarCausa(String idCita, String titulo, Time hora, Date fecha) {
@@ -331,7 +415,7 @@ public class CitaGatewayImpl implements CitaGateway {
     try {
 		    c = Jdbc.createThreadConnection();
 
-		    pst = c.prepareStatement("SELECT MAX("+columnName+") FROM "+tabla);
+		    pst = c.prepareStatement("SELECT NVL(MAX("+columnName+"), 0) FROM "+tabla);
 
 		    rs = pst.executeQuery();
 		    rs.next();
@@ -452,5 +536,97 @@ public class CitaGatewayImpl implements CitaGateway {
 		} finally {
 		    Jdbc.close(rs, pst);
 		}
+	}
+	
+	private static String REMOVEC= "DELETE FROM CITA WHERE IDCITA = ?";
+
+	@Override
+	public void removeCita(String idCita) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getConnection();
+			
+			pst = c.prepareStatement(REMOVEC);
+			pst.setString(1,  idCita);
+			pst.execute();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
+	public List<VacunaRecord> getVacunas(String idCita) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+    try {
+		    c = Jdbc.createThreadConnection();
+
+		    pst = c.prepareStatement(FIND_VACUNAS_FROM_CITA);
+		    pst.setString(1, idCita);
+
+		    rs = pst.executeQuery();
+
+		    return RecordAssembler.toVacunaList(rs);
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
+	public List<CitaRecord> findBySanitarioId(MedicoRecord medico, EnfermeroRecord enfermero, Date dia) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+		    c = Jdbc.getCurrentConnection();
+		    if (medico != null) {
+		    	pst = c.prepareStatement(PROXIMAS_CITAS_MEDICO);
+		    	pst.setInt(1, medico.idMedico);
+		    }
+		    else if (enfermero != null) {
+		    	pst = c.prepareStatement(PROXIMAS_CITAS_ENFERMERO);
+		    	pst.setInt(1, enfermero.idEnfermero);
+		    }
+		    pst.setDate(2, dia);
+
+		    pst.execute();
+
+		    rs = pst.executeQuery();
+
+		    return RecordAssembler.toCitaList(rs);
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(rs, pst);
+		}
+  }
+	
+	private static String CONFIRMAR_CITA = "update CITA set CONFIRMADA = TRUE   where idcita = ?";
+
+	@Override
+	public void ConfirCita(String idCita) {
+		// TODO Auto-generated method stub
+		Connection c = null;
+		PreparedStatement pst = null;
+    try {
+		    c = Jdbc.createThreadConnection();
+		    pst = c.prepareStatement(CONFIRMAR_CITA);
+		    pst.setString(1,idCita);
+		    pst.execute();
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(pst);
+    }
 	}
 }

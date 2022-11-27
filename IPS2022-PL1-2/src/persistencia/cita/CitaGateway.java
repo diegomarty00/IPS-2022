@@ -6,6 +6,9 @@ import java.time.LocalTime;
 import java.util.List;
 
 import persistencia.Gateway;
+import persistencia.enfermero.EnfermeroRecord;
+import persistencia.medico.MedicoRecord;
+import persistencia.paciente.VacunaRecord;
 
 public interface CitaGateway extends Gateway<CitaRecord> {
 	
@@ -20,6 +23,8 @@ public interface CitaGateway extends Gateway<CitaRecord> {
     List<CitaRecord> getCitasDelDia(Date dia);
 
     List<CitaRecord> getCitasProximas(Date dia);
+    
+    public void ModificarTodo(CitaRecord cit);
 
     void modificarCita(String idCita, String correo, int telefono);
     
@@ -36,4 +41,17 @@ public interface CitaGateway extends Gateway<CitaRecord> {
 	void insertarPrescripcion(PrescripcionRecord presc);
 
 	void deletePrescripcion(PrescripcionRecord presc);
+
+	List<CitaRecord> findByHistorialId(int idHistorial);
+	
+	void removeCita(String idCita);
+
+	List<VacunaRecord> getVacunas(String idCita);
+
+	List<CitaRecord> findBySanitarioId(MedicoRecord medico, EnfermeroRecord enfermero, Date dia);
+
+	List<CitaRecord> findAllNc();
+	
+	void ConfirCita(String idCita);
+
 }

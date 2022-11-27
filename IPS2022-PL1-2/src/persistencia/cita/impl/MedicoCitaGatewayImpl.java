@@ -53,10 +53,33 @@ public class MedicoCitaGatewayImpl implements MedicoCitaGateway {
 		
 	}
 
+	
+	private String findID ="select * from PUBLIC.MEDICOCITA WHERE IDCITA = ?";
 	@Override
 	public Optional<MedicoCitaRecord> findById(String id) {
-		// TODO Auto-generated method stub
 		return null;
+		
+	}
+	
+	
+	
+	public List<MedicoCitaRecord> findById1(String id) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getConnection();
+			
+			pst = c.prepareStatement(findID);
+			pst.setString(1,  id);
+			rs = pst.executeQuery();
+			return RecordAssembler.toMedicoCitaList(rs);
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
 	}
 
 	private String findAll ="select * from PUBLIC.MEDICOCITA";
@@ -81,6 +104,29 @@ public class MedicoCitaGatewayImpl implements MedicoCitaGateway {
 		} finally {
 			Jdbc.close(rs, pst);
 		}
+	}
+	
+	private static String REMOVEMC= "DELETE FROM MEDICOCITA WHERE IDCITA = ?";
+
+	@Override
+	public void removeMedicocitas(String idCita) {
+		// TODO Auto-generated method stub
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		
+		try {
+			c = Jdbc.getConnection();
+			
+			pst = c.prepareStatement(REMOVEMC);
+			pst.setString(1,  idCita);
+			pst.execute();
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+		
 	}
 
 }

@@ -22,6 +22,8 @@ public class VentanaAdministrador extends JFrame {
 	private JLabel lblNewLabel;
 	private JButton btJornadas;
 	private JButton btModificarDatos_1;
+	private JButton btModificarCitas;
+	private JButton btCitasSolicitadas;
 
 
 
@@ -41,6 +43,8 @@ public class VentanaAdministrador extends JFrame {
 		contentPane.add(getLblNewLabel());
 		contentPane.add(getBtJornadas());
 		contentPane.add(getBtModificarDatos_1());
+		contentPane.add(getBtModificarCitas());
+		contentPane.add(getBtCitasSolicitadas());
 	}
 	private JButton getBtCrearCita() {
 		if (btCrearCita == null) {
@@ -51,7 +55,7 @@ public class VentanaAdministrador extends JFrame {
 		    		ven.setVisible(true);
 				}
 			});
-			btCrearCita.setBounds(125, 86, 192, 45);
+			btCrearCita.setBounds(20, 86, 192, 45);
 		}
 		return btCrearCita;
 	}
@@ -78,7 +82,7 @@ public class VentanaAdministrador extends JFrame {
 					}
 				}
 			});
-			btJornadas.setBounds(125, 142, 192, 45);
+			btJornadas.setBounds(20, 142, 192, 45);
 		}
 		return btJornadas;
 	}
@@ -92,8 +96,34 @@ public class VentanaAdministrador extends JFrame {
 						ven.setVisible(true);
 				}
 			});
-			btModificarDatos_1.setBounds(125, 198, 192, 45);
+			btModificarDatos_1.setBounds(20, 198, 192, 45);
 		}
 		return btModificarDatos_1;
+	}
+	private JButton getBtModificarCitas() {
+		if (btModificarCitas == null) {
+			btModificarCitas = new JButton("Modificar Cita o Cancelar");
+			btModificarCitas.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					SelectorCitasModificar frame = new SelectorCitasModificar();
+					frame.setVisible(true);
+				}
+			});
+			btModificarCitas.setBounds(232, 142, 192, 45);
+		}
+		return btModificarCitas;
+	}
+	private JButton getBtCitasSolicitadas() {
+		if (btCitasSolicitadas == null) {
+			btCitasSolicitadas = new JButton("Citas Solicitadas");
+			btCitasSolicitadas.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					AceptarCitas frame = new AceptarCitas();
+					frame.setVisible(true);
+				}
+			});
+			btCitasSolicitadas.setBounds(232, 86, 192, 45);
+		}
+		return btCitasSolicitadas;
 	}
 }
