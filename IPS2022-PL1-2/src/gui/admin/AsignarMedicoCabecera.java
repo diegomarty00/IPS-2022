@@ -5,8 +5,15 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -18,7 +25,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 import business.BusinessFactory;
-import persistencia.admin.MedicoRecord;
+import persistencia.medico.MedicoRecord;
 import persistencia.paciente.PacienteRecord;
 import util.BusinessException;
 
@@ -47,6 +54,12 @@ public class AsignarMedicoCabecera extends JFrame {
 
     private PacienteRecord paciente;
     private MedicoRecord medico;
+    private JComboBox cbNombreMedico;
+    private JComboBox cbLicenciaMedico;
+
+    private static LocalDate today = LocalDate.now();
+    private Optional<MedicoRecord> medicoRecord = null;
+    private JButton btnAtras;
 
     /**
      * Launch the application.
@@ -82,7 +95,8 @@ public class AsignarMedicoCabecera extends JFrame {
 	contentPane.add(getBtnAñadir());
 	contentPane.add(getBtnModificar());
 	contentPane.add(getBtnEliminar());
-	// contentPane.add(getListPacientesxMedico());
+	contentPane.add(getBtnAtras());
+	contentPane.add(getListPacientesxMedico());
 	contentPane.add(getLblNewLabel());
     }
 
@@ -143,7 +157,7 @@ public class AsignarMedicoCabecera extends JFrame {
 	if (btnBuscarPaciente == null) {
 	    btnBuscarPaciente = new JButton("Buscar paciente");
 	    btnBuscarPaciente.setBackground(new Color(0, 255, 0));
-	    btnBuscarPaciente.setBounds(139, 146, 123, 23);
+	    btnBuscarPaciente.setBounds(107, 146, 155, 23);
 	}
 	return btnBuscarPaciente;
     }
@@ -177,9 +191,10 @@ public class AsignarMedicoCabecera extends JFrame {
 		    new Color(0, 0, 0)));
 	    pnMedico.setBounds(10, 190, 252, 85);
 	    pnMedico.add(getLblNombreMedico());
-	    pnMedico.add(getTextNombreMedico());
+	    // pnMedico.add(getTextNombreMedico());
 	    pnMedico.add(getLblLicencia());
-	    pnMedico.add(getTextLicencia());
+	    pnMedico.add(getCbLicenciaMedico());
+	    pnMedico.add(getCbNombreMedico());
 	}
 	return pnMedico;
     }
@@ -200,6 +215,74 @@ public class AsignarMedicoCabecera extends JFrame {
 	    textNombreMedico.setBounds(74, 21, 168, 20);
 	}
 	return textNombreMedico;
+    }
+
+    private JComboBox getCbNombreMedico() {
+	if (cbNombreMedico == null) {
+	    cbNombreMedico = new JComboBox();
+	    cbNombreMedico.addActionListener(new ActionListener() {
+
+		public void actionPerformed(ActionEvent e) {
+		    cbLicenciaMedico.setSelectedIndex(
+			    cbNombreMedico.getSelectedIndex());
+		    try {
+			medicoRecord = BusinessFactory.forAdminService()
+				.buscarMedico(Integer.parseInt(cbLicenciaMedico
+					.getSelectedItem().toString()));
+		    } catch (NumberFormatException | BusinessException e1) {
+			e1.printStackTrace();
+		    }
+		}
+	    });
+	    cbNombreMedico.setBounds(74, 21, 168, 20);
+	    cbNombreMedico.setRequestFocusEnabled(false);
+	    DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+	    List<MedicoRecord> l = new ArrayList<>();
+	    try {
+		l = BusinessFactory.forAdminService().buscarMedicos();
+	    } catch (BusinessException e) {
+		e.printStackTrace();
+	    }
+	    for (int i = 0; i < l.size(); i++) {
+		mod.addElement(l.get(i).nombre + " " + l.get(i).apellidos);
+	    }
+	    cbNombreMedico.setModel(mod);
+
+	}
+	return cbNombreMedico;
+    }
+
+    private JComboBox getCbLicenciaMedico() {
+	if (cbLicenciaMedico == null) {
+	    cbLicenciaMedico = new JComboBox();
+	    cbLicenciaMedico.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		    cbNombreMedico.setSelectedIndex(
+			    cbLicenciaMedico.getSelectedIndex());
+		    try {
+			medicoRecord = BusinessFactory.forAdminService()
+				.buscarMedico(Integer.parseInt(cbLicenciaMedico
+					.getSelectedItem().toString()));
+		    } catch (NumberFormatException | BusinessException e1) {
+			e1.printStackTrace();
+		    }
+		}
+	    });
+	    cbLicenciaMedico.setBounds(74, 49, 168, 20);
+	    cbLicenciaMedico.setRequestFocusEnabled(false);
+	    DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+	    List<MedicoRecord> l = new ArrayList<>();
+	    try {
+		l = BusinessFactory.forAdminService().buscarMedicos();
+	    } catch (BusinessException e) {
+		e.printStackTrace();
+	    }
+	    for (int i = 0; i < l.size(); i++) {
+		mod.addElement(l.get(i).idMedico);
+	    }
+	    cbLicenciaMedico.setModel(mod);
+	}
+	return cbLicenciaMedico;
     }
 
     private JLabel getLblLicencia() {
@@ -233,7 +316,8 @@ public class AsignarMedicoCabecera extends JFrame {
 				    .asignarMedicoCabeceraTutor(
 					    paciente.getDniTutorLegal(),
 					    paciente.getNombre(),
-					    paciente.getApellidos(), medico.id);
+					    paciente.getApellidos(),
+					    medico.idMedico);
 			} catch (BusinessException e1) {
 			    e1.printStackTrace();
 			}
@@ -243,7 +327,7 @@ public class AsignarMedicoCabecera extends JFrame {
 			    BusinessFactory.forAdminService()
 				    .asignarMedicoCabeceraDni(
 					    paciente.getDniPaciente(),
-					    medico.id);
+					    medico.idMedico);
 			} catch (BusinessException e1) {
 			    e1.printStackTrace();
 			}
@@ -273,7 +357,8 @@ public class AsignarMedicoCabecera extends JFrame {
 				    .asignarMedicoCabeceraTutor(
 					    paciente.getDniTutorLegal(),
 					    paciente.getNombre(),
-					    paciente.getApellidos(), medico.id);
+					    paciente.getApellidos(),
+					    medico.idMedico);
 			} catch (BusinessException e1) {
 			    e1.printStackTrace();
 			}
@@ -287,7 +372,7 @@ public class AsignarMedicoCabecera extends JFrame {
 			    BusinessFactory.forAdminService()
 				    .asignarMedicoCabeceraDni(
 					    paciente.getDniPaciente(),
-					    medico.id);
+					    medico.idMedico);
 			} catch (BusinessException e1) {
 			    e1.printStackTrace();
 			}
@@ -330,11 +415,57 @@ public class AsignarMedicoCabecera extends JFrame {
 	}
 	return btnEliminar;
     }
-    /*
-     * private JList<PacienteRecord> getListPacientesxMedico() { if
-     * (listPacientesxMedico == null) { listPacientesxMedico.setBounds(371, 55,
-     * 231, 220); } return listPacientesxMedico; }
-     */
+
+    private JList<PacienteRecord> getListPacientesxMedico() {
+	if (listPacientesxMedico == null) {
+	    listaPacientesXMedico();
+	}
+	return listPacientesxMedico;
+    }
+
+    private void listaPacientesXMedico() {
+	DefaultListModel modelo = null;
+	List<PacienteRecord> pacientes = null;
+
+	try {
+	    modelo = new DefaultListModel<>();
+	    pacientes = BusinessFactory.forAdminService().buscarPacientes();
+	} catch (BusinessException e) {
+	    e.printStackTrace();
+	}
+	for (PacienteRecord paciente : pacientes) {
+	    try {
+		if (paciente
+			.getIdMedicoCabecera() == medicoRecord.get().idMedico) {
+		    if (paciente.getDniPaciente() == null)
+			modelo.addElement(paciente.getNombre() + " "
+				+ paciente.getApellidos() + " - Sin DNI");
+		    else
+			modelo.addElement(paciente.getNombre() + " "
+				+ paciente.getApellidos() + " - "
+				+ paciente.getDniPaciente());
+		}
+	    } catch (Exception e) {
+	    }
+	}
+	listPacientesxMedico = new JList<PacienteRecord>(modelo);
+	listPacientesxMedico.setBounds(371, 55, 231, 220);
+
+    }
+
+    private JButton getBtnAtras() {
+	if (btnAtras == null) {
+	    btnAtras = new JButton("Retroceder");
+	    btnAtras.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		    dispose();
+		}
+	    });
+	    btnAtras.setBackground(Color.RED);
+	    btnAtras.setBounds(466, 293, 136, 23);
+	}
+	return btnAtras;
+    }
 
     private JLabel getLblNewLabel() {
 	if (lblNewLabel == null) {

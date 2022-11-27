@@ -1,10 +1,12 @@
 package business.admin;
 
 import java.util.List;
+import java.util.Optional;
 
 import persistencia.admin.JornadaComunRecord;
 import persistencia.admin.JornadaRecord;
-import persistencia.admin.MedicoRecord;
+import persistencia.medico.MedicoRecord;
+import persistencia.paciente.PacienteRecord;
 import util.BusinessException;
 
 public interface AdminService {
@@ -33,4 +35,13 @@ public interface AdminService {
 
     void eliminarMedicoCabeceraTutor(String dniTutor, String name,
 	    String surname) throws BusinessException;
+
+    void buscarPacienteDni(String dni) throws BusinessException;
+
+    void buscarPacienteTutor(String dniTutor, String name, String surname)
+	    throws BusinessException;
+
+    List<PacienteRecord> buscarPacientes() throws BusinessException;
+
+    Optional<MedicoRecord> buscarMedico(int licencia) throws BusinessException;
 }

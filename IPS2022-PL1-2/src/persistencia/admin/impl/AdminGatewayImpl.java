@@ -14,13 +14,15 @@ import persistencia.RecordAssembler;
 import persistencia.admin.AdminGateway;
 import persistencia.admin.JornadaComunRecord;
 import persistencia.admin.JornadaRecord;
-import persistencia.admin.MedicoRecord;
+import persistencia.medico.MedicoRecord;
 import persistencia.paciente.PacienteRecord;
 import util.jdbc.Jdbc;
 
 public class AdminGatewayImpl implements AdminGateway {
 
     private static final String ALL_MEDICOS = "SELECT * from MEDICO";
+    private static final String BUSCAR_MEDICO_LICENCIA = "SELECT * from MEDICO where idmedico = ?";
+    private static final String ALL_PACIENTES = "SELECT * from PACIENTE";
     private static final String ANIADIR_JORNADAS = "insert into JORNADA values (?, ?, ?, ?, ?)";
     private static final String CONTAR_JORNADAS = "SELECT count(*) from JORNADA";
     private static final String ANIADIR_JORNADASCOMUNES = "insert into JornadaComun values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -73,7 +75,7 @@ public class AdminGatewayImpl implements AdminGateway {
 		MedicoRecord medico = new MedicoRecord();
 		medico.nombre = rs.getString("nombre");
 		medico.apellidos = rs.getString("apellidos");
-		medico.id = rs.getInt("idmedico");
+		medico.idMedico = rs.getInt("idmedico");
 		medico.correo = rs.getString("correo");
 		medicos.add(medico);
 	    }
@@ -83,6 +85,39 @@ public class AdminGatewayImpl implements AdminGateway {
 	    Jdbc.close(rs, pst);
 	}
 	return medicos;
+    }
+
+    @Override
+    public List<PacienteRecord> findAllPacientes() {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	ArrayList<PacienteRecord> pacientes = new ArrayList<>();
+	try {
+	    c = Jdbc.getCurrentConnection();
+
+	    pst = c.prepareStatement(ALL_PACIENTES);
+
+	    rs = pst.executeQuery();
+	    while (rs.next()) {
+		PacienteRecord paciente = new PacienteRecord();
+		paciente.setId(rs.getInt("ID"));
+		paciente.setDniPaciente(rs.getString("DNI"));
+		paciente.setNombre(rs.getString("NOMBRE"));
+		paciente.setApellidos(rs.getString("APELLIDOS"));
+		paciente.setCorreo(rs.getString("CORREO"));
+		paciente.setFechaNac(rs.getDate("NACIMIENTO"));
+		paciente.setDniTutorLegal(rs.getString("DNITUTOR"));
+		paciente.setTutorLegal(rs.getString("NOMBRETURTOR"));
+		paciente.setIdMedicoCabecera(rs.getInt("IDMEDICOCABECERA"));
+		pacientes.add(paciente);
+	    }
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+	return pacientes;
     }
 
     @Override
@@ -295,6 +330,28 @@ public class AdminGatewayImpl implements AdminGateway {
 
 	    rs = pst.executeQuery();
 	    result = RecordAssembler.toPacienteRecord(rs);
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+	return result;
+    }
+
+    @Override
+    public Optional<MedicoRecord> findMedicoLic(int licencia) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	Optional<MedicoRecord> result = null;
+	try {
+	    c = Jdbc.getCurrentConnection();
+	    pst = c.prepareStatement(BUSCAR_MEDICO_LICENCIA);
+	    pst.setInt(1, licencia);
+	    pst.execute();
+
+	    rs = pst.executeQuery();
+	    result = RecordAssembler.rsToMedicoO(rs);
 	} catch (SQLException e) {
 	    throw new PersistenceException(e);
 	} finally {

@@ -1,20 +1,26 @@
 package business.admin.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import business.admin.AdminService;
 import business.admin.operaciones.AsignarJornadasLaboralesComunes;
 import business.admin.operaciones.AsignarJornadasLaboralesMedicos;
 import business.admin.operaciones.AsignarMedicoCabeceraDni;
 import business.admin.operaciones.AsignarMedicoCabeceraTutor;
+import business.admin.operaciones.BuscarMedico;
 import business.admin.operaciones.BuscarMedicos;
+import business.admin.operaciones.BuscarPacienteDni;
+import business.admin.operaciones.BuscarPacienteTutor;
+import business.admin.operaciones.BuscarPacientes;
 import business.admin.operaciones.CrearJornadasLaboralesComunes;
 import business.admin.operaciones.EliminarMedicoCabeceraDni;
 import business.admin.operaciones.EliminarMedicoCabeceraTutor;
 import business.admin.operaciones.ListarJornadasMedico;
 import persistencia.admin.JornadaComunRecord;
 import persistencia.admin.JornadaRecord;
-import persistencia.admin.MedicoRecord;
+import persistencia.medico.MedicoRecord;
+import persistencia.paciente.PacienteRecord;
 import util.BusinessException;
 import util.command.CommandExecutor;
 
@@ -76,6 +82,31 @@ public class AdminServiceImpl implements AdminService {
     public void eliminarMedicoCabeceraTutor(String dniTutor, String name,
 	    String surname) throws BusinessException {
 	c.execute(new EliminarMedicoCabeceraTutor(dniTutor, name, surname));
+    }
+
+    @Override
+    public void buscarPacienteDni(String dni) throws BusinessException {
+	c.execute(new BuscarPacienteDni(dni));
+
+    }
+
+    @Override
+    public void buscarPacienteTutor(String dniTutor, String name,
+	    String surname) throws BusinessException {
+	c.execute(new BuscarPacienteTutor(dniTutor, name, surname));
+
+    }
+
+    @Override
+    public List<PacienteRecord> buscarPacientes() throws BusinessException {
+	return c.execute(new BuscarPacientes());
+
+    }
+
+    @Override
+    public Optional<MedicoRecord> buscarMedico(int licencia)
+	    throws BusinessException {
+	return c.execute(new BuscarMedico(licencia));
     }
 
 }

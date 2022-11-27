@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import persistencia.Gateway;
+import persistencia.medico.MedicoRecord;
 import persistencia.paciente.PacienteRecord;
 
 public interface AdminGateway extends Gateway<MedicoRecord> {
@@ -30,5 +31,9 @@ public interface AdminGateway extends Gateway<MedicoRecord> {
 
     void eliminarMedicoCabeceraTutor(String dniTutor, String name,
 	    String surname);
+
+    List<PacienteRecord> findAllPacientes();
+
+    Optional<MedicoRecord> findMedicoLic(int licencia);
 
 }

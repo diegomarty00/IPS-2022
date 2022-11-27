@@ -4,6 +4,7 @@ import java.sql.Date;
 
 public class PacienteRecord {
 
+    private int id;
     private String dniPaciente;
     private String nombre;
     private String apellidos;
@@ -13,6 +14,14 @@ public class PacienteRecord {
     private String DniTutorLegal;
     private String tarjetaSanitaria;
     private int idMedicoCabecera;
+
+    public int getId() {
+	return id;
+    }
+
+    public void setId(int id) {
+	this.id = id;
+    }
 
     public String getDniPaciente() {
 	return dniPaciente;
