@@ -10,6 +10,7 @@ import business.cita.CitaService;
 import business.cita.operaciones.AsignarHoraEntrada;
 import business.cita.operaciones.AsignarHoraSalida;
 import business.cita.operaciones.GetCitasDelDia;
+import business.cita.operaciones.GetCitasDelDiaYSanitario;
 import business.cita.operaciones.GetCitasProximas;
 import business.cita.operaciones.InsertarCausa;
 import business.cita.operaciones.InsertarPrescripcion;
@@ -21,6 +22,8 @@ import persistencia.PersistenceFactory;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.PrescripcionRecord;
+import persistencia.enfermero.EnfermeroRecord;
+import persistencia.medico.MedicoRecord;
 import util.BusinessException;
 import util.command.CommandExecutor;
 
@@ -56,6 +59,14 @@ public class CitaServiceImpl implements CitaService {
 	CommandExecutor c = new CommandExecutor();
 	return c.execute(new GetCitasDelDia(date));
     }
+    
+    @Override
+	public List<CitaRecord> getCitasDelDiaYSanitario(int year, int month, int day, MedicoRecord medico,
+			EnfermeroRecord enfermero) throws BusinessException {
+		Date date = Date.valueOf(LocalDate.of(year, month, day));
+		CommandExecutor c = new CommandExecutor();
+		return c.execute(new GetCitasDelDiaYSanitario(date,medico,enfermero));
+	}
 
     @Override
     public List<CitaRecord> getCitasProximas(int year, int month, int day)

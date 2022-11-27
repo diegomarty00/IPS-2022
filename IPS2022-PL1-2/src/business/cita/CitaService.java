@@ -7,6 +7,8 @@ import java.util.List;
 
 import persistencia.cita.CitaRecord;
 import persistencia.cita.PrescripcionRecord;
+import persistencia.enfermero.EnfermeroRecord;
+import persistencia.medico.MedicoRecord;
 import util.BusinessException;
 
 public interface CitaService {
@@ -46,5 +48,8 @@ public interface CitaService {
 	    String cantidad, String intervalo, String duracion,
 	    String observaciones, LocalTime hora, LocalDate fecha,
 	    String idCita);
+
+	List<CitaRecord> getCitasDelDiaYSanitario(int year, int month, int day, MedicoRecord medico,
+		EnfermeroRecord enfermero) throws BusinessException;
 
 }

@@ -14,6 +14,7 @@ import javax.swing.border.EmptyBorder;
 import gui.admin.VentanaAdministrador;
 import gui.admin.VentanaCitasA;
 import gui.citas.VentanaCalendarioCitas;
+import persistencia.PersistenceFactory;
 import util.jdbc.Jdbc;
 import util.mail.EnviarMail;
 
@@ -28,6 +29,7 @@ public class VentanaPrincipal extends JFrame {
     private JLabel lblInicioSesion;
     private JButton btnAdmin;
     private JButton btnMedico;
+    private JButton btnEnfermero;
 
     /**
      * Launch the application.
@@ -54,7 +56,7 @@ public class VentanaPrincipal extends JFrame {
     public VentanaPrincipal() {
 	setTitle("GPTo - Inicio de Sesi\u00F3n");
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	setBounds(100, 100, 495, 242);
+	setBounds(100, 100, 495, 303);
 	contentPane = new JPanel();
 	contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 	setContentPane(contentPane);
@@ -64,6 +66,7 @@ public class VentanaPrincipal extends JFrame {
 	contentPane.add(getLblInicioSesion());
 	contentPane.add(getBtnAdmin());
 	contentPane.add(getBtnMedico());
+	contentPane.add(getBtnEnfermero());
     }
 
     public JLabel getLblTitulo() {
@@ -102,7 +105,7 @@ public class VentanaPrincipal extends JFrame {
 	    	public void actionPerformed(ActionEvent e) {
 	    		VentanaAdministrador frame = new VentanaAdministrador();
 				frame.setVisible(true);
-				setVisible(false);
+				dispose();
 	    	}
 	    });
 	    btnAdmin.setBounds(90, 130, 125, 50);
@@ -115,13 +118,27 @@ public class VentanaPrincipal extends JFrame {
 	    btnMedico = new JButton("Medico");
 	    btnMedico.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
-	    		VentanaCalendarioCitas frame = new VentanaCalendarioCitas();
+	    		VentanaCalendarioCitas frame = new VentanaCalendarioCitas(PersistenceFactory.forMedico().findAll().get(0), null);
 				frame.setVisible(true);
-				setVisible(false);
+				dispose();
 	    	}
 	    });
 	    btnMedico.setBounds(269, 130, 125, 50);
 	}
 	return btnMedico;
     }
+	private JButton getBtnEnfermero() {
+		if (btnEnfermero == null) {
+			btnEnfermero = new JButton("Enfermero");
+			btnEnfermero.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					VentanaCalendarioCitas frame = new VentanaCalendarioCitas(null, PersistenceFactory.forEnfermero().findAll().get(0));
+					frame.setVisible(true);
+					dispose();
+				}
+			});
+			btnEnfermero.setBounds(175, 191, 125, 50);
+		}
+		return btnEnfermero;
+	}
 }

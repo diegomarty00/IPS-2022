@@ -19,6 +19,8 @@ import javax.swing.border.EmptyBorder;
 
 import business.BusinessFactory;
 import persistencia.cita.CitaRecord;
+import persistencia.enfermero.EnfermeroRecord;
+import persistencia.medico.MedicoRecord;
 import util.BusinessException;
 
 import java.awt.event.ActionListener;
@@ -29,6 +31,9 @@ import java.awt.event.ActionEvent;
 
 public class VentanaCalendarioCitas extends JFrame {
 
+	private MedicoRecord medico;
+	private EnfermeroRecord enfermero;
+	
 	private JPanel contentPane;
 	private JLabel lblTitulo;
 	private JSpinner spnDia;
@@ -46,23 +51,27 @@ public class VentanaCalendarioCitas extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					VentanaCalendarioCitas frame = new VentanaCalendarioCitas();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					VentanaCalendarioCitas frame = new VentanaCalendarioCitas();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
 	 */
-	public VentanaCalendarioCitas() {
+	public VentanaCalendarioCitas(MedicoRecord medico, EnfermeroRecord enfermero) {
+		
+		this.medico=medico;
+		this.enfermero=enfermero;
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 583, 463);
 		contentPane = new JPanel();
@@ -134,7 +143,7 @@ public class VentanaCalendarioCitas extends JFrame {
 	private void searchCitas() {
 		try {
 			modelo.clear();
-			citas = BusinessFactory.forCitaService().getCitasDelDia((Integer)getSpnYear().getValue(), (Integer)getSpnMes().getValue(), (Integer)getSpnDia().getValue());
+			citas = BusinessFactory.forCitaService().getCitasDelDiaYSanitario((Integer)getSpnYear().getValue(), (Integer)getSpnMes().getValue(), (Integer)getSpnDia().getValue(), medico, enfermero);
 			for (CitaRecord cita : citas) {
 				modelo.addElement(cita);
 			}
@@ -175,7 +184,7 @@ public class VentanaCalendarioCitas extends JFrame {
 	}
 	
 	private void verCita(CitaRecord citaPulsada) {
-		VentanaCita v = new VentanaCita(citaPulsada);
+		VentanaCita v = new VentanaCita(citaPulsada, medico, enfermero);
 		v.setVisible(true);
 	}
 }

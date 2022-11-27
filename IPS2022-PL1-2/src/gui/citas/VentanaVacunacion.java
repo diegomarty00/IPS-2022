@@ -21,6 +21,8 @@ import javax.swing.border.EmptyBorder;
 import business.BusinessFactory;
 import persistencia.PersistenceFactory;
 import persistencia.cita.CitaRecord;
+import persistencia.enfermero.EnfermeroRecord;
+import persistencia.medico.MedicoRecord;
 import persistencia.paciente.HistorialRecord;
 import persistencia.paciente.PacienteRecord;
 import persistencia.paciente.VacunaRecord;
@@ -32,6 +34,8 @@ public class VentanaVacunacion extends JFrame {
 	private CitaRecord cita;
 	private VacunaRecord vacuna;
 	private PacienteRecord paciente;
+	MedicoRecord medico;
+	EnfermeroRecord enfermero;
 	
 	private static LocalDate today = LocalDate.now();
 	private static LocalTime now = LocalTime.now();
@@ -55,12 +59,14 @@ public class VentanaVacunacion extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaVacunacion(PacienteRecord paciente, CitaRecord cita, VacunaRecord vacuna) {
+	public VentanaVacunacion(PacienteRecord paciente, CitaRecord cita, VacunaRecord vacuna, MedicoRecord medico, EnfermeroRecord enfermero) {
 		setResizable(false);
 		this.historial=PersistenceFactory.forPaciente().getHistorial(paciente.getDniPaciente());
 		this.cita=cita;
 		this.vacuna=vacuna;
 		this.paciente=paciente;
+		this.medico=medico;
+		this.enfermero=enfermero;
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 609, 378);
@@ -230,13 +236,13 @@ public class VentanaVacunacion extends JFrame {
 	
 	private void cerrar() {
 		if (cita!=null) {
-			VentanaCita v = new VentanaCita(cita);
+			VentanaCita v = new VentanaCita(cita,medico,enfermero);
 			v.setVisible(true);
-		} else if (vacuna.getHora()!=null || vacuna.getFechaAproximada()!=null){
-			VentanaCalendarioVacunacion v = new VentanaCalendarioVacunacion(paciente, cita);
+		} else if (vacuna != null && (vacuna.getHora()!=null || vacuna.getFechaAproximada()!=null)){
+			VentanaCalendarioVacunacion v = new VentanaCalendarioVacunacion(paciente, cita,medico,enfermero);
 			v.setVisible(true);
 		} else {
-			VentanaHistorial v = new VentanaHistorial(paciente);
+			VentanaHistorial v = new VentanaHistorial(paciente,medico,enfermero);
 			v.setVisible(true);
 		}
 		dispose();

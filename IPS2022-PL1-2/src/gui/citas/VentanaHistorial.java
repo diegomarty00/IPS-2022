@@ -16,6 +16,8 @@ import persistencia.PersistenceFactory;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.PrescripcionRecord;
+import persistencia.enfermero.EnfermeroRecord;
+import persistencia.medico.MedicoRecord;
 import persistencia.paciente.HistorialRecord;
 import persistencia.paciente.PacienteRecord;
 import persistencia.paciente.VacunaRecord;
@@ -28,6 +30,8 @@ public class VentanaHistorial extends JFrame {
 
 	PacienteRecord paciente;
 	HistorialRecord historial;
+	MedicoRecord medico;
+	EnfermeroRecord enfermero;
 	
 	private JPanel contentPane;
 	private JScrollPane scrollPaneCitas;
@@ -52,9 +56,11 @@ public class VentanaHistorial extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaHistorial(PacienteRecord paciente) {
+	public VentanaHistorial(PacienteRecord paciente, MedicoRecord medico, EnfermeroRecord enfermero) {
 		this.paciente=paciente;
 		historial=PersistenceFactory.forPaciente().getHistorial(paciente.getDniPaciente());
+		this.medico=medico;
+		this.enfermero=enfermero;
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 709, 733);
@@ -233,13 +239,13 @@ public class VentanaHistorial extends JFrame {
 	}
 	
 	private void verCalendarioVacunacion() {
-		VentanaCalendarioVacunacion v = new VentanaCalendarioVacunacion(paciente, null);
+		VentanaCalendarioVacunacion v = new VentanaCalendarioVacunacion(paciente, null, medico, enfermero);
 		v.setVisible(true);
 		dispose();
 	}
 	
 	private void vacunar() {
-		VentanaVacunacion v = new VentanaVacunacion(paciente, null, null);
+		VentanaVacunacion v = new VentanaVacunacion(paciente, null, null, medico,enfermero);
 		v.setVisible(true);
 		this.dispose();
 	}
