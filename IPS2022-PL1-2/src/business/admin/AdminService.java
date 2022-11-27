@@ -44,4 +44,7 @@ public interface AdminService {
     List<PacienteRecord> buscarPacientes() throws BusinessException;
 
     Optional<MedicoRecord> buscarMedico(int licencia) throws BusinessException;
+
+    Optional<JornadaComunRecord> buscarJornadaComun(String nombre)
+	    throws BusinessException;
 }

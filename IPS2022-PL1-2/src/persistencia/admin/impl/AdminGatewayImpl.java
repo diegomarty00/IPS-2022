@@ -21,7 +21,9 @@ import util.jdbc.Jdbc;
 public class AdminGatewayImpl implements AdminGateway {
 
     private static final String ALL_MEDICOS = "SELECT * from MEDICO";
+    private static final String ALL_JORNADAS_COMUNES = "SELECT * from JORNADACOMUN";
     private static final String BUSCAR_MEDICO_LICENCIA = "SELECT * from MEDICO where idmedico = ?";
+    private static final String BUSCAR_JORNADA_COMUN_NOMBRE = "SELECT * from JORNADACOMUN where nombre = ?";
     private static final String ALL_PACIENTES = "SELECT * from PACIENTE";
     private static final String ANIADIR_JORNADAS = "insert into JORNADA values (?, ?, ?, ?, ?)";
     private static final String CONTAR_JORNADAS = "SELECT count(*) from JORNADA";
@@ -37,19 +39,15 @@ public class AdminGatewayImpl implements AdminGateway {
 
     @Override
     public void add(MedicoRecord t) {
-	// TODO Auto-generated method stub
 
     }
 
     @Override
     public void remove(String id) {
-	// TODO Auto-generated method stub
-
     }
 
     @Override
     public void update(MedicoRecord t) {
-	// TODO Auto-generated method stub
 
     }
 
@@ -118,6 +116,38 @@ public class AdminGatewayImpl implements AdminGateway {
 	    Jdbc.close(rs, pst);
 	}
 	return pacientes;
+    }
+
+    @Override
+    public List<JornadaComunRecord> findAllJornadasComunes() {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	ArrayList<JornadaComunRecord> jornadas = new ArrayList<>();
+	try {
+	    c = Jdbc.getCurrentConnection();
+
+	    pst = c.prepareStatement(ALL_JORNADAS_COMUNES);
+
+	    rs = pst.executeQuery();
+	    while (rs.next()) {
+		JornadaComunRecord jornada = new JornadaComunRecord();
+		jornada.nombre = rs.getString("NOMBRE");
+		jornada.transformar(rs.getString("lunes"), "lunes");
+		jornada.transformar(rs.getString("martes"), "martes");
+		jornada.transformar(rs.getString("miercoles"), "miercoles");
+		jornada.transformar(rs.getString("jueves"), "jueves");
+		jornada.transformar(rs.getString("viernes"), "viernes");
+		jornada.transformar(rs.getString("sabado"), "sabado");
+		jornada.transformar(rs.getString("domingo"), "domingo ");
+		jornadas.add(jornada);
+	    }
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+	return jornadas;
     }
 
     @Override
@@ -352,6 +382,28 @@ public class AdminGatewayImpl implements AdminGateway {
 
 	    rs = pst.executeQuery();
 	    result = RecordAssembler.rsToMedicoO(rs);
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+	return result;
+    }
+
+    @Override
+    public Optional<JornadaComunRecord> findJornadaNombre(String nombre) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	Optional<JornadaComunRecord> result = null;
+	try {
+	    c = Jdbc.getCurrentConnection();
+	    pst = c.prepareStatement(BUSCAR_JORNADA_COMUN_NOMBRE);
+	    pst.setString(1, nombre);
+	    pst.execute();
+
+	    rs = pst.executeQuery();
+	    result = RecordAssembler.toJornadaComunRecord(rs);
 	} catch (SQLException e) {
 	    throw new PersistenceException(e);
 	} finally {
