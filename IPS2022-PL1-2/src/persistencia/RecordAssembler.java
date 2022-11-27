@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import persistencia.admin.JornadaComunRecord;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.MedicoCitaRecord;
@@ -262,5 +263,27 @@ public class RecordAssembler {
 	    vacunas.add(rsToVacuna(rs));
 	}
 	return vacunas;
+    }
+
+    public static Optional<JornadaComunRecord> toJornadaComunRecord(
+	    ResultSet rs) throws SQLException {
+	if (rs.next()) {
+	    return Optional.of(resultSetToJornadaComunRecord(rs));
+	} else
+	    return Optional.ofNullable(null);
+    }
+
+    private static JornadaComunRecord resultSetToJornadaComunRecord(
+	    ResultSet rs) throws SQLException {
+	JornadaComunRecord jornada = new JornadaComunRecord();
+	jornada.nombre = (rs.getString("nombre"));
+	jornada.transformar(rs.getString("lunes"), "lunes");
+	jornada.transformar(rs.getString("martes"), "martes");
+	jornada.transformar(rs.getString("miercoles"), "miercoles");
+	jornada.transformar(rs.getString("jueves"), "jueves");
+	jornada.transformar(rs.getString("viernes"), "viernes");
+	jornada.transformar(rs.getString("sabado"), "sabado");
+	jornada.transformar(rs.getString("domingo"), "domingo ");
+	return jornada;
     }
 }

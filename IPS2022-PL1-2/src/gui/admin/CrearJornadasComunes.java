@@ -3,7 +3,6 @@ package gui.admin;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -19,7 +18,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
@@ -28,6 +26,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 import business.BusinessFactory;
+import persistencia.admin.DiaSemanaRecord;
 import persistencia.admin.JornadaComunRecord;
 import persistencia.admin.JornadaRecord;
 import util.BusinessException;
@@ -59,10 +58,10 @@ public class CrearJornadasComunes extends JFrame {
     private JLabel lblA_1;
     private JLabel lblA_1_1;
     private JSpinner spinnerMinutoFin;
-    private List<JornadaRecord> jornadas;
-    private ListModel<String> modelo = new DefaultListModel<>();
+    private List<DiaSemanaRecord> jornadas;
+    private DefaultListModel<String> modelo = new DefaultListModel<>();
     private JLabel lblNNombreJornada;
-    private JTextField textField;
+    private JTextField textNombreJornada;
     private JornadaComunRecord jornada = new JornadaComunRecord();
     private JButton btnAñadir;
     private String añadirDia;
@@ -104,7 +103,7 @@ public class CrearJornadasComunes extends JFrame {
 	contentPane.add(getBtnCrear());
 	contentPane.add(getBtnCancelar());
 	contentPane.add(getLblNNombreJornada());
-	contentPane.add(getTextField());
+	contentPane.add(getTextNombreJornada());
 	contentPane.add(getBtnAñadir());
     }
 
@@ -242,12 +241,10 @@ public class CrearJornadasComunes extends JFrame {
     private JList<String> getListResumen() {
 	if (listResumen == null) {
 	    modelo = new DefaultListModel<>();
-
 	    listResumen = new JList<String>(modelo);
 
 	    listResumen.setBounds(363, 42, 270, 229);
 	} else {
-	    modelo = new DefaultListModel<>();
 	    listResumen.setModel(modelo);
 	}
 	return listResumen;
@@ -269,24 +266,39 @@ public class CrearJornadasComunes extends JFrame {
 	    btnCrear.addActionListener(new ActionListener() {
 		@SuppressWarnings("deprecation")
 		public void actionPerformed(ActionEvent e) {
-		    try {
-			if (getListResumen().getSelectedValuesList()
-				.size() == 0)
-			    JOptionPane.showMessageDialog(null,
-				    "Por favor, seleccione a alg�n m�dico al que quiera a�adirle una jornada",
-				    "Error - M�dico no seleccionado", 0);
-		    } catch (HeadlessException e2) {
-			e2.printStackTrace();
-			try {
-			    BusinessFactory.forAdminService()
-				    .crearJornadasLaboralesComunes(jornada);
-			} catch (BusinessException e1) {
-			    e1.printStackTrace();
-			}
+		    if (getTextNombreJornada().getText().isEmpty()
+			    || getTextNombreJornada().getText().isBlank()) {
 			JOptionPane.showMessageDialog(null,
-				"Se ha creado la jornada correctamente.",
-				"Creacion realizada", 1);
+				"Por favor, indique un nombre para la jornada",
+				"Error - Nombre jornada", 0);
+		    } else {
+			jornada.nombre = getTextNombreJornada().getText();
+			if (modelo.size() == 0) {
+			    JOptionPane.showMessageDialog(null,
+				    "Por favor, añade horarios para la creacion de jornada",
+				    "Error - Horas jornada", 0);
+			} else {
+			    try {
+				if (!BusinessFactory.forAdminService()
+					.buscarJornadaComun(jornada.nombre)
+					.isPresent()) {
+				    BusinessFactory.forAdminService()
+					    .crearJornadasLaboralesComunes(
+						    jornada);
+				    JOptionPane.showMessageDialog(null,
+					    "Se ha creado la jornada correctamente.",
+					    "Creacion realizada", 1);
+				    dispose();
+				} else {
+				    JOptionPane.showMessageDialog(null,
+					    "Por favor, utilice otro nombre para la jornada que no se haya utilizado anteriormente",
+					    "Error - Nombre jornada", 0);
+				}
+			    } catch (BusinessException e1) {
+				e1.printStackTrace();
+			    }
 
+			}
 		    }
 		}
 	    });
@@ -407,21 +419,6 @@ public class CrearJornadasComunes extends JFrame {
 	return dia;
     }
 
-    private boolean comprobacionesBasicas() {
-	if (!getChckbxLunes().isSelected() && !getChckbxMartes().isSelected()
-		&& !getChckbxMiercoles().isSelected()
-		&& !getChckbxJueves().isSelected()
-		&& !getChckbxViernes().isSelected()
-		&& !getChckbxSabado().isSelected()
-		&& !getChckbxDomingo().isSelected()) {
-	    JOptionPane.showMessageDialog(null,
-		    "Por favor, seleccione al menos un d�a de la semana para a�adir a la jornada",
-		    "Error - D�as de la semana no escogidos", 0);
-	    return false;
-	}
-	return true;
-    }
-
     private JLabel getLblNNombreJornada() {
 	if (lblNNombreJornada == null) {
 	    lblNNombreJornada = new JLabel("Nombre Jornada:");
@@ -430,13 +427,13 @@ public class CrearJornadasComunes extends JFrame {
 	return lblNNombreJornada;
     }
 
-    private JTextField getTextField() {
-	if (textField == null) {
-	    textField = new JTextField();
-	    textField.setBounds(140, 75, 188, 20);
-	    textField.setColumns(10);
+    private JTextField getTextNombreJornada() {
+	if (textNombreJornada == null) {
+	    textNombreJornada = new JTextField();
+	    textNombreJornada.setBounds(140, 75, 188, 20);
+	    textNombreJornada.setColumns(10);
 	}
-	return textField;
+	return textNombreJornada;
     }
 
     private JButton getBtnAñadir() {
@@ -446,52 +443,169 @@ public class CrearJornadasComunes extends JFrame {
 	    btnAñadir.setBounds(234, 282, 106, 23);
 	    btnAñadir.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-		    actualizarJornada();
-		    System.out.println(jornada);
-		    getListResumen();
+		    if (comporbarHoras()) {
+			actualizarJornada();
+			System.out.println(jornada);
+			getListResumen();
+		    } else {
+			JOptionPane.showMessageDialog(null,
+				"Por favor, seleccione otras horas que no estén dentro de las horas escogidas",
+				"Error - Horas escogidas", 0);
+		    }
 		}
+
 	    });
 	}
 	return btnAñadir;
     }
 
-    private void actualizarJornada() {
+    private boolean comporbarHoras() {
+	boolean inicial = true;
+	boolean fin = false;
 	if (getChckbxLunes().isSelected()) {
-	    jornada.lunes.add(getspinnerHoraInicio().getValue() + ":"
-		    + getspinnerMinutoInicio() + "-"
-		    + getspinnerHoraFin().getValue() + ":"
-		    + getspinnerMinutoFin().getValue());
-	    modelo.add
+	    if (!jornada.comprobarHora((int) getspinnerHoraInicio().getValue(),
+		    (int) getspinnerMinutoInicio().getValue(), "lunes",
+		    inicial))
+		return false;
+	    if (!jornada.comprobarHora((int) getspinnerHoraFin().getValue(),
+		    (int) getspinnerMinutoFin().getValue(), "lunes", fin))
+		return false;
 	}
 	if (getChckbxMartes().isSelected()) {
-	    jornada.martes.add(getspinnerHoraInicio().getValue() + ":"
-		    + getspinnerMinutoInicio() + "-"
-		    + getspinnerHoraFin().getValue() + ":"
-		    + getspinnerMinutoFin().getValue());}
+	    if (!jornada.comprobarHora((int) getspinnerHoraInicio().getValue(),
+		    (int) getspinnerMinutoInicio().getValue(), "martes",
+		    inicial))
+		return false;
+	    if (!jornada.comprobarHora((int) getspinnerHoraFin().getValue(),
+		    (int) getspinnerMinutoFin().getValue(), "martes", fin))
+		return false;
+	}
 	if (getChckbxMiercoles().isSelected()) {
-	    jornada.miercoles.add(getspinnerHoraInicio().getValue() + ":"
-		    + getspinnerMinutoInicio() + "-"
-		    + getspinnerHoraFin().getValue() + ":"
-		    + getspinnerMinutoFin().getValue());}{
-	if (getChckbxJueves().isSelected()){
-	    jornada.jueves.add(getspinnerHoraInicio().getValue() + ":"
-		    + getspinnerMinutoInicio() + "-"
-		    + getspinnerHoraFin().getValue() + ":"
-		    + getspinnerMinutoFin().getValue());}
+	    if (!jornada.comprobarHora((int) getspinnerHoraInicio().getValue(),
+		    (int) getspinnerMinutoInicio().getValue(), "miercoles",
+		    inicial))
+		return false;
+	    if (!jornada.comprobarHora((int) getspinnerHoraFin().getValue(),
+		    (int) getspinnerMinutoFin().getValue(), "miercoles", fin))
+		return false;
+	}
+	if (getChckbxJueves().isSelected()) {
+	    if (!jornada.comprobarHora((int) getspinnerHoraInicio().getValue(),
+		    (int) getspinnerMinutoInicio().getValue(), "jueves",
+		    inicial))
+		return false;
+	    if (!jornada.comprobarHora((int) getspinnerHoraFin().getValue(),
+		    (int) getspinnerMinutoFin().getValue(), "jueves", fin))
+		return false;
+	}
 	if (getChckbxViernes().isSelected()) {
-	    jornada.viernes.add(getspinnerHoraInicio().getValue() + ":"
-		    + getspinnerMinutoInicio() + "-"
-		    + getspinnerHoraFin().getValue() + ":"
-		    + getspinnerMinutoFin().getValue());}
+	    if (!jornada.comprobarHora((int) getspinnerHoraInicio().getValue(),
+		    (int) getspinnerMinutoInicio().getValue(), "viernes",
+		    inicial))
+		return false;
+	    if (!jornada.comprobarHora((int) getspinnerHoraFin().getValue(),
+		    (int) getspinnerMinutoFin().getValue(), "viernes", fin))
+		return false;
+	}
 	if (getChckbxSabado().isSelected()) {
-	    jornada.sabado.add(getspinnerHoraInicio().getValue() + ":"
-		    + getspinnerMinutoInicio() + "-"
-		    + getspinnerHoraFin().getValue() + ":"
-		    + getspinnerMinutoFin().getValue());}
+	    if (!jornada.comprobarHora((int) getspinnerHoraInicio().getValue(),
+		    (int) getspinnerMinutoInicio().getValue(), "sabado",
+		    inicial))
+		return false;
+	    if (!jornada.comprobarHora((int) getspinnerHoraFin().getValue(),
+		    (int) getspinnerMinutoFin().getValue(), "sabado", fin))
+		return false;
+	}
 	if (getChckbxDomingo().isSelected()) {
-	    jornada.domingo.add(getspinnerHoraInicio().getValue() + ":"
-		    + getspinnerMinutoInicio() + "-"
-		    + getspinnerHoraFin().getValue() + ":"
-		    + getspinnerMinutoFin().getValue());}
+	    if (!jornada.comprobarHora((int) getspinnerHoraInicio().getValue(),
+		    (int) getspinnerMinutoInicio().getValue(), "domingo",
+		    inicial))
+		return false;
+	    if (!jornada.comprobarHora((int) getspinnerHoraFin().getValue(),
+		    (int) getspinnerMinutoFin().getValue(), "domingo", fin))
+		return false;
+	}
+	return true;
+
+    }
+
+    private void actualizarJornada() {
+	if (getChckbxLunes().isSelected()) {
+	    jornada.lunes.add((int) getspinnerHoraInicio().getValue() + ":"
+		    + (int) getspinnerMinutoInicio().getValue() + "-"
+		    + (int) getspinnerHoraFin().getValue() + ":"
+		    + (int) getspinnerMinutoFin().getValue());
+	    modelo.addElement(
+		    "Lunes: De " + (int) getspinnerHoraInicio().getValue() + ":"
+			    + (int) getspinnerMinutoInicio().getValue() + " a "
+			    + (int) getspinnerHoraFin().getValue() + ":"
+			    + (int) getspinnerMinutoFin().getValue());
+	}
+	if (getChckbxMartes().isSelected()) {
+	    jornada.martes.add((int) getspinnerHoraInicio().getValue() + ":"
+		    + (int) getspinnerMinutoInicio().getValue() + "-"
+		    + (int) getspinnerHoraFin().getValue() + ":"
+		    + (int) getspinnerMinutoFin().getValue());
+	    modelo.addElement(
+		    "Martes: De " + (int) getspinnerHoraInicio().getValue()
+			    + ":" + (int) getspinnerMinutoInicio().getValue()
+			    + " a " + (int) getspinnerHoraFin().getValue() + ":"
+			    + (int) getspinnerMinutoFin().getValue());
+	}
+	if (getChckbxMiercoles().isSelected()) {
+	    jornada.miercoles.add((int) getspinnerHoraInicio().getValue() + ":"
+		    + (int) getspinnerMinutoInicio().getValue() + "-"
+		    + (int) getspinnerHoraFin().getValue() + ":"
+		    + (int) getspinnerMinutoFin().getValue());
+	    modelo.addElement(
+		    "Miercoles: De " + (int) getspinnerHoraInicio().getValue()
+			    + ":" + (int) getspinnerMinutoInicio().getValue()
+			    + " a " + (int) getspinnerHoraFin().getValue() + ":"
+			    + (int) getspinnerMinutoFin().getValue());
+	}
+	if (getChckbxJueves().isSelected()) {
+	    jornada.jueves.add((int) getspinnerHoraInicio().getValue() + ":"
+		    + (int) getspinnerMinutoInicio().getValue() + "-"
+		    + (int) getspinnerHoraFin().getValue() + ":"
+		    + (int) getspinnerMinutoFin().getValue());
+	    modelo.addElement(
+		    "Jueves: De " + (int) getspinnerHoraInicio().getValue()
+			    + ":" + (int) getspinnerMinutoInicio().getValue()
+			    + " a " + (int) getspinnerHoraFin().getValue() + ":"
+			    + (int) getspinnerMinutoFin().getValue());
+	}
+	if (getChckbxViernes().isSelected()) {
+	    jornada.viernes.add((int) getspinnerHoraInicio().getValue() + ":"
+		    + (int) getspinnerMinutoInicio().getValue() + "-"
+		    + (int) getspinnerHoraFin().getValue() + ":"
+		    + (int) getspinnerMinutoFin().getValue());
+	    modelo.addElement(
+		    "Viernes: De " + (int) getspinnerHoraInicio().getValue()
+			    + ":" + (int) getspinnerMinutoInicio().getValue()
+			    + " a " + (int) getspinnerHoraFin().getValue() + ":"
+			    + (int) getspinnerMinutoFin().getValue());
+	}
+	if (getChckbxSabado().isSelected()) {
+	    jornada.sabado.add((int) getspinnerHoraInicio().getValue() + ":"
+		    + (int) getspinnerMinutoInicio().getValue() + "-"
+		    + (int) getspinnerHoraFin().getValue() + ":"
+		    + (int) getspinnerMinutoFin().getValue());
+	    modelo.addElement(
+		    "Sabado: De " + (int) getspinnerHoraInicio().getValue()
+			    + ":" + (int) getspinnerMinutoInicio().getValue()
+			    + " a " + (int) getspinnerHoraFin().getValue() + ":"
+			    + (int) getspinnerMinutoFin().getValue());
+	}
+	if (getChckbxDomingo().isSelected()) {
+	    jornada.domingo.add((int) getspinnerHoraInicio().getValue() + ":"
+		    + (int) getspinnerMinutoInicio().getValue() + "-"
+		    + (int) getspinnerHoraFin().getValue() + ":"
+		    + (int) getspinnerMinutoFin().getValue());
+	    modelo.addElement(
+		    "Domingo: De " + (int) getspinnerHoraInicio().getValue()
+			    + ":" + (int) getspinnerMinutoInicio().getValue()
+			    + " a " + (int) getspinnerHoraFin().getValue() + ":"
+			    + (int) getspinnerMinutoFin().getValue());
+	}
     }
 }

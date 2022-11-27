@@ -36,4 +36,8 @@ public interface AdminGateway extends Gateway<MedicoRecord> {
 
     Optional<MedicoRecord> findMedicoLic(int licencia);
 
+    Optional<JornadaComunRecord> findJornadaNombre(String nombre);
+
+    List<JornadaComunRecord> findAllJornadasComunes();
+
 }
