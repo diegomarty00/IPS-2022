@@ -46,4 +46,8 @@ public interface CitaGateway extends Gateway<CitaRecord> {
 
 	List<VacunaRecord> getVacunas(String idCita);
 
+	List<CitaRecord> findAllNc();
+	
+	void ConfirCita(String idCita);
+
 }

@@ -101,9 +101,31 @@ public class CitaGatewayImpl implements CitaGateway {
 
     }
 
+    private static String findAllNc = "SELECT * FROM PUBLIC.cita WHERE CONFIRMADA = false";
+	@Override
+	public List<CitaRecord> findAllNc() {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+			c = Jdbc.getConnection();
+			
+			pst = c.prepareStatement(findAllNc);
+			rs = pst.executeQuery();
+			
+			
+
+			return RecordAssembler.toCitaList(rs);
+
+		} catch (SQLException e) {
+			throw new PersistenceException(e);
+		} finally {
+			Jdbc.close(rs, pst);
+		}
+	}
     
-    
-	private static String findAll = "SELECT * FROM PUBLIC.cita WHERE CONFIRMADA = true";
+    private static String findAll = "SELECT * FROM PUBLIC.cita WHERE CONFIRMADA = true";
 	@Override
 	public List<CitaRecord> findAll() {
 		Connection c = null;
@@ -553,5 +575,24 @@ public class CitaGatewayImpl implements CitaGateway {
 		} finally {
 		    Jdbc.close(rs, pst);
 		}
+	}
+	
+	private static String CONFIRMAR_CITA = "update CITA set CONFIRMADA = TRUE   where idcita = ?";
+
+	@Override
+	public void ConfirCita(String idCita) {
+		// TODO Auto-generated method stub
+		Connection c = null;
+		PreparedStatement pst = null;
+    try {
+		    c = Jdbc.createThreadConnection();
+		    pst = c.prepareStatement(CONFIRMAR_CITA);
+		    pst.setString(1,idCita);
+		    pst.execute();
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(pst);
+    }
 	}
 }
