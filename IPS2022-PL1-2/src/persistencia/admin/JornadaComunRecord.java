@@ -1,5 +1,6 @@
 package persistencia.admin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JornadaComunRecord {
@@ -7,23 +8,34 @@ public class JornadaComunRecord {
     public String nombre;
     public String inicio;
     public String fin;
-    public List<String> lunes;
-    public List<String> martes;
-    public List<String> miercoles;
-    public List<String> jueves;
-    public List<String> viernes;
-    public List<String> sabado;
-    public List<String> domingo;
+    public List<String> lunes = new ArrayList<>();
+    public List<String> martes = new ArrayList<>();
+    public List<String> miercoles = new ArrayList<>();
+    public List<String> jueves = new ArrayList<>();
+    public List<String> viernes = new ArrayList<>();
+    public List<String> sabado = new ArrayList<>();
+    public List<String> domingo = new ArrayList<>();
 
+    @Override
     public String toString() {
-	String result = "Jornada: " + nombre + "\n";
-	result = Jornadas(result, lunes, "lunes") + "\n";
-	result = Jornadas(result, martes, "martes") + "\n";
-	result = Jornadas(result, miercoles, "miercoles") + "\n";
-	result = Jornadas(result, jueves, "jueves") + "\n";
-	result = Jornadas(result, viernes, "viernes") + "\n";
-	result = Jornadas(result, sabado, "sabado") + "\n";
-	result = Jornadas(result, domingo, "domingo") + "\n";
+	String result = "";
+	if (nombre != "") {
+	    result = "Jornada: " + nombre + "\n";
+	    if (lunes.size() != 0)
+		result = Jornadas(result, lunes, "lunes") + "\n";
+	    if (martes.size() != 0)
+		result = Jornadas(result, martes, "martes") + "\n";
+	    if (miercoles.size() != 0)
+		result = Jornadas(result, miercoles, "miercoles") + "\n";
+	    if (jueves.size() != 0)
+		result = Jornadas(result, jueves, "jueves") + "\n";
+	    if (viernes.size() != 0)
+		result = Jornadas(result, viernes, "viernes") + "\n";
+	    if (sabado.size() != 0)
+		result = Jornadas(result, sabado, "sabado") + "\n";
+	    if (domingo.size() != 0)
+		result = Jornadas(result, domingo, "domingo") + "\n";
+	}
 	return result;
     }
 
