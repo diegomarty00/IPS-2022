@@ -50,5 +50,8 @@ public interface CitaGateway extends Gateway<CitaRecord> {
 
 	List<CitaRecord> findBySanitarioId(MedicoRecord medico, EnfermeroRecord enfermero, Date dia);
 
+	List<CitaRecord> findAllNc();
+	
+	void ConfirCita(String idCita);
 
 }
