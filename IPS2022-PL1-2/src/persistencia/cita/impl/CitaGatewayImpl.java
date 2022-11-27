@@ -16,6 +16,8 @@ import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaGateway;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.PrescripcionRecord;
+import persistencia.enfermero.EnfermeroRecord;
+import persistencia.medico.MedicoRecord;
 import persistencia.paciente.VacunaRecord;
 import util.jdbc.Jdbc;
 
@@ -28,6 +30,8 @@ public class CitaGatewayImpl implements CitaGateway {
 	private static final String FIND_PRESCRIPCIONES_FROM_CITA = "SELECT * from PRESCRIPCION where IDCITA = ? ORDER BY FECHA_ASIGNACION ASC";
 	private static final String FIN_BY_HISTORIAL_ID = "SELECT * FROM CITA WHERE IDHISTORIAL = ?";
 	private static final String FIND_VACUNAS_FROM_CITA = "SELECT * FROM VACUNA WHERE IDCITA = ? ORDER BY FECHAAPROXIMADA ASC";
+	private static final String PROXIMAS_CITAS_MEDICO = "Select * from cita where idcita in (select idcita from MEDICOCITA where idmedico =?) and fecha = ?";
+	private static final String PROXIMAS_CITAS_ENFERMERO = "Select * from cita where idcita in (select idcita from ENFERMEROCITA where idenfermero =?) and fecha = ?";;
 
     private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
     private static String ASIGNAR_NUEVO_HORARIO = "update CITA set HORA_ENTRADA_ESTIMADA = ? , HORA_SALIDA_ESTIMADA = ?  where idcita = ?";
@@ -548,6 +552,36 @@ public class CitaGatewayImpl implements CitaGateway {
 		    rs = pst.executeQuery();
 
 		    return RecordAssembler.toVacunaList(rs);
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
+	public List<CitaRecord> findBySanitarioId(MedicoRecord medico, EnfermeroRecord enfermero, Date dia) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+		    c = Jdbc.getCurrentConnection();
+		    if (medico != null) {
+		    	pst = c.prepareStatement(PROXIMAS_CITAS_MEDICO);
+		    	pst.setInt(1, medico.idMedico);
+		    }
+		    else if (enfermero != null) {
+		    	pst = c.prepareStatement(PROXIMAS_CITAS_ENFERMERO);
+		    	pst.setInt(1, enfermero.idEnfermero);
+		    }
+		    pst.setDate(2, dia);
+
+		    pst.execute();
+
+		    rs = pst.executeQuery();
+
+		    return RecordAssembler.toCitaList(rs);
 		} catch (SQLException e) {
 		    throw new PersistenceException(e);
 		} finally {

@@ -31,6 +31,8 @@ import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
 import persistencia.cita.PrescripcionRecord;
 import persistencia.cita.impl.CitaGatewayImpl;
+import persistencia.enfermero.EnfermeroRecord;
+import persistencia.medico.MedicoRecord;
 import persistencia.paciente.HistorialRecord;
 import persistencia.paciente.PacienteRecord;
 import persistencia.paciente.VacunaRecord;
@@ -50,6 +52,9 @@ public class VentanaCita extends JFrame {
 
 	CitaRecord cita;
 	PacienteRecord pacienteAsociado;
+	MedicoRecord medico;
+	EnfermeroRecord enfermero;
+	
 	CitaService citaService;
 	private JLabel lblCita;
 	private JLabel lblHoraEntrada;
@@ -82,29 +87,32 @@ public class VentanaCita extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					CitaGatewayImpl citaGateway = (CitaGatewayImpl) PersistenceFactory.forCita();
-					CitaRecord cita = citaGateway.findById("1").get();
-					VentanaCita frame = new VentanaCita(cita);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					CitaGatewayImpl citaGateway = (CitaGatewayImpl) PersistenceFactory.forCita();
+//					CitaRecord cita = citaGateway.findById("1").get();
+//					VentanaCita frame = new VentanaCita(cita);
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 
 	/**
 	 * Create the frame.
 	 */
-	public VentanaCita(CitaRecord cita) {
+	public VentanaCita(CitaRecord cita, MedicoRecord medico, EnfermeroRecord enfermero) {
 
 		this.cita = cita;
 		this.pacienteAsociado=cita.getPacienteAsociado();
+		this.medico=medico;
+		this.enfermero=enfermero;
 		citaService = BusinessFactory.forCitaService();
+		
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 788, 628);
@@ -217,20 +225,22 @@ public class VentanaCita extends JFrame {
 		btnCerrarCita.setBounds(635, 565, 124, 23);
 		contentPane.add(btnCerrarCita);
 		contentPane.add(getBtnVerHistorial());
-		contentPane.add(getLblCausas());
-		contentPane.add(getBtnSeleccionarCausas());
-		contentPane.add(getLblPrescripciones());
-		contentPane.add(getBtnSeleccionarPrescripciones());
+		if (medico!=null) {
+			contentPane.add(getLblCausas());
+			contentPane.add(getBtnSeleccionarCausas());
+			contentPane.add(getLblPrescripciones());
+			contentPane.add(getBtnSeleccionarPrescripciones());
 		
-		scrollPanePrescripciones = new JScrollPane();
-		scrollPanePrescripciones.setBounds(399, 252, 310, 127);
-		contentPane.add(scrollPanePrescripciones);
-		scrollPanePrescripciones.setViewportView(getListPrescripciones());
-		
-		scrollPaneCausas = new JScrollPane();
-		scrollPaneCausas.setBounds(23, 250, 310, 129);
-		contentPane.add(scrollPaneCausas);
-		scrollPaneCausas.setViewportView(getListCausas());
+			scrollPanePrescripciones = new JScrollPane();
+			scrollPanePrescripciones.setBounds(399, 252, 310, 127);
+			contentPane.add(scrollPanePrescripciones);
+			scrollPanePrescripciones.setViewportView(getListPrescripciones());
+			
+			scrollPaneCausas = new JScrollPane();
+			scrollPaneCausas.setBounds(23, 250, 310, 129);
+			contentPane.add(scrollPaneCausas);
+			scrollPaneCausas.setViewportView(getListCausas());
+		}
 		contentPane.add(getCbAsistencia());
 		contentPane.add(getLblVacunas());
 		contentPane.add(getBtnVacunar());
@@ -318,7 +328,7 @@ public class VentanaCita extends JFrame {
 			btnVerHistorial = new JButton("Ver Historial");
 			btnVerHistorial.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					VentanaHistorial v  = new VentanaHistorial(pacienteAsociado);
+					VentanaHistorial v  = new VentanaHistorial(pacienteAsociado,medico,enfermero);
 					v.setVisible(true);
 				}
 			});
@@ -348,7 +358,7 @@ public class VentanaCita extends JFrame {
 	}
 	
 	private void openVentCausas() {
-		VentanaCausas ventCausas = new VentanaCausas(cita);
+		VentanaCausas ventCausas = new VentanaCausas(cita,medico,enfermero);
 		ventCausas.setVisible(true);
 		this.dispose();
 	}
@@ -387,7 +397,7 @@ public class VentanaCita extends JFrame {
 	}
 	
 	private void openVentPresc() {
-		VentanaPrescripciones ventPresc = new VentanaPrescripciones(cita);
+		VentanaPrescripciones ventPresc = new VentanaPrescripciones(cita,medico,enfermero);
 		ventPresc.setVisible(true);
 		this.dispose();
 	}
@@ -422,7 +432,7 @@ public class VentanaCita extends JFrame {
 	}
 	
 	private void vacunar() {
-		VentanaVacunacion v = new VentanaVacunacion(pacienteAsociado, cita, null);
+		VentanaVacunacion v = new VentanaVacunacion(pacienteAsociado, cita, null,medico,enfermero);
 		v.setVisible(true);
 		this.dispose();
 	}
@@ -464,7 +474,7 @@ public class VentanaCita extends JFrame {
   }
 
   private void verCalendarioVacunas() {
-		VentanaCalendarioVacunacion v = new VentanaCalendarioVacunacion(pacienteAsociado, cita);
+		VentanaCalendarioVacunacion v = new VentanaCalendarioVacunacion(pacienteAsociado, cita, medico, enfermero);
 		v.setVisible(true);
 		this.dispose();
 	}

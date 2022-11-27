@@ -12,6 +12,8 @@ import persistencia.paciente.PacienteRecord;
 import persistencia.paciente.VacunaRecord;
 import persistencia.PersistenceFactory;
 import persistencia.cita.CitaRecord;
+import persistencia.enfermero.EnfermeroRecord;
+import persistencia.medico.MedicoRecord;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -29,6 +31,8 @@ public class VentanaCalendarioVacunacion extends JFrame {
 	private HistorialRecord historial;
 	private PacienteRecord paciente;
 	private CitaRecord cita;
+	MedicoRecord medico;
+	EnfermeroRecord enfermero;
 	
 	private JPanel contentPane;
 	private JLabel lblTituloVentana;
@@ -41,12 +45,14 @@ public class VentanaCalendarioVacunacion extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public VentanaCalendarioVacunacion(PacienteRecord paciente, CitaRecord cita) {
+	public VentanaCalendarioVacunacion(PacienteRecord paciente, CitaRecord cita, MedicoRecord medico, EnfermeroRecord enfermero) {
 		setResizable(false);
 		
 		this.historial=PersistenceFactory.forPaciente().getHistorial(paciente.getDniPaciente());
 		this.paciente=paciente;
 		this.cita=cita;
+		this.medico=medico;
+		this.enfermero=enfermero;
 		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 614, 502);
@@ -110,7 +116,7 @@ public class VentanaCalendarioVacunacion extends JFrame {
 			vacuna = getListCalendario().getSelectedValue();
 		}
 		
-		VentanaVacunacion v = new VentanaVacunacion(paciente, cita, vacuna); 
+		VentanaVacunacion v = new VentanaVacunacion(paciente, cita, vacuna,medico,enfermero); 
 		v.setVisible(true);
 		dispose();
 	}
@@ -130,10 +136,10 @@ public class VentanaCalendarioVacunacion extends JFrame {
 	
 	private void cerrar() {
 		if (cita==null) {
-			VentanaHistorial v = new VentanaHistorial(paciente);
+			VentanaHistorial v = new VentanaHistorial(paciente, medico, enfermero);
 			v.setVisible(true);
 		} else {
-			VentanaCita v = new VentanaCita(cita);
+			VentanaCita v = new VentanaCita(cita, medico, enfermero);
 			v.setVisible(true);
 		}
 		this.dispose();
