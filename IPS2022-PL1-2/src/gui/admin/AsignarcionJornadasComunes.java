@@ -442,7 +442,7 @@ public class AsignarcionJornadasComunes extends JFrame {
 	    for (String d : jornadaComun.get().martes) {
 		franja = d.split("-");
 		horas = franja[0].split(":");
-		jornada.dia = "Lunes";
+		jornada.dia = "Martes";
 		jornada.inicio = indicarInicio(Integer.parseInt(horas[0]),
 			Integer.parseInt(horas[1]));
 		horas = franja[1].split(":");
@@ -458,7 +458,7 @@ public class AsignarcionJornadasComunes extends JFrame {
 	    for (String d : jornadaComun.get().miercoles) {
 		franja = d.split("-");
 		horas = franja[0].split(":");
-		jornada.dia = "Lunes";
+		jornada.dia = "Miercoles";
 		jornada.inicio = indicarInicio(Integer.parseInt(horas[0]),
 			Integer.parseInt(horas[1]));
 		horas = franja[1].split(":");
@@ -473,7 +473,7 @@ public class AsignarcionJornadasComunes extends JFrame {
 	    for (String d : jornadaComun.get().jueves) {
 		franja = d.split("-");
 		horas = franja[0].split(":");
-		jornada.dia = "Lunes";
+		jornada.dia = "Jueves";
 		jornada.inicio = indicarInicio(Integer.parseInt(horas[0]),
 			Integer.parseInt(horas[1]));
 		horas = franja[1].split(":");
@@ -488,7 +488,7 @@ public class AsignarcionJornadasComunes extends JFrame {
 	    for (String d : jornadaComun.get().viernes) {
 		franja = d.split("-");
 		horas = franja[0].split(":");
-		jornada.dia = "Lunes";
+		jornada.dia = "Viernes";
 		jornada.inicio = indicarInicio(Integer.parseInt(horas[0]),
 			Integer.parseInt(horas[1]));
 		horas = franja[1].split(":");
@@ -503,7 +503,7 @@ public class AsignarcionJornadasComunes extends JFrame {
 	    for (String d : jornadaComun.get().sabado) {
 		franja = d.split("-");
 		horas = franja[0].split(":");
-		jornada.dia = "Lunes";
+		jornada.dia = "Sabado";
 		jornada.inicio = indicarInicio(Integer.parseInt(horas[0]),
 			Integer.parseInt(horas[1]));
 		horas = franja[1].split(":");
@@ -518,7 +518,7 @@ public class AsignarcionJornadasComunes extends JFrame {
 	    for (String d : jornadaComun.get().domingo) {
 		franja = d.split("-");
 		horas = franja[0].split(":");
-		jornada.dia = "Lunes";
+		jornada.dia = "Domingo";
 		jornada.inicio = indicarInicio(Integer.parseInt(horas[0]),
 			Integer.parseInt(horas[1]));
 		horas = franja[1].split(":");

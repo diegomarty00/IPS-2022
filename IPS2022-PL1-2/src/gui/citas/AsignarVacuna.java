@@ -6,10 +6,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -41,15 +45,13 @@ public class AsignarVacuna extends JFrame {
     private JLabel lblDNI;
     private JTextField textDNIPaciente;
     private JButton btnBuscarPaciente;
-    private JLabel lblTutorPaciente;
-    private JTextField textTutorPaciente;
     private JTextField textNombreMedico;
     private JTextField textLicencia;
     private JButton btnAniadir;
     private JButton btnEliminar;
     private JList<PacienteRecord> listPacientesxMedico;
 
-    private PacienteRecord paciente = new PacienteRecord();
+    private Optional<PacienteRecord> paciente;
 
     private static LocalDate today = LocalDate.now();
     private Optional<MedicoRecord> medicoRecord = null;
@@ -66,6 +68,8 @@ public class AsignarVacuna extends JFrame {
 
     private VacunaRecord vacuna = new VacunaRecord();
     private MedicoRecord medico = new MedicoRecord();
+    private JComboBox cbDniPaciente;
+    private JComboBox cbNombrePaciente;
 
     /**
      * Launch the application.
@@ -111,11 +115,9 @@ public class AsignarVacuna extends JFrame {
 	    pnPaciente.setBounds(10, 11, 275, 106);
 	    pnPaciente.setLayout(null);
 	    pnPaciente.add(getLblNombrePaciente());
-	    pnPaciente.add(getTextNombrePaciente());
+	    pnPaciente.add(getcbDNIPaciente());
 	    pnPaciente.add(getLblDNI());
-	    pnPaciente.add(getTextDNIPaciente());
-	    pnPaciente.add(getLblTutorPaciente());
-	    pnPaciente.add(getTextTutorPaciente());
+	    pnPaciente.add(getcbNombrePaciente());
 	}
 	return pnPaciente;
     }
@@ -128,14 +130,77 @@ public class AsignarVacuna extends JFrame {
 	return lblNombrePaciente;
     }
 
-    private JTextField getTextNombrePaciente() {
-	if (textNombrePaciente == null) {
-	    textNombrePaciente = new JTextField();
-	    textNombrePaciente.setBounds(65, 21, 200, 20);
-	    textNombrePaciente.setEditable(false);
-	    textNombrePaciente.setColumns(10);
+    private JComboBox getcbNombrePaciente() {
+	if (cbNombrePaciente == null) {
+	    cbNombrePaciente = new JComboBox();
+	    cbNombrePaciente.setEditable(true);
+	    cbNombrePaciente.addActionListener(new ActionListener() {
+
+		public void actionPerformed(ActionEvent e) {
+		    cbDniPaciente.setSelectedIndex(
+			    cbNombrePaciente.getSelectedIndex());
+		    try {
+			paciente = BusinessFactory.forAdminService()
+				.buscarPacienteDni(cbDniPaciente
+					.getSelectedItem().toString());
+		    } catch (NumberFormatException | BusinessException e1) {
+			e1.printStackTrace();
+		    }
+		}
+	    });
+	    cbNombrePaciente.setBounds(65, 21, 200, 20);
+	    cbNombrePaciente.setRequestFocusEnabled(false);
+	    DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+	    List<PacienteRecord> l = new ArrayList<>();
+	    try {
+		l = BusinessFactory.forAdminService().buscarPacientes();
+	    } catch (BusinessException e) {
+		e.printStackTrace();
+	    }
+	    for (int i = 0; i < l.size(); i++) {
+		mod.addElement(
+			l.get(i).getNombre() + " " + l.get(i).getApellidos());
+	    }
+	    cbNombrePaciente.setModel(mod);
+
 	}
-	return textNombrePaciente;
+	return cbNombrePaciente;
+    }
+
+    private JComboBox getcbDNIPaciente() {
+	if (cbDniPaciente == null) {
+	    cbDniPaciente = new JComboBox();
+	    cbDniPaciente.setEditable(true);
+	    cbDniPaciente.addActionListener(new ActionListener() {
+
+		public void actionPerformed(ActionEvent e) {
+		    cbNombrePaciente
+			    .setSelectedIndex(cbDniPaciente.getSelectedIndex());
+		    try {
+			paciente = BusinessFactory.forAdminService()
+				.buscarPacienteDni(cbDniPaciente
+					.getSelectedItem().toString());
+		    } catch (NumberFormatException | BusinessException e1) {
+			e1.printStackTrace();
+		    }
+		}
+	    });
+	    cbDniPaciente.setBounds(40, 46, 225, 20);
+	    cbDniPaciente.setRequestFocusEnabled(false);
+	    DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+	    List<PacienteRecord> l = new ArrayList<>();
+	    try {
+		l = BusinessFactory.forAdminService().buscarPacientes();
+	    } catch (BusinessException e) {
+		e.printStackTrace();
+	    }
+	    for (int i = 0; i < l.size(); i++) {
+		mod.addElement(l.get(i).getDniPaciente());
+	    }
+	    cbDniPaciente.setModel(mod);
+
+	}
+	return cbDniPaciente;
     }
 
     private JLabel getLblDNI() {
@@ -146,16 +211,6 @@ public class AsignarVacuna extends JFrame {
 	return lblDNI;
     }
 
-    private JTextField getTextDNIPaciente() {
-	if (textDNIPaciente == null) {
-	    textDNIPaciente = new JTextField();
-	    textDNIPaciente.setEditable(false);
-	    textDNIPaciente.setBounds(40, 46, 225, 20);
-	    textDNIPaciente.setColumns(10);
-	}
-	return textDNIPaciente;
-    }
-
     private JButton getBtnBuscarPaciente() {
 	if (btnBuscarPaciente == null) {
 	    btnBuscarPaciente = new JButton("Buscar paciente");
@@ -163,24 +218,6 @@ public class AsignarVacuna extends JFrame {
 	    btnBuscarPaciente.setBounds(130, 128, 155, 23);
 	}
 	return btnBuscarPaciente;
-    }
-
-    private JLabel getLblTutorPaciente() {
-	if (lblTutorPaciente == null) {
-	    lblTutorPaciente = new JLabel("Tutor:");
-	    lblTutorPaciente.setBounds(10, 74, 51, 14);
-	}
-	return lblTutorPaciente;
-    }
-
-    private JTextField getTextTutorPaciente() {
-	if (textTutorPaciente == null) {
-	    textTutorPaciente = new JTextField();
-	    textTutorPaciente.setEditable(false);
-	    textTutorPaciente.setColumns(10);
-	    textTutorPaciente.setBounds(50, 71, 215, 20);
-	}
-	return textTutorPaciente;
     }
 
     private JTextField getTextNombreMedico() {
@@ -250,48 +287,40 @@ public class AsignarVacuna extends JFrame {
 	    btnAniadir.addActionListener(new ActionListener() {
 
 		public void actionPerformed(ActionEvent e) {
-		    if (!getTextNombrePaciente().getText().isEmpty()
-			    || !getTextNombrePaciente().getText().isBlank()) {
-			JOptionPane.showMessageDialog(null,
-				"Por favor, selecciona el paciente al que se le quiere asignar una vacuna",
-				"Error - Paciente no seleccionado", 0);
-		    } else if (!getTextDosis().getText().isEmpty()
+		    if (!getTextDosis().getText().isEmpty()
 			    || !getTextDosis().getText().isBlank()) {
 			vacuna.setDosis(getTextDosis().getText());
 			vacuna.setFechaAproximada(LocalDate.of(
 				(Integer) getSpinnerAnioInicio().getValue(),
-				(Integer) indicarMes(),
+				(Integer) indicarMes() + 1,
 				(Integer) getSpinnerDiaInicio().getValue()));
 			vacuna.setRefuerzo(getChckbxRefuerzo().isSelected());
 			try {
+			    Optional<PacienteRecord> pac = BusinessFactory
+				    .forAdminService()
+				    .buscarPacienteDni(cbDniPaciente
+					    .getSelectedItem().toString());
+
 			    vacuna.setIdHistorial(
 				    BusinessFactory.forCitaService()
-					    .buscarHistorial(paciente.getId())
+					    .buscarHistorial(pac.get().getId())
 					    .get().getIdHistorial());
 			} catch (BusinessException e2) {
 			    e2.printStackTrace();
 			}
-			if (getTextDNIPaciente().getText() == "No tiene") {
-			    try {
-				if (!getTextDosis().getText().isEmpty()
-					&& !getTextDosis().getText().isBlank())
+			try {
+			    if (!getTextDosis().getText().isEmpty()
+				    && !getTextDosis().getText().isBlank())
 
-				    BusinessFactory.forCitaService()
-					    .crearVacuna(vacuna);
-			    } catch (BusinessException e1) {
-				e1.printStackTrace();
-			    }
-
-			} else {
-			    try {
-				BusinessFactory.forAdminService()
-					.asignarMedicoCabeceraDni(
-						paciente.getDniPaciente(),
-						medico.idMedico);
-			    } catch (BusinessException e1) {
-				e1.printStackTrace();
-			    }
+				BusinessFactory.forCitaService()
+					.crearVacuna(vacuna);
+			} catch (BusinessException e1) {
+			    e1.printStackTrace();
 			}
+			JOptionPane.showMessageDialog(null,
+				"Se le ha añadido la vacuna al calendario",
+				"Calendario actualizados", 1);
+
 		    } else {
 			JOptionPane.showMessageDialog(null,
 				"Por favor, indique el nombre de la dosis",
@@ -306,31 +335,12 @@ public class AsignarVacuna extends JFrame {
 
     private JButton getBtnEliminar() {
 	if (btnEliminar == null) {
-	    btnEliminar = new JButton("Eliminar");
+	    btnEliminar = new JButton("Cancelar");
 	    btnEliminar.setBackground(new Color(255, 0, 0));
 	    btnEliminar.setBounds(399, 159, 89, 23);
 	    btnEliminar.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-		    if (getLblDNI().getText() == "No tiene") {
-			try {
-			    BusinessFactory.forAdminService()
-				    .eliminarMedicoCabeceraTutor(
-					    paciente.getDniTutorLegal(),
-					    paciente.getNombre(),
-					    paciente.getApellidos());
-			} catch (BusinessException e1) {
-			    e1.printStackTrace();
-			}
-
-		    } else {
-			try {
-			    BusinessFactory.forAdminService()
-				    .eliminarMedicoCabeceraDni(
-					    paciente.getDniPaciente());
-			} catch (BusinessException e1) {
-			    e1.printStackTrace();
-			}
-		    }
+		    dispose();
 		}
 	    });
 	}
