@@ -25,6 +25,7 @@ public class VentanaAdministrador extends JFrame {
     private JButton btnCrearJornadas;
     private JButton btnAsignarJornadasComunes;
     private JButton btnMedicosDeCabecera;
+    private JButton btnVerJornadas;
 
     /**
      * Create the frame.
@@ -32,7 +33,7 @@ public class VentanaAdministrador extends JFrame {
     public VentanaAdministrador() {
 	setTitle("Menu Administrador");
 	setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	setBounds(100, 100, 450, 361);
+	setBounds(100, 100, 450, 403);
 	contentPane = new JPanel();
 	contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -47,6 +48,7 @@ public class VentanaAdministrador extends JFrame {
 	contentPane.add(getBtnCrearJornadas());
 	contentPane.add(getBtnAsignarJornadasComunes());
 	contentPane.add(getBtnMedicosDeCabecera());
+	contentPane.add(getBtnVerJornadas());
     }
 
     private JButton getBtCrearCita() {
@@ -138,7 +140,7 @@ public class VentanaAdministrador extends JFrame {
     private JButton getBtnCrearJornadas() {
 	if (btnCrearJornadas == null) {
 	    btnCrearJornadas = new JButton("Crear Jornadas");
-	    btnCrearJornadas.setBounds(232, 255, 192, 45);
+	    btnCrearJornadas.setBounds(124, 308, 192, 45);
 	    btnCrearJornadas.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    CrearJornadasComunes frame;
@@ -186,5 +188,19 @@ public class VentanaAdministrador extends JFrame {
 	    });
 	}
 	return btnMedicosDeCabecera;
+    }
+
+    private JButton getBtnVerJornadas() {
+	if (btnVerJornadas == null) {
+	    btnVerJornadas = new JButton("Ver jornadas");
+	    btnVerJornadas.setBounds(232, 254, 192, 45);
+	    btnVerJornadas.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		    VerJornadasLaborales frame = new VerJornadasLaborales();
+		    frame.setVisible(true);
+		}
+	    });
+	}
+	return btnVerJornadas;
     }
 }
