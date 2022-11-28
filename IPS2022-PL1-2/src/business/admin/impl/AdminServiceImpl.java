@@ -10,6 +10,7 @@ import business.admin.operaciones.AsignarMedicoCabeceraDni;
 import business.admin.operaciones.AsignarMedicoCabeceraTutor;
 import business.admin.operaciones.BuscarJornadaComun;
 import business.admin.operaciones.BuscarJornadasComunes;
+import business.admin.operaciones.BuscarJornadasMedicos;
 import business.admin.operaciones.BuscarMedico;
 import business.admin.operaciones.BuscarMedicos;
 import business.admin.operaciones.BuscarPacienteDni;
@@ -53,13 +54,6 @@ public class AdminServiceImpl implements AdminService {
 	    JornadaRecord jornada, MedicoRecord medico)
 	    throws BusinessException {
 	c.execute(new AsignarJornadasLaboralesComunes(comun, jornada, medico));
-    }
-
-    @Override
-    public List<JornadaRecord> listarJornadasMedico(String idMedico)
-	    throws BusinessException {
-	return c.execute(new ListarJornadasMedico(idMedico));
-
     }
 
     @Override
@@ -122,6 +116,19 @@ public class AdminServiceImpl implements AdminService {
     public List<JornadaComunRecord> buscarJornadasComunes()
 	    throws BusinessException {
 	return c.execute(new BuscarJornadasComunes());
+    }
+
+    @Override
+    public List<JornadaRecord> buscarJornadasMedicos()
+	    throws BusinessException {
+	return c.execute(new BuscarJornadasMedicos());
+    }
+
+    @Override
+    public List<JornadaRecord> listarJornadasMedico(int idMedico)
+	    throws BusinessException {
+	return c.execute(new ListarJornadasMedico(idMedico));
+
     }
 
 }

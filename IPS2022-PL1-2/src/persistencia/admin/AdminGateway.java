@@ -15,7 +15,7 @@ public interface AdminGateway extends Gateway<MedicoRecord> {
 
     void crearJornadas(JornadaComunRecord jornada);
 
-    List<JornadaRecord> findByMedico(String idMedico);
+    List<JornadaRecord> findByMedico(int idMedico);
 
     void asignarMedicoCabeceraDni(String dniPaciente, int idMedico);
 
@@ -39,5 +39,7 @@ public interface AdminGateway extends Gateway<MedicoRecord> {
     Optional<JornadaComunRecord> findJornadaNombre(String nombre);
 
     List<JornadaComunRecord> findAllJornadasComunes();
+
+    List<JornadaRecord> findAllJornadasMedicos();
 
 }
