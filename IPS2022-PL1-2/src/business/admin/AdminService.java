@@ -47,4 +47,7 @@ public interface AdminService {
 
     Optional<JornadaComunRecord> buscarJornadaComun(String nombre)
 	    throws BusinessException;
+
+    List<JornadaComunRecord> buscarJornadasComunes() throws BusinessException;
+
 }
