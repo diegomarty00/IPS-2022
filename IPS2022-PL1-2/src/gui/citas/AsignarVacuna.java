@@ -45,7 +45,7 @@ public class AsignarVacuna extends JFrame {
     private JTextField textTutorPaciente;
     private JTextField textNombreMedico;
     private JTextField textLicencia;
-    private JButton btnAñadir;
+    private JButton btnAniadir;
     private JButton btnEliminar;
     private JList<PacienteRecord> listPacientesxMedico;
 
@@ -97,7 +97,7 @@ public class AsignarVacuna extends JFrame {
 	contentPane.setLayout(null);
 	contentPane.add(getPnPaciente());
 	contentPane.add(getBtnBuscarPaciente());
-	contentPane.add(getBtnAñadir());
+	contentPane.add(getBtnAniadir());
 	contentPane.add(getBtnEliminar());
 	contentPane.add(getPnVacuna());
 	contentPane.add(getPanelDiaVacuna());
@@ -242,12 +242,12 @@ public class AsignarVacuna extends JFrame {
 	return dia;
     }
 
-    private JButton getBtnAñadir() {
-	if (btnAñadir == null) {
-	    btnAñadir = new JButton("Añadir");
-	    btnAñadir.setBackground(new Color(0, 255, 0));
-	    btnAñadir.setBounds(498, 159, 89, 23);
-	    btnAñadir.addActionListener(new ActionListener() {
+    private JButton getBtnAniadir() {
+	if (btnAniadir == null) {
+	    btnAniadir = new JButton("Añadir");
+	    btnAniadir.setBackground(new Color(0, 255, 0));
+	    btnAniadir.setBounds(498, 159, 89, 23);
+	    btnAniadir.addActionListener(new ActionListener() {
 
 		public void actionPerformed(ActionEvent e) {
 		    if (!getTextNombrePaciente().getText().isEmpty()
@@ -301,7 +301,7 @@ public class AsignarVacuna extends JFrame {
 		}
 	    });
 	}
-	return btnAñadir;
+	return btnAniadir;
     }
 
     private JButton getBtnEliminar() {

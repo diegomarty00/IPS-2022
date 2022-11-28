@@ -46,7 +46,7 @@ public class AsignarMedicoCabecera extends JFrame {
     private JTextField textNombreMedico;
     private JLabel lblLicencia;
     private JTextField textLicencia;
-    private JButton btnAñadir;
+    private JButton btnAniadir;
     private JButton btnModificar;
     private JButton btnEliminar;
     private JList<PacienteRecord> listPacientesxMedico;
@@ -94,7 +94,7 @@ public class AsignarMedicoCabecera extends JFrame {
 	contentPane.add(getPnPaciente());
 	contentPane.add(getBtnBuscarPaciente());
 	contentPane.add(getPnMedico());
-	contentPane.add(getBtnAñadir());
+	contentPane.add(getBtnAniadir());
 	contentPane.add(getBtnModificar());
 	contentPane.add(getBtnEliminar());
 	contentPane.add(getBtnAtras());
@@ -314,12 +314,12 @@ public class AsignarMedicoCabecera extends JFrame {
 	return textLicencia;
     }
 
-    private JButton getBtnAñadir() {
-	if (btnAñadir == null) {
-	    btnAñadir = new JButton("Añadir");
-	    btnAñadir.setBackground(new Color(0, 255, 0));
-	    btnAñadir.setBounds(272, 109, 89, 23);
-	    btnAñadir.addActionListener(new ActionListener() {
+    private JButton getBtnAniadir() {
+	if (btnAniadir == null) {
+	    btnAniadir = new JButton("Añadir");
+	    btnAniadir.setBackground(new Color(0, 255, 0));
+	    btnAniadir.setBounds(272, 109, 89, 23);
+	    btnAniadir.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    if (getLblDNI().getText() == "No tiene") {
 			try {
@@ -346,7 +346,7 @@ public class AsignarMedicoCabecera extends JFrame {
 		}
 	    });
 	}
-	return btnAñadir;
+	return btnAniadir;
     }
 
     private JButton getBtnModificar() {
