@@ -38,7 +38,7 @@ public class BusquedaPaciente extends JFrame {
     private JTextField textNombreMedico;
     private JTextField textLicencia;
     private JList<PacienteRecord> listPacientes;
-
+    public String resultado;
     private PacienteRecord paciente;
     private MedicoRecord medico;
 
@@ -134,6 +134,18 @@ public class BusquedaPaciente extends JFrame {
 	if (btnConfirmar == null) {
 	    btnConfirmar = new JButton("Confirmar");
 	    btnConfirmar.setBackground(new Color(0, 255, 0));
+	    btnConfirmar.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		    for (PacienteRecord paciente : pacientes) {
+
+			for (int i = 0; i < getListPacientes()
+				.getSelectedValues().length; i++)
+			    resultado = getListPacientes()
+				    .getSelectedValues()[0].toString();
+
+		    }
+		}
+	    });
 	    btnConfirmar.setBounds(414, 220, 122, 23);
 	}
 	return btnConfirmar;
@@ -288,21 +300,22 @@ public class BusquedaPaciente extends JFrame {
 		    for (PacienteRecord paciente : pacientes) {
 			if (!getTextNombreTutor().getText().isEmpty()
 				&& !getTextNombreTutor().getText().isBlank()) {
-			    if (getTextNombreTutor().getText() == paciente
-				    .getTutorLegal())
+			    if (getTextNombreTutor().getText()
+				    .equals(paciente.getTutorLegal()))
 				modelo.addElement(paciente.getNombre() + " "
 					+ paciente.getApellidos() + " - Tutor: "
 					+ paciente.getTutorLegal());
 			} else if (!getTextDniTutor().getText().isEmpty()
 				&& !getTextDniTutor().getText().isBlank()) {
-			    if (getTextDniTutor().getText() == paciente
-				    .getDniTutorLegal())
+			    if (getTextDniTutor().getText()
+				    .equals(paciente.getDniTutorLegal()))
 				modelo.addElement(paciente.getNombre() + " "
 					+ paciente.getApellidos() + " - Tutor: "
 					+ paciente.getTutorLegal());
 			}
 		    }
 		    listPacientes = new JList<PacienteRecord>(modelo);
+		    listPacientes.setBounds(297, 33, 239, 168);
 		}
 	    });
 	    btnBuscarTutor.setBackground(Color.GREEN);
@@ -320,8 +333,8 @@ public class BusquedaPaciente extends JFrame {
 		    for (PacienteRecord paciente : pacientes) {
 			if (!getTextDniPaciente().getText().isEmpty()
 				&& !getTextDniPaciente().getText().isBlank()) {
-			    if (getTextDniPaciente().getText() == paciente
-				    .getDniPaciente())
+			    if (getTextDniPaciente().getText()
+				    .equals(paciente.getDniPaciente()))
 				modelo.addElement(paciente.getNombre() + " "
 					+ paciente.getApellidos() + " - "
 					+ paciente.getDniPaciente());
@@ -345,8 +358,8 @@ public class BusquedaPaciente extends JFrame {
 		    for (PacienteRecord paciente : pacientes) {
 			if (!getTextApellido().getText().isEmpty()
 				&& !getTextApellido().getText().isBlank()) {
-			    if (getTextApellido().getText() == paciente
-				    .getApellidos())
+			    if (getTextApellido().getText()
+				    .equals(paciente.getApellidos()))
 				if (paciente.getDniPaciente() == null)
 				    modelo.addElement(paciente.getNombre() + " "
 					    + paciente.getApellidos()
@@ -358,8 +371,8 @@ public class BusquedaPaciente extends JFrame {
 					    + paciente.getDniPaciente());
 			} else if (!getTextNombre().getText().isEmpty()
 				&& !getTextNombre().getText().isBlank()) {
-			    if (getTextNombre().getText() == paciente
-				    .getNombre())
+			    if (getTextNombre().getText()
+				    .equals(paciente.getNombre()))
 				if (paciente.getDniPaciente() == null)
 				    modelo.addElement(paciente.getNombre() + " "
 					    + paciente.getApellidos()

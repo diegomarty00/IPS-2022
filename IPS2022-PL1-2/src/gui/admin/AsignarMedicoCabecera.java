@@ -60,6 +60,7 @@ public class AsignarMedicoCabecera extends JFrame {
     private static LocalDate today = LocalDate.now();
     private Optional<MedicoRecord> medicoRecord = null;
     private JButton btnAtras;
+    private AsignarMedicoCabecera frame;
 
     /**
      * Launch the application.
@@ -81,6 +82,7 @@ public class AsignarMedicoCabecera extends JFrame {
      * Create the frame.
      */
     public AsignarMedicoCabecera() {
+	frame = this;
 	setTitle("Asignación de medicos de cabecera");
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 628, 366);
@@ -158,6 +160,13 @@ public class AsignarMedicoCabecera extends JFrame {
 	    btnBuscarPaciente = new JButton("Buscar paciente");
 	    btnBuscarPaciente.setBackground(new Color(0, 255, 0));
 	    btnBuscarPaciente.setBounds(107, 146, 155, 23);
+	    btnBuscarPaciente.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		    BusquedaPaciente frame = new BusquedaPaciente();
+		    frame.setVisible(true);
+		    ;
+		}
+	    });
 	}
 	return btnBuscarPaciente;
     }
