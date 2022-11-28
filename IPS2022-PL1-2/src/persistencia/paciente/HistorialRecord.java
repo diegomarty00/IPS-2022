@@ -6,6 +6,7 @@ import java.util.List;
 import persistencia.PersistenceFactory;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
+import persistencia.cita.DiagnosticoRecord;
 import persistencia.cita.PrescripcionRecord;
 
 public class HistorialRecord {
@@ -15,6 +16,7 @@ public class HistorialRecord {
 	private List<CitaRecord> citas;
 	private List<CausaRecord> causas;
 	private List<PrescripcionRecord> prescripciones;
+	private List<DiagnosticoRecord> diagnosticos;
 	private List<VacunaRecord> vacunasRealizadas;
 	private List<VacunaRecord> calendarioVacunas;
 	
@@ -52,6 +54,17 @@ public class HistorialRecord {
 		return causas;
 	}
 
+	public List<DiagnosticoRecord> getDiagnosticos(){
+		if (diagnosticos==null) {
+			List<DiagnosticoRecord> myDiag = new ArrayList<>();
+			for (CitaRecord cita : getCitas()) {
+				myDiag.addAll(PersistenceFactory.forCita().getDiagnosticos(cita.idCita));
+			}
+			diagnosticos=myDiag;
+		}
+		return diagnosticos;
+	}
+	
 	public List<PrescripcionRecord> getPrescripciones() {
 		if (prescripciones==null) {
 			List<PrescripcionRecord> myPrescripciones = new ArrayList<>();

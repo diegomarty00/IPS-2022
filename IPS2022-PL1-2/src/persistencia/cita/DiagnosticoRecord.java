@@ -8,16 +8,15 @@ import persistencia.medico.MedicoRecord;
 public class DiagnosticoRecord {
 
 	private int idDiagnostico;
+	private String idCita;
 	private String titulo;
-	private String seccion;
 	private LocalDate fechaAsignacion;
 	private LocalTime horaAsginacion;
 	private MedicoRecord medicoAsociado;
 	
-	public DiagnosticoRecord(String titulo, String seccion) {
+	public DiagnosticoRecord(String titulo) {
 		super();
 		this.titulo = titulo;
-		this.seccion = seccion;
 	}
 
 	public int getIdDiagnostico() {
@@ -55,9 +54,13 @@ public class DiagnosticoRecord {
 	public void setMedicoAsociado(MedicoRecord medicoAsociado) {
 		this.medicoAsociado = medicoAsociado;
 	}
-	
-	public String getSeccion() {
-		return seccion;
+
+	public String getIdCita() {
+		return idCita;
+	}
+
+	public void setIdCita(String idCita) {
+		this.idCita = idCita;
 	}
 
 	@Override

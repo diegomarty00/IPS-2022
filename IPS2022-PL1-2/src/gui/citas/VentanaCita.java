@@ -29,6 +29,7 @@ import business.cita.CitaService;
 import persistencia.PersistenceFactory;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
+import persistencia.cita.DiagnosticoRecord;
 import persistencia.cita.PrescripcionRecord;
 import persistencia.cita.impl.CitaGatewayImpl;
 import persistencia.enfermero.EnfermeroRecord;
@@ -497,16 +498,30 @@ public class VentanaCita extends JFrame {
 	private JButton getBtnSeleccionarDiagnosticos() {
 		if (btnSeleccionarDiagnosticos == null) {
 			btnSeleccionarDiagnosticos = new JButton("Seleccionar Diagnosticos");
+			btnSeleccionarDiagnosticos.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					openVentDiagnosticos();
+				}
+			});
 			btnSeleccionarDiagnosticos.setBounds(186, 409, 181, 20);
 		}
 		return btnSeleccionarDiagnosticos;
 	}
+	
+	private void openVentDiagnosticos() {
+		VentanaDiagnosticos ventDiag = new VentanaDiagnosticos(cita,medico,enfermero);
+		ventDiag.setVisible(true);
+		this.dispose();
+		
+	}
+	
 	private JScrollPane getScrollPaneDiagnosticos() {
 		if (scrollPaneDiagnosticos == null) {
 			scrollPaneDiagnosticos = new JScrollPane();
 			scrollPaneDiagnosticos.setBounds(23, 436, 310, 129);
-			
-			listDiagnosticos = new JList();
+			DefaultListModel<DiagnosticoRecord> model = new DefaultListModel<DiagnosticoRecord>();
+			model.addAll(PersistenceFactory.forCita().getDiagnosticos(cita.idCita));
+			listDiagnosticos = new JList<DiagnosticoRecord>(model);
 			scrollPaneDiagnosticos.setViewportView(listDiagnosticos);
 		}
 		return scrollPaneDiagnosticos;

@@ -54,4 +54,10 @@ public interface CitaGateway extends Gateway<CitaRecord> {
 	
 	void ConfirCita(String idCita);
 
+	List<DiagnosticoRecord> getDiagnosticos(String idCita);
+
+	void addDiagnostico(DiagnosticoRecord diag);
+
+	void deleteDiagnostico(DiagnosticoRecord diag);
+
 }

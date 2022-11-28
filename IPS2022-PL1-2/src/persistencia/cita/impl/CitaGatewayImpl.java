@@ -15,6 +15,7 @@ import persistencia.RecordAssembler;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaGateway;
 import persistencia.cita.CitaRecord;
+import persistencia.cita.DiagnosticoRecord;
 import persistencia.cita.PrescripcionRecord;
 import persistencia.enfermero.EnfermeroRecord;
 import persistencia.medico.MedicoRecord;
@@ -31,7 +32,10 @@ public class CitaGatewayImpl implements CitaGateway {
 	private static final String FIN_BY_HISTORIAL_ID = "SELECT * FROM CITA WHERE IDHISTORIAL = ?";
 	private static final String FIND_VACUNAS_FROM_CITA = "SELECT * FROM VACUNA WHERE IDCITA = ? ORDER BY FECHAAPROXIMADA ASC";
 	private static final String PROXIMAS_CITAS_MEDICO = "Select * from cita where idcita in (select idcita from MEDICOCITA where idmedico =?) and fecha = ?";
-	private static final String PROXIMAS_CITAS_ENFERMERO = "Select * from cita where idcita in (select idcita from ENFERMEROCITA where idenfermero =?) and fecha = ?";;
+	private static final String PROXIMAS_CITAS_ENFERMERO = "Select * from cita where idcita in (select idcita from ENFERMEROCITA where idenfermero =?) and fecha = ?";
+	private static final String FIND_DIAG_FROM_CITA = "SELECT * FROM DIAGNOSTICO WHERE IDCITA = ?";
+	private static final String ADD_DIAGNOSTICO = "INSERT INTO DIAGNOSTICO VALUES (?,?,?,?,?,?)";
+	private static final String DELETE_DIAGNOSTICO = "DELETE FROM DIAGNOSTICO WHERE IDDIAGNOSTICO = ?";
 
     private static String ASIGNAR_ENTRADA = "update CITA set HORA_ENTRADA_REAL = ? where idcita = ?";
     private static String ASIGNAR_NUEVO_HORARIO = "update CITA set HORA_ENTRADA_ESTIMADA = ? , HORA_SALIDA_ESTIMADA = ?  where idcita = ?";
@@ -628,5 +632,71 @@ public class CitaGatewayImpl implements CitaGateway {
 		} finally {
 		    Jdbc.close(pst);
     }
+	}
+
+	@Override
+	public List<DiagnosticoRecord> getDiagnosticos(String idCita) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+    try {
+		    c = Jdbc.createThreadConnection();
+
+		    pst = c.prepareStatement(FIND_DIAG_FROM_CITA);
+		    pst.setString(1, idCita);
+
+		    rs = pst.executeQuery();
+
+		    return RecordAssembler.toDiagnosticoList(rs);
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
+	public void addDiagnostico(DiagnosticoRecord diag) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+		    c = Jdbc.getCurrentConnection();
+
+		    pst = c.prepareStatement(ADD_DIAGNOSTICO);
+			pst.setInt(1, getLastId("DIAGNOSTICO", "IDDIAGNOSTICO")+1);
+		    pst.setString(2, diag.getIdCita());
+		    pst.setInt(3, diag.getMedicoAsociado().idMedico);
+		    pst.setString(4, diag.getTitulo());
+		    pst.setDate(5, Date.valueOf(diag.getFechaAsignacion()));
+		    pst.setTime(6, Time.valueOf(diag.getHoraAsginacion()));
+
+		    pst.execute();
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(rs, pst);
+		}
+	}
+
+	@Override
+	public void deleteDiagnostico(DiagnosticoRecord diag) {
+		Connection c = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+
+		try {
+		    c = Jdbc.getCurrentConnection();
+
+		    pst = c.prepareStatement(DELETE_DIAGNOSTICO);
+		    pst.setInt(1, diag.getIdDiagnostico());
+		    pst.execute();
+		} catch (SQLException e) {
+		    throw new PersistenceException(e);
+		} finally {
+		    Jdbc.close(rs, pst);
+		}
 	}
 }
