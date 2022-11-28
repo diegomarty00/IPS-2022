@@ -87,15 +87,16 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void buscarPacienteDni(String dni) throws BusinessException {
-	c.execute(new BuscarPacienteDni(dni));
+    public Optional<PacienteRecord> buscarPacienteDni(String dni)
+	    throws BusinessException {
+	return c.execute(new BuscarPacienteDni(dni));
 
     }
 
     @Override
-    public void buscarPacienteTutor(String dniTutor, String name,
-	    String surname) throws BusinessException {
-	c.execute(new BuscarPacienteTutor(dniTutor, name, surname));
+    public Optional<PacienteRecord> buscarPacienteTutor(String dniTutor,
+	    String name, String surname) throws BusinessException {
+	return c.execute(new BuscarPacienteTutor(dniTutor, name, surname));
 
     }
 
