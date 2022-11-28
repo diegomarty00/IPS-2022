@@ -91,7 +91,7 @@ public class AsignarVacuna extends JFrame {
      * Create the frame.
      */
     public AsignarVacuna() {
-	setTitle("Asignación de medicos de cabecera");
+	setTitle("Asignar vacuna");
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 613, 232);
 	contentPane = new JPanel();
@@ -312,8 +312,9 @@ public class AsignarVacuna extends JFrame {
 			    if (!getTextDosis().getText().isEmpty()
 				    && !getTextDosis().getText().isBlank())
 
-				BusinessFactory.forCitaService()
-					.crearVacuna(vacuna);
+				vacuna.setDosis(getTextDosis().getText());
+			    BusinessFactory.forCitaService()
+				    .crearVacuna(vacuna);
 			} catch (BusinessException e1) {
 			    e1.printStackTrace();
 			}

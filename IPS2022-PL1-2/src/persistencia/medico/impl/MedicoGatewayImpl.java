@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import persistencia.PersistenceException;
+import persistencia.PersistenceFactory;
 import persistencia.RecordAssembler;
 import persistencia.medico.MedicoGateway;
 import persistencia.medico.MedicoRecord;
@@ -105,14 +106,16 @@ public class MedicoGatewayImpl implements MedicoGateway {
 	    pst = c.prepareStatement(CREAR_VACUNA);
 
 	    rs.next();
-	    pst.setInt(1, rs.getInt(1));
+	    pst.setInt(1,
+		    PersistenceFactory.forCita().getLastId("VACUNA", "idvacuna")
+			    + 1);
 	    pst.setInt(2, vacuna.getIdHistorial());
 	    pst.setString(3, null);
-	    pst.setDate(4, Date.valueOf(vacuna.getFechaReal()));
+	    pst.setDate(4, null);
 	    pst.setDate(5, Date.valueOf(vacuna.getFechaAproximada()));
 	    pst.setTime(6, null);
-	    pst.setString(6, vacuna.getDosis());
-	    pst.setBoolean(7, vacuna.isRefuerzo());
+	    pst.setString(7, vacuna.getDosis());
+	    pst.setBoolean(8, vacuna.isRefuerzo());
 	    pst.executeUpdate();
 	} catch (SQLException e) {
 	    throw new PersistenceException(e);
