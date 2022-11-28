@@ -220,6 +220,7 @@ public class AsignarMedicoCabecera extends JFrame {
     private JComboBox getCbNombreMedico() {
 	if (cbNombreMedico == null) {
 	    cbNombreMedico = new JComboBox();
+	    cbNombreMedico.setEditable(true);
 	    cbNombreMedico.addActionListener(new ActionListener() {
 
 		public void actionPerformed(ActionEvent e) {
@@ -255,6 +256,7 @@ public class AsignarMedicoCabecera extends JFrame {
     private JComboBox getCbLicenciaMedico() {
 	if (cbLicenciaMedico == null) {
 	    cbLicenciaMedico = new JComboBox();
+	    cbLicenciaMedico.setEditable(true);
 	    cbLicenciaMedico.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    cbNombreMedico.setSelectedIndex(

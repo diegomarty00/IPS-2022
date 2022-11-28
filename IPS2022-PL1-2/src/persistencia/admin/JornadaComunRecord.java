@@ -148,7 +148,7 @@ public class JornadaComunRecord {
     }
 
     private void tranformacion(String cadena, List<String> dia) {
-	String[] horas = cadena.split("-");
+	String[] horas = cadena.split(",");
 	for (String hora : horas) {
 	    dia.add(hora);
 	}
