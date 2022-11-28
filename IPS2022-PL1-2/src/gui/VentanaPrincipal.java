@@ -1,8 +1,9 @@
 package gui;
 
-import java.sql.Connection;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,14 +13,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import gui.admin.VentanaAdministrador;
-import gui.admin.VentanaCitasA;
-import gui.citas.VentanaCalendarioCitas;
-import persistencia.PersistenceFactory;
-import util.jdbc.Jdbc;
-import util.mail.EnviarMail;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class VentanaPrincipal extends JFrame {
 
@@ -37,15 +30,15 @@ public class VentanaPrincipal extends JFrame {
     public static void main(String[] args) {
 	EventQueue.invokeLater(new Runnable() {
 	    public void run() {
-	    
-			try {	
-	
-			    VentanaPrincipal frame = new VentanaPrincipal();
-			    frame.setVisible(true);
-			  
-			} catch (Exception e) {
-			    e.printStackTrace();
-			}
+
+		try {
+
+		    VentanaPrincipal frame = new VentanaPrincipal();
+		    frame.setVisible(true);
+
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
 	    }
 	});
     }
@@ -102,11 +95,11 @@ public class VentanaPrincipal extends JFrame {
 	if (btnAdmin == null) {
 	    btnAdmin = new JButton("Administrador");
 	    btnAdmin.addActionListener(new ActionListener() {
-	    	public void actionPerformed(ActionEvent e) {
-	    		VentanaAdministrador frame = new VentanaAdministrador();
-				frame.setVisible(true);
-				dispose();
-	    	}
+		public void actionPerformed(ActionEvent e) {
+		    VentanaAdministrador frame = new VentanaAdministrador();
+		    frame.setVisible(true);
+		    dispose();
+		}
 	    });
 	    btnAdmin.setBounds(90, 130, 125, 50);
 	}
@@ -117,28 +110,29 @@ public class VentanaPrincipal extends JFrame {
 	if (btnMedico == null) {
 	    btnMedico = new JButton("Medico");
 	    btnMedico.addActionListener(new ActionListener() {
-	    	public void actionPerformed(ActionEvent e) {
-	    		VentanaCalendarioCitas frame = new VentanaCalendarioCitas(PersistenceFactory.forMedico().findAll().get(0), null);
-				frame.setVisible(true);
-				dispose();
-	    	}
+		public void actionPerformed(ActionEvent e) {
+		    VentanaMedico frame = new VentanaMedico();
+		    frame.setVisible(true);
+		    dispose();
+		}
 	    });
 	    btnMedico.setBounds(269, 130, 125, 50);
 	}
 	return btnMedico;
     }
-	private JButton getBtnEnfermero() {
-		if (btnEnfermero == null) {
-			btnEnfermero = new JButton("Enfermero");
-			btnEnfermero.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					VentanaCalendarioCitas frame = new VentanaCalendarioCitas(null, PersistenceFactory.forEnfermero().findAll().get(0));
-					frame.setVisible(true);
-					dispose();
-				}
-			});
-			btnEnfermero.setBounds(175, 191, 125, 50);
+
+    private JButton getBtnEnfermero() {
+	if (btnEnfermero == null) {
+	    btnEnfermero = new JButton("Enfermero");
+	    btnEnfermero.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		    VentanaEnfermero frame = new VentanaEnfermero();
+		    frame.setVisible(true);
+		    dispose();
 		}
-		return btnEnfermero;
+	    });
+	    btnEnfermero.setBounds(175, 191, 125, 50);
 	}
+	return btnEnfermero;
+    }
 }
