@@ -158,7 +158,7 @@ public class RecordAssembler {
 	    throws SQLException {
 	HistorialRecord historial = new HistorialRecord();
 	historial.setIdHistorial(rs.getInt("IDHISTORIAL"));
-	historial.setDniPaciente(rs.getString("DNIPACIENTE"));
+	historial.setIDPaciente(rs.getInt("IDPACIENTE"));
 	return historial;
     }
 
@@ -285,5 +285,22 @@ public class RecordAssembler {
 	jornada.transformar(rs.getString("sabado"), "sabado");
 	jornada.transformar(rs.getString("domingo"), "domingo ");
 	return jornada;
+    }
+
+    public static Optional<HistorialRecord> rsToHistorialO(ResultSet rs)
+	    throws SQLException {
+	if (rs.next()) {
+	    return Optional.of(rsToHistorial(rs));
+	} else
+	    return Optional.ofNullable(null);
+    }
+
+    public static HistorialRecord rsToHistorial(ResultSet r)
+	    throws SQLException {
+	HistorialRecord historial = new HistorialRecord();
+	historial.setIdHistorial(r.getInt("IDHISTORIAL"));
+	historial.setIDPaciente(r.getInt("IDPACIENTE"));
+
+	return historial;
     }
 }

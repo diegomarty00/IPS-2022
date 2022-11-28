@@ -36,10 +36,11 @@ public interface AdminService {
     void eliminarMedicoCabeceraTutor(String dniTutor, String name,
 	    String surname) throws BusinessException;
 
-    void buscarPacienteDni(String dni) throws BusinessException;
-
-    void buscarPacienteTutor(String dniTutor, String name, String surname)
+    Optional<PacienteRecord> buscarPacienteDni(String dni)
 	    throws BusinessException;
+
+    Optional<PacienteRecord> buscarPacienteTutor(String dniTutor, String name,
+	    String surname) throws BusinessException;
 
     List<PacienteRecord> buscarPacientes() throws BusinessException;
 
