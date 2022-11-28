@@ -145,6 +145,7 @@ public class RecordAssembler {
     private static PacienteRecord resultSetToPacienteRecord(ResultSet rs)
 	    throws SQLException {
 	PacienteRecord paciente = new PacienteRecord();
+	paciente.setId(rs.getInt("id"));
 	paciente.setDniPaciente(rs.getString("DNI"));
 	paciente.setNombre(rs.getString("NOMBRE"));
 	paciente.setApellidos(rs.getString("APELLIDOS"));
