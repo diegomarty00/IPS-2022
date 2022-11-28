@@ -22,9 +22,6 @@ public interface AdminService {
 	    JornadaRecord jornada, MedicoRecord medico)
 	    throws BusinessException;
 
-    List<JornadaRecord> listarJornadasMedico(String idMedico)
-	    throws BusinessException;
-
     void asignarMedicoCabeceraTutor(String dniTutor, String name,
 	    String surname, int idMedico) throws BusinessException;
 
@@ -50,5 +47,10 @@ public interface AdminService {
 	    throws BusinessException;
 
     List<JornadaComunRecord> buscarJornadasComunes() throws BusinessException;
+
+    List<JornadaRecord> buscarJornadasMedicos() throws BusinessException;
+
+    List<JornadaRecord> listarJornadasMedico(int idMedico)
+	    throws BusinessException;
 
 }

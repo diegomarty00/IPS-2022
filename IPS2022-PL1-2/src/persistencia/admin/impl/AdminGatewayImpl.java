@@ -21,6 +21,7 @@ import util.jdbc.Jdbc;
 public class AdminGatewayImpl implements AdminGateway {
 
     private static final String ALL_MEDICOS = "SELECT * from MEDICO";
+    private static final String ALL_JORNADAS_MEDICOS = "SELECT * from JORNADA";
     private static final String ALL_JORNADAS_COMUNES = "SELECT * from JORNADACOMUN";
     private static final String BUSCAR_MEDICO_LICENCIA = "SELECT * from MEDICO where idmedico = ?";
     private static final String BUSCAR_JORNADA_COMUN_NOMBRE = "SELECT * from JORNADACOMUN where nombre = ?";
@@ -151,6 +152,34 @@ public class AdminGatewayImpl implements AdminGateway {
     }
 
     @Override
+    public List<JornadaRecord> findAllJornadasMedicos() {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	ArrayList<JornadaRecord> jornadas = new ArrayList<>();
+	try {
+	    c = Jdbc.getCurrentConnection();
+
+	    pst = c.prepareStatement(ALL_JORNADAS_MEDICOS);
+
+	    rs = pst.executeQuery();
+	    while (rs.next()) {
+		JornadaRecord jornada = new JornadaRecord();
+		jornada.idMedico = rs.getInt("idmedico");
+		jornada.dia = rs.getString("dia");
+		jornada.inicio = (rs.getTimestamp("inicio"));
+		jornada.fin = (rs.getTimestamp("fin"));
+		jornadas.add(jornada);
+	    }
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+	return jornadas;
+    }
+
+    @Override
     public void aniadirJornadas(JornadaRecord jornada) {
 
 	Connection c = null;
@@ -223,7 +252,7 @@ public class AdminGatewayImpl implements AdminGateway {
     }
 
     @Override
-    public List<JornadaRecord> findByMedico(String idMedico) {
+    public List<JornadaRecord> findByMedico(int idMedico) {
 	Connection c = null;
 	PreparedStatement pst = null;
 	ResultSet rs = null;
@@ -232,7 +261,7 @@ public class AdminGatewayImpl implements AdminGateway {
 	    c = Jdbc.getCurrentConnection();
 
 	    pst = c.prepareStatement(FINDBYMEDICOS);
-	    pst.setString(1, idMedico);
+	    pst.setInt(1, idMedico);
 	    rs = pst.executeQuery();
 
 	    jornadas = JornadaAssembler.toJornadaList(rs);
