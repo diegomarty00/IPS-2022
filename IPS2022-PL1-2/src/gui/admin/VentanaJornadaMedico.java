@@ -144,7 +144,7 @@ public class VentanaJornadaMedico extends JFrame {
 			+ " / "
 			+ (lista.get(lista.size() - 1).fin.getYear() + 1900));
 	    } catch (Exception e) {
-		textInicioJornada.setText("Sin datos");
+		textFinJornada.setText("Sin datos");
 	    }
 	    textFinJornada.setColumns(10);
 	    textFinJornada.setBounds(21, 31, 168, 26);
@@ -221,7 +221,7 @@ public class VentanaJornadaMedico extends JFrame {
 				+ jornada.fin.getHours() + ":"
 				+ jornada.fin.getMinutes() + "  ";
 	    } catch (Exception e) {
-		textInicioJornada.setText("Sin datos");
+		textLunes.setText("Sin datos");
 	    }
 	    textLunes.setText(cadena);
 	    textLunes.setBounds(153, 118, 227, 20);
@@ -237,13 +237,13 @@ public class VentanaJornadaMedico extends JFrame {
 	    textMartes.setEditable(false);
 	    try {
 		for (JornadaRecord jornada : lista)
-		    if (jornada.dia == "Martes")
+		    if (jornada.dia.equals("Martes"))
 			cadena += jornada.inicio.getHours() + ":"
 				+ jornada.inicio.getMinutes() + "-"
 				+ jornada.fin.getHours() + ":"
 				+ jornada.fin.getMinutes() + "  ";
 	    } catch (Exception e) {
-		textInicioJornada.setText("Sin datos");
+		textMartes.setText("Sin datos");
 	    }
 	    textMartes.setText(cadena);
 	    textMartes.setColumns(10);
@@ -259,13 +259,13 @@ public class VentanaJornadaMedico extends JFrame {
 	    textMiercoles.setEditable(false);
 	    try {
 		for (JornadaRecord jornada : lista)
-		    if (jornada.dia == "Miercoles")
+		    if (jornada.dia.equals("Miercoles"))
 			cadena += jornada.inicio.getHours() + ":"
 				+ jornada.inicio.getMinutes() + "-"
 				+ jornada.fin.getHours() + ":"
 				+ jornada.fin.getMinutes() + "  ";
 	    } catch (Exception e) {
-		textInicioJornada.setText("Sin datos");
+		textMiercoles.setText("Sin datos");
 	    }
 	    textMiercoles.setText(cadena);
 	    textMiercoles.setColumns(10);
@@ -281,13 +281,13 @@ public class VentanaJornadaMedico extends JFrame {
 	    textJueves.setEditable(false);
 	    try {
 		for (JornadaRecord jornada : lista)
-		    if (jornada.dia == "Jueves")
+		    if (jornada.dia.equals("Jueves"))
 			cadena += jornada.inicio.getHours() + ":"
 				+ jornada.inicio.getMinutes() + "-"
 				+ jornada.fin.getHours() + ":"
 				+ jornada.fin.getMinutes() + "  ";
 	    } catch (Exception e) {
-		textInicioJornada.setText("Sin datos");
+		textJueves.setText("Sin datos");
 	    }
 	    textJueves.setText(cadena);
 	    textJueves.setColumns(10);
@@ -303,13 +303,13 @@ public class VentanaJornadaMedico extends JFrame {
 	    textViernes.setEditable(false);
 	    try {
 		for (JornadaRecord jornada : lista)
-		    if (jornada.dia == "Viernes")
+		    if (jornada.dia.equals("Viernes"))
 			cadena += jornada.inicio.getHours() + ":"
 				+ jornada.inicio.getMinutes() + "-"
 				+ jornada.fin.getHours() + ":"
 				+ jornada.fin.getMinutes() + "  ";
 	    } catch (Exception e) {
-		textInicioJornada.setText("Sin datos");
+		textViernes.setText("Sin datos");
 	    }
 	    textViernes.setText(cadena);
 	    textViernes.setColumns(10);
@@ -325,13 +325,13 @@ public class VentanaJornadaMedico extends JFrame {
 	    textSabado.setEditable(false);
 	    try {
 		for (JornadaRecord jornada : lista)
-		    if (jornada.dia == "Sabado")
+		    if (jornada.dia.equals("Sabado"))
 			cadena += jornada.inicio.getHours() + ":"
 				+ jornada.inicio.getMinutes() + "-"
 				+ jornada.fin.getHours() + ":"
 				+ jornada.fin.getMinutes() + "  ";
 	    } catch (Exception e) {
-		textInicioJornada.setText("Sin datos");
+		textSabado.setText("Sin datos");
 	    }
 	    textSabado.setText(cadena);
 	    textSabado.setColumns(10);
@@ -347,13 +347,13 @@ public class VentanaJornadaMedico extends JFrame {
 	    textDomingo.setEditable(false);
 	    try {
 		for (JornadaRecord jornada : lista)
-		    if (jornada.dia == "Domingo")
+		    if (jornada.dia.equals("Domingo"))
 			cadena += jornada.inicio.getHours() + ":"
 				+ jornada.inicio.getMinutes() + "-"
 				+ jornada.fin.getHours() + ":"
 				+ jornada.fin.getMinutes() + "  ";
 	    } catch (Exception e) {
-		textInicioJornada.setText("Sin datos");
+		textDomingo.setText("Sin datos");
 	    }
 	    textDomingo.setText(cadena);
 	    textDomingo.setColumns(10);
