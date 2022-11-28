@@ -107,7 +107,7 @@ public class AdminGatewayImpl implements AdminGateway {
 		paciente.setCorreo(rs.getString("CORREO"));
 		paciente.setFechaNac(rs.getDate("NACIMIENTO"));
 		paciente.setDniTutorLegal(rs.getString("DNITUTOR"));
-		paciente.setTutorLegal(rs.getString("NOMBRETURTOR"));
+		paciente.setTutorLegal(rs.getString("NOMBRETUTOR"));
 		paciente.setIdMedicoCabecera(rs.getInt("IDMEDICOCABECERA"));
 		pacientes.add(paciente);
 	    }

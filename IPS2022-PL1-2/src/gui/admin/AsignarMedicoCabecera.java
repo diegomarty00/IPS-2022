@@ -17,6 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -39,8 +40,6 @@ public class AsignarMedicoCabecera extends JFrame {
     private JLabel lblDNI;
     private JTextField textDNIPaciente;
     private JButton btnBuscarPaciente;
-    private JLabel lblTutorPaciente;
-    private JTextField textTutorPaciente;
     private JPanel pnMedico;
     private JLabel lblNombreMedico;
     private JTextField textNombreMedico;
@@ -52,7 +51,7 @@ public class AsignarMedicoCabecera extends JFrame {
     private JList<PacienteRecord> listPacientesxMedico;
     private JLabel lblNewLabel;
 
-    private PacienteRecord paciente;
+    private Optional<PacienteRecord> paciente;
     private MedicoRecord medico;
     private JComboBox cbNombreMedico;
     private JComboBox cbLicenciaMedico;
@@ -61,6 +60,8 @@ public class AsignarMedicoCabecera extends JFrame {
     private Optional<MedicoRecord> medicoRecord = null;
     private JButton btnAtras;
     private AsignarMedicoCabecera frame;
+    private JComboBox cbNombrePaciente;
+    private JComboBox cbDniPaciente;
 
     /**
      * Launch the application.
@@ -83,7 +84,7 @@ public class AsignarMedicoCabecera extends JFrame {
      */
     public AsignarMedicoCabecera() {
 	frame = this;
-	setTitle("Asignación de medicos de cabecera");
+	setTitle("Asignacion de medicos de cabecera");
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	setBounds(100, 100, 628, 366);
 	contentPane = new JPanel();
@@ -110,11 +111,9 @@ public class AsignarMedicoCabecera extends JFrame {
 	    pnPaciente.setBounds(10, 29, 252, 106);
 	    pnPaciente.setLayout(null);
 	    pnPaciente.add(getLblNombrePaciente());
-	    pnPaciente.add(getTextNombrePaciente());
+	    pnPaciente.add(getcbNombrePaciente());
 	    pnPaciente.add(getLblDNI());
-	    pnPaciente.add(getTextDNIPaciente());
-	    pnPaciente.add(getLblTutorPaciente());
-	    pnPaciente.add(getTextTutorPaciente());
+	    pnPaciente.add(getcbDNIPaciente());
 	}
 	return pnPaciente;
     }
@@ -122,37 +121,90 @@ public class AsignarMedicoCabecera extends JFrame {
     private JLabel getLblNombrePaciente() {
 	if (lblNombrePaciente == null) {
 	    lblNombrePaciente = new JLabel("Nombre:");
-	    lblNombrePaciente.setBounds(10, 24, 70, 14);
+	    lblNombrePaciente.setBounds(10, 37, 70, 14);
 	}
 	return lblNombrePaciente;
     }
 
-    private JTextField getTextNombrePaciente() {
-	if (textNombrePaciente == null) {
-	    textNombrePaciente = new JTextField();
-	    textNombrePaciente.setBounds(65, 21, 173, 20);
-	    textNombrePaciente.setEditable(false);
-	    textNombrePaciente.setColumns(10);
+    private JComboBox getcbNombrePaciente() {
+	if (cbNombrePaciente == null) {
+	    cbNombrePaciente = new JComboBox();
+	    cbNombrePaciente.setEditable(true);
+	    cbNombrePaciente.addActionListener(new ActionListener() {
+
+		public void actionPerformed(ActionEvent e) {
+		    cbDniPaciente.setSelectedIndex(
+			    cbNombrePaciente.getSelectedIndex());
+		    try {
+			paciente = BusinessFactory.forAdminService()
+				.buscarPacienteDni(cbDniPaciente
+					.getSelectedItem().toString());
+		    } catch (NumberFormatException | BusinessException e1) {
+			e1.printStackTrace();
+		    }
+		}
+	    });
+	    cbNombrePaciente.setBounds(65, 34, 173, 20);
+	    cbNombrePaciente.setRequestFocusEnabled(false);
+	    DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+	    List<PacienteRecord> l = new ArrayList<>();
+	    try {
+		l = BusinessFactory.forAdminService().buscarPacientes();
+	    } catch (BusinessException e) {
+		e.printStackTrace();
+	    }
+	    for (int i = 0; i < l.size(); i++) {
+		mod.addElement(
+			l.get(i).getNombre() + " " + l.get(i).getApellidos());
+	    }
+	    cbNombrePaciente.setModel(mod);
+
 	}
-	return textNombrePaciente;
+	return cbNombrePaciente;
     }
 
     private JLabel getLblDNI() {
 	if (lblDNI == null) {
 	    lblDNI = new JLabel("DNI:");
-	    lblDNI.setBounds(10, 49, 51, 14);
+	    lblDNI.setBounds(10, 62, 51, 14);
 	}
 	return lblDNI;
     }
 
-    private JTextField getTextDNIPaciente() {
-	if (textDNIPaciente == null) {
-	    textDNIPaciente = new JTextField();
-	    textDNIPaciente.setEditable(false);
-	    textDNIPaciente.setBounds(40, 46, 198, 20);
-	    textDNIPaciente.setColumns(10);
+    private JComboBox getcbDNIPaciente() {
+	if (cbDniPaciente == null) {
+	    cbDniPaciente = new JComboBox();
+	    cbDniPaciente.setEditable(true);
+	    cbDniPaciente.addActionListener(new ActionListener() {
+
+		public void actionPerformed(ActionEvent e) {
+		    cbNombrePaciente
+			    .setSelectedIndex(cbDniPaciente.getSelectedIndex());
+		    try {
+			paciente = BusinessFactory.forAdminService()
+				.buscarPacienteDni(cbDniPaciente
+					.getSelectedItem().toString());
+		    } catch (NumberFormatException | BusinessException e1) {
+			e1.printStackTrace();
+		    }
+		}
+	    });
+	    cbDniPaciente.setBounds(40, 59, 198, 20);
+	    cbDniPaciente.setRequestFocusEnabled(false);
+	    DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+	    List<PacienteRecord> l = new ArrayList<>();
+	    try {
+		l = BusinessFactory.forAdminService().buscarPacientes();
+	    } catch (BusinessException e) {
+		e.printStackTrace();
+	    }
+	    for (int i = 0; i < l.size(); i++) {
+		mod.addElement(l.get(i).getDniPaciente());
+	    }
+	    cbDniPaciente.setModel(mod);
+
 	}
-	return textDNIPaciente;
+	return cbDniPaciente;
     }
 
     private JButton getBtnBuscarPaciente() {
@@ -169,24 +221,6 @@ public class AsignarMedicoCabecera extends JFrame {
 	    });
 	}
 	return btnBuscarPaciente;
-    }
-
-    private JLabel getLblTutorPaciente() {
-	if (lblTutorPaciente == null) {
-	    lblTutorPaciente = new JLabel("Tutor:");
-	    lblTutorPaciente.setBounds(10, 74, 51, 14);
-	}
-	return lblTutorPaciente;
-    }
-
-    private JTextField getTextTutorPaciente() {
-	if (textTutorPaciente == null) {
-	    textTutorPaciente = new JTextField();
-	    textTutorPaciente.setEditable(false);
-	    textTutorPaciente.setColumns(10);
-	    textTutorPaciente.setBounds(50, 71, 188, 20);
-	}
-	return textTutorPaciente;
     }
 
     private JPanel getPnMedico() {
@@ -316,7 +350,7 @@ public class AsignarMedicoCabecera extends JFrame {
 
     private JButton getBtnAniadir() {
 	if (btnAniadir == null) {
-	    btnAniadir = new JButton("Añadir");
+	    btnAniadir = new JButton("A\u00F1adir");
 	    btnAniadir.setBackground(new Color(0, 255, 0));
 	    btnAniadir.setBounds(272, 109, 89, 23);
 	    btnAniadir.addActionListener(new ActionListener() {
@@ -325,23 +359,35 @@ public class AsignarMedicoCabecera extends JFrame {
 			try {
 			    BusinessFactory.forAdminService()
 				    .asignarMedicoCabeceraTutor(
-					    paciente.getDniTutorLegal(),
-					    paciente.getNombre(),
-					    paciente.getApellidos(),
-					    medico.idMedico);
+					    paciente.get().getDniTutorLegal(),
+					    paciente.get().getNombre(),
+					    paciente.get().getApellidos(),
+					    Integer.parseInt(cbLicenciaMedico
+						    .getSelectedItem()
+						    .toString()));
 			} catch (BusinessException e1) {
 			    e1.printStackTrace();
 			}
 
 		    } else {
 			try {
+			    String cadena = cbDniPaciente.getSelectedItem()
+				    .toString();
+			    int culo = Integer.parseInt(cbLicenciaMedico
+				    .getSelectedItem().toString());
 			    BusinessFactory.forAdminService()
 				    .asignarMedicoCabeceraDni(
-					    paciente.getDniPaciente(),
-					    medico.idMedico);
+					    cbDniPaciente.getSelectedItem()
+						    .toString(),
+					    Integer.parseInt(cbLicenciaMedico
+						    .getSelectedItem()
+						    .toString()));
 			} catch (BusinessException e1) {
 			    e1.printStackTrace();
 			}
+			JOptionPane.showMessageDialog(null,
+				"Se han a�adido el medico de cabecera correctamente.",
+				"Asignacion realizada", 1);
 		    }
 		}
 	    });
@@ -360,15 +406,15 @@ public class AsignarMedicoCabecera extends JFrame {
 			try {
 			    BusinessFactory.forAdminService()
 				    .eliminarMedicoCabeceraTutor(
-					    paciente.getDniTutorLegal(),
-					    paciente.getNombre(),
-					    paciente.getApellidos());
+					    paciente.get().getDniTutorLegal(),
+					    paciente.get().getNombre(),
+					    paciente.get().getApellidos());
 
 			    BusinessFactory.forAdminService()
 				    .asignarMedicoCabeceraTutor(
-					    paciente.getDniTutorLegal(),
-					    paciente.getNombre(),
-					    paciente.getApellidos(),
+					    paciente.get().getDniTutorLegal(),
+					    paciente.get().getNombre(),
+					    paciente.get().getApellidos(),
 					    medico.idMedico);
 			} catch (BusinessException e1) {
 			    e1.printStackTrace();
@@ -378,11 +424,11 @@ public class AsignarMedicoCabecera extends JFrame {
 			try {
 			    BusinessFactory.forAdminService()
 				    .eliminarMedicoCabeceraDni(
-					    paciente.getDniPaciente());
+					    paciente.get().getDniPaciente());
 
 			    BusinessFactory.forAdminService()
 				    .asignarMedicoCabeceraDni(
-					    paciente.getDniPaciente(),
+					    paciente.get().getDniPaciente(),
 					    medico.idMedico);
 			} catch (BusinessException e1) {
 			    e1.printStackTrace();
@@ -405,9 +451,9 @@ public class AsignarMedicoCabecera extends JFrame {
 			try {
 			    BusinessFactory.forAdminService()
 				    .eliminarMedicoCabeceraTutor(
-					    paciente.getDniTutorLegal(),
-					    paciente.getNombre(),
-					    paciente.getApellidos());
+					    paciente.get().getDniTutorLegal(),
+					    paciente.get().getNombre(),
+					    paciente.get().getApellidos());
 			} catch (BusinessException e1) {
 			    e1.printStackTrace();
 			}
@@ -416,7 +462,7 @@ public class AsignarMedicoCabecera extends JFrame {
 			try {
 			    BusinessFactory.forAdminService()
 				    .eliminarMedicoCabeceraDni(
-					    paciente.getDniPaciente());
+					    paciente.get().getDniPaciente());
 			} catch (BusinessException e1) {
 			    e1.printStackTrace();
 			}
