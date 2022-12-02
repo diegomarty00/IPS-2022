@@ -61,7 +61,7 @@ public class VentanaVacunacion extends JFrame {
 	 */
 	public VentanaVacunacion(PacienteRecord paciente, CitaRecord cita, VacunaRecord vacuna, MedicoRecord medico, EnfermeroRecord enfermero) {
 		setResizable(false);
-		this.historial=PersistenceFactory.forPaciente().getHistorial(paciente.getDniPaciente());
+		this.historial=PersistenceFactory.forPaciente().getHistorial(paciente.getId());
 		this.cita=cita;
 		this.vacuna=vacuna;
 		this.paciente=paciente;
@@ -249,7 +249,7 @@ public class VentanaVacunacion extends JFrame {
 	}
 	
 	private boolean confirm() {
-		int result = JOptionPane.showConfirmDialog(this, "¿Esta seguro que desea confirmar la vacuna? No podrá modificarla despues");
+		int result = JOptionPane.showConfirmDialog(this, "ï¿½Esta seguro que desea confirmar la vacuna? No podrï¿½ modificarla despues");
 		if (result == JOptionPane.YES_OPTION)
 			return true;
 		else if (result == JOptionPane.NO_OPTION)

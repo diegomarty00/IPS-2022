@@ -24,10 +24,6 @@ public class HistorialRecord {
 		return idHistorial;
 	}
 
-    public int getIdHistorial() {
-	return idHistorial;
-    }
-
     public void setIdHistorial(int idHistorial) {
 	this.idHistorial = idHistorial;
     }
@@ -80,8 +76,6 @@ public class HistorialRecord {
 		}
 		return prescripciones;
 	}
-	return prescripciones;
-    }
 
     public List<VacunaRecord> getVacunasRealizadas() {
 	if (vacunasRealizadas == null) {

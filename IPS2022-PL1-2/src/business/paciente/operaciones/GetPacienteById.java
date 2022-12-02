@@ -7,17 +7,17 @@ import persistencia.paciente.PacienteRecord;
 import util.BusinessException;
 import util.command.Command;
 
-public class GetPacienteByDni implements Command<Optional<PacienteRecord>> {
+public class GetPacienteById implements Command<Optional<PacienteRecord>> {
 
-    private String dni;
+    private int idPaciente;
 
-    public GetPacienteByDni(String dni) {
-	this.dni = dni;
+    public GetPacienteById(int idPaciente) {
+	this.idPaciente =idPaciente;
     }
 
     @Override
     public Optional<PacienteRecord> execute() throws BusinessException {
-	return PersistenceFactory.forPaciente().findById(dni);
+	return PersistenceFactory.forPaciente().findById(String.valueOf(idPaciente));
     }
 
 }

@@ -7,16 +7,16 @@ import util.command.Command;
 
 public class GetHistorialPaciente implements Command<HistorialRecord>{
 
-	private String dniPaciente; 
+	private int idPaciente; 
 	
-	public GetHistorialPaciente(String dniPaciente) {
+	public GetHistorialPaciente(int idPaciente) {
 		super();
-		this.dniPaciente = dniPaciente;
+		this.idPaciente = idPaciente;
 	}
 
 	@Override
 	public HistorialRecord execute() throws BusinessException {
-		return PersistenceFactory.forPaciente().getHistorial(dniPaciente);
+		return PersistenceFactory.forPaciente().getHistorial(idPaciente);
 	}
 
 }

@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import business.paciente.PacienteService;
 import business.paciente.operaciones.GetHistorialPaciente;
-import business.paciente.operaciones.GetPacienteByDni;
+import business.paciente.operaciones.GetPacienteById;
 import persistencia.PersistenceFactory;
 import persistencia.paciente.HistorialRecord;
 import persistencia.paciente.PacienteRecord;
@@ -16,15 +16,15 @@ import util.command.CommandExecutor;
 public class PacienteServiceImpl implements PacienteService{
 
 	@Override
-	public Optional<PacienteRecord> getByDni(String dni) throws BusinessException {
+	public Optional<PacienteRecord> getById(int idPaciente) throws BusinessException {
 		CommandExecutor c = new CommandExecutor();
-		return c.execute(new GetPacienteByDni(dni));
+		return c.execute(new GetPacienteById(idPaciente));
 	}
 
 	@Override
-	public HistorialRecord getHistorialPaciente(String dniPaciente) throws BusinessException {
+	public HistorialRecord getHistorialPaciente(int idPaciente) throws BusinessException {
 		CommandExecutor c = new CommandExecutor();
-		return c.execute(new GetHistorialPaciente(dniPaciente));
+		return c.execute(new GetHistorialPaciente(idPaciente));
 	}
 
 	@Override

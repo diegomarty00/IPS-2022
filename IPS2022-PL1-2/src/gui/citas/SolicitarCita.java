@@ -200,7 +200,7 @@ public class SolicitarCita extends JFrame {
 				if (cbAnio.getSelectedIndex() != -1 && cbMes.getSelectedIndex() != -1 && cbDia.getSelectedIndex() != -1
 						&& cbHoraInicio.getSelectedIndex() != -1 && cbHoraFinal.getSelectedIndex() != -1) {
 
-					cc.SolicitarCita(pac.toString(), jChBUrgente.isSelected(),
+					cc.SolicitarCita(pac, jChBUrgente.isSelected(),
 							cbLugar.getSelectedItem().toString(), cbAnio.getSelectedItem().toString(),
 							cbMes.getSelectedItem().toString(), cbDia.getSelectedItem().toString(),
 							cbHoraInicio.getSelectedItem().toString(), cbHoraFinal.getSelectedItem().toString(),pac.getCorreo(),String.valueOf(pac.getTelefono()),getJChBPrioritario().isSelected());

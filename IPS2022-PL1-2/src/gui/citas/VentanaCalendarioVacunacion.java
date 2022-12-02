@@ -48,7 +48,7 @@ public class VentanaCalendarioVacunacion extends JFrame {
 	public VentanaCalendarioVacunacion(PacienteRecord paciente, CitaRecord cita, MedicoRecord medico, EnfermeroRecord enfermero) {
 		setResizable(false);
 		
-		this.historial=PersistenceFactory.forPaciente().getHistorial(paciente.getDniPaciente());
+		this.historial=PersistenceFactory.forPaciente().getHistorial(paciente.getId());
 		this.paciente=paciente;
 		this.cita=cita;
 		this.medico=medico;

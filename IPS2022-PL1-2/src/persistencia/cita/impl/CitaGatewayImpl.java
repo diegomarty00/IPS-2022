@@ -361,7 +361,7 @@ public class CitaGatewayImpl implements CitaGateway {
 
 
 
-	private static String MODIFICAR_CITA = "update CITA set DNIPACIENTE = ? , URGENTE = ?,HORA_ENTRADA_ESTIMADA = ?,"
+	private static String MODIFICAR_CITA = "update CITA set IDPACIENTE = ? , URGENTE = ?,HORA_ENTRADA_ESTIMADA = ?,"
 		+ " HORA_SALIDA_ESTIMADA = ?,FECHA = ?,LUGAR_CITA = ?,PRIORITARIO = ?   where idcita = ?";
 	@Override
 	public void ModificarTodo(CitaRecord cit) {
