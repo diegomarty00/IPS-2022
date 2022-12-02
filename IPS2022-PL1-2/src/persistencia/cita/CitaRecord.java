@@ -10,7 +10,7 @@ import util.BusinessException;
 public class CitaRecord {
 
     public String idCita;
-    public String dniPaciente;
+    public String idPaciente;
     public int idHistorial;
     public boolean urgente;
     public LocalTime horaEntradaEstimada;
