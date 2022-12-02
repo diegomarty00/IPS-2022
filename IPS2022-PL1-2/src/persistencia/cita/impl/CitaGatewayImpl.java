@@ -63,7 +63,7 @@ public class CitaGatewayImpl implements CitaGateway {
 			
 			pst = c.prepareStatement(ADD_CITA);
 			pst.setString(1,  t.idCita);
-			pst.setNString(2, t.dniPaciente);
+			pst.setInt(2, t.idPaciente);
 			pst.setInt(3, t.idHistorial);
 			pst.setBoolean(4, t.urgente);
 			if(t.horaEntradaEstimada != null ) {
@@ -371,7 +371,7 @@ public class CitaGatewayImpl implements CitaGateway {
 		    c = Jdbc.createThreadConnection();
 		    pst = c.prepareStatement(MODIFICAR_CITA);
 		    pst.setString(8, cit.idCita);
-		    pst.setString(1,cit.dniPaciente);
+		    pst.setInt(1,cit.idPaciente);
 		    pst.setBoolean(2, cit.urgente);
 		    pst.setTime(3, Time.valueOf(cit.horaEntradaEstimada));
 		    pst.setTime(4, Time.valueOf(cit.horaSalidaEstimada));

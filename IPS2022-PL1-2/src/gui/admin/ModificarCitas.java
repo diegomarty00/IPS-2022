@@ -197,7 +197,7 @@ public class ModificarCitas extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				cita.dniPaciente = ((PacienteRecord) getComboBox_2().getSelectedItem()).getDniPaciente();
+				cita.idPaciente = ((PacienteRecord) getComboBox_2().getSelectedItem()).getId();
 				cita.prioritario =  getJChBPrioritario().isSelected();
 				cita.urgente =  getRdbtnNewRadioButton().isSelected();
 				cita.horaEntradaEstimada = LocalTime.parse(cbHoraInicio.getSelectedItem().toString());
@@ -353,7 +353,7 @@ public class ModificarCitas extends JFrame {
 		    }
 
 		    cbPacinte.setModel(mod);
-		    PacienteRecord pa = p.findById(cita.dniPaciente).get();
+		    PacienteRecord pa = p.findById(String.valueOf(cita.idPaciente)).get();
 		    cbPacinte.setSelectedItem(pa);
 		    repaint();
 		}

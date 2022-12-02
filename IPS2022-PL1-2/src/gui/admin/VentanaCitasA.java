@@ -61,7 +61,7 @@ public class VentanaCitasA<E> extends JFrame {
     private JLabel lbMedicosSelccionados;
     private JButton jbAniadir;
     private JPanel panelComboBox;
-    private JComboBox cbPacinte;
+    private JComboBox<PacienteRecord> cbPacinte;
     private JComboBox cbMedicos;
     private JComboBox cbLugar;
     private JPanel panel_2;
@@ -199,7 +199,7 @@ public class VentanaCitasA<E> extends JFrame {
 					&& cbHoraInicio.getSelectedIndex() != -1
 					&& cbHoraFinal.getSelectedIndex() != -1) {
 					
-						DatosCita frame = new DatosCita(cbPacinte.getSelectedItem().toString(),
+						DatosCita frame = new DatosCita((PacienteRecord) cbPacinte.getSelectedItem(),
 								jChBUrgente.isSelected(),
 							    cbLugar.getSelectedItem().toString(),
 							    cbAnio.getSelectedItem().toString(),
@@ -340,15 +340,15 @@ public class VentanaCitasA<E> extends JFrame {
 	return panelComboBox;
     }
 
-    private JComboBox getComboBox_2() {
+    private JComboBox<PacienteRecord> getComboBox_2() {
 	if (cbPacinte == null) {
 	    cbPacinte = new JComboBox();
 	    cbPacinte.setRequestFocusEnabled(false);
-	    DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+	    DefaultComboBoxModel<PacienteRecord> mod = new DefaultComboBoxModel<>();
 	    PacienteGatewayImpl p = new PacienteGatewayImpl();
 	    List<PacienteRecord> l = p.findAll();
 	    for (int i = 0; i < l.size(); i++) {
-		mod.addElement(l.get(i).toString());
+		mod.addElement(l.get(i));
 	    }
 
 	    cbPacinte.setModel(mod);

@@ -12,6 +12,7 @@ import gui.admin.DatosCita.ProcesarAccion;
 import persistencia.cita.CitaRecord;
 import persistencia.enfermero.EnfermeroCitaRecord;
 import persistencia.especialidad.EspecialidadCitaRecord;
+import persistencia.paciente.PacienteRecord;
 
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
@@ -43,7 +44,7 @@ public class CitaPrioritaria extends JFrame {
 	private JButton btCancelar;
 	private JButton btFinalizar;
 	private DatosCita dc = null;
-	private String paciente;
+	private PacienteRecord paciente;
 	private String lugar ;
 	private String anio;
 	private String mes;
@@ -69,7 +70,7 @@ public class CitaPrioritaria extends JFrame {
 	 * @param enflist 
 	 * @param  
 	 */
-	public CitaPrioritaria(CrearCita cc,DatosCita a ,String paciente, boolean urgencia,String lugar, String anio , String mes , String dia, String horaE, String horaS,DefaultListModel<String> modjlist,
+	public CitaPrioritaria(CrearCita cc,DatosCita a ,PacienteRecord paciente, boolean urgencia,String lugar, String anio , String mes , String dia, String horaE, String horaS,DefaultListModel<String> modjlist,
 			String email, String telf,String otros,boolean prioridad, DefaultListModel<EspecialidadCitaRecord> eslist, DefaultListModel<EnfermeroCitaRecord> enflist) {
 		this.cc = cc;
 		this.eslist = eslist;

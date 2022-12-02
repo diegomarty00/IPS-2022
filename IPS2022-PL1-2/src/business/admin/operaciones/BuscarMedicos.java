@@ -3,7 +3,7 @@ package business.admin.operaciones;
 import java.util.List;
 
 import persistencia.PersistenceFactory;
-import persistencia.admin.MedicoRecord;
+import persistencia.medico.MedicoRecord;
 import util.BusinessException;
 import util.command.Command;
 

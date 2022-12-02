@@ -2,7 +2,7 @@ package persistencia.admin;
 
 import java.sql.Timestamp;
 
-public class JornadaRecord {
+public class DiaSemanaRecord {
     public int idJornada;
     public int idMedico;
     public String dia;

@@ -8,11 +8,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -28,33 +31,21 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 import business.BusinessFactory;
+import persistencia.admin.JornadaComunRecord;
 import persistencia.admin.JornadaRecord;
 import persistencia.medico.MedicoRecord;
 import util.BusinessException;
 
-public class AsignarcionJornadasLaborales extends JFrame {
+public class AsignarcionJornadasComunes extends JFrame {
 
     private static final long serialVersionUID = 1L;
     private JPanel contentPane;
-    private JPanel panelDiaSemana;
-    private JCheckBox chckbxLunes;
-    private JCheckBox chckbxMartes;
-    private JCheckBox chckbxMiercoles;
-    private JCheckBox chckbxJueves;
-    private JCheckBox chckbxViernes;
-    private JCheckBox chckbxSabado;
-    private JCheckBox chckbxDomingo;
     private JPanel panelInicioJornada;
     private JSpinner spinnerDiaInicio;
     private JLabel lblDe;
     private JSpinner spinnerMesInicio;
     private JLabel lblDel;
     private JSpinner SpinnerAnioInicio;
-    private JPanel panelHoraJornada;
-    private JLabel lblDe_1_1;
-    private JSpinner spinnerHoraInicio;
-    private JLabel lblA;
-    private JSpinner spinnerHoraFin;
     private JPanel panelFinJornada;
     private JSpinner spinnerDiaFin;
     private JLabel lblDe_1;
@@ -67,12 +58,13 @@ public class AsignarcionJornadasLaborales extends JFrame {
     private JButton btnCancelar;
 
     private static LocalDate today = LocalDate.now();
-    private JSpinner spinnerMinutoInicio;
-    private JLabel lblA_1;
-    private JLabel lblA_1_1;
-    private JSpinner spinnerMinutoFin;
     private List<MedicoRecord> medicos;
     private DefaultListModel<MedicoRecord> modelo = new DefaultListModel<>();
+    private JPanel panelJornada;
+    private JLabel lblNombre;
+    private JComboBox cbNombreJornada;
+
+    private Optional<JornadaComunRecord> jornadaComun;
 
     /**
      * Launch the application.
@@ -81,7 +73,7 @@ public class AsignarcionJornadasLaborales extends JFrame {
 	EventQueue.invokeLater(new Runnable() {
 	    public void run() {
 		try {
-		    AsignarcionJornadasLaborales frame = new AsignarcionJornadasLaborales();
+		    AsignarcionJornadasComunes frame = new AsignarcionJornadasComunes();
 		    frame.setVisible(true);
 		} catch (Exception e) {
 		    e.printStackTrace();
@@ -95,7 +87,7 @@ public class AsignarcionJornadasLaborales extends JFrame {
      * 
      * @throws BusinessException
      */
-    public AsignarcionJornadasLaborales() throws BusinessException {
+    public AsignarcionJornadasComunes() throws BusinessException {
 	setResizable(false);
 	setTitle("Asignaci\u00F3n Jornadas Laborales - Manual");
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -104,88 +96,19 @@ public class AsignarcionJornadasLaborales extends JFrame {
 	contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 	setContentPane(contentPane);
 	contentPane.setLayout(null);
-	contentPane.add(getPanelDiaSemana());
 	contentPane.add(getPanelInicioJornada());
-	contentPane.add(getPanelHoraJornada());
 	contentPane.add(getPanelFinJornada());
 	contentPane.add(getListMedicos());
 	contentPane.add(getLblListaMedicos());
 	contentPane.add(getBtnAsignar());
 	contentPane.add(getBtnCancelar());
-    }
-
-    private JPanel getPanelDiaSemana() {
-	if (panelDiaSemana == null) {
-	    panelDiaSemana = new JPanel();
-	    panelDiaSemana.setBounds(20, 104, 322, 83);
-	    panelDiaSemana
-		    .setBorder(new TitledBorder(null, "D\u00EDas de la semana",
-
-			    TitledBorder.LEFT, TitledBorder.TOP, null, null));
-	    panelDiaSemana.add(getChckbxLunes());
-	    panelDiaSemana.add(getChckbxMartes());
-	    panelDiaSemana.add(getChckbxMiercoles());
-	    panelDiaSemana.add(getChckbxJueves());
-	    panelDiaSemana.add(getChckbxViernes());
-	    panelDiaSemana.add(getChckbxSabado());
-	    panelDiaSemana.add(getChckbxDomingo());
-	}
-	return panelDiaSemana;
-    }
-
-    private JCheckBox getChckbxLunes() {
-	if (chckbxLunes == null) {
-	    chckbxLunes = new JCheckBox("Lunes");
-	}
-	return chckbxLunes;
-    }
-
-    private JCheckBox getChckbxMartes() {
-	if (chckbxMartes == null) {
-	    chckbxMartes = new JCheckBox("Martes");
-	}
-	return chckbxMartes;
-    }
-
-    private JCheckBox getChckbxMiercoles() {
-	if (chckbxMiercoles == null) {
-	    chckbxMiercoles = new JCheckBox("Mi\u00E9rcoles");
-	}
-	return chckbxMiercoles;
-    }
-
-    private JCheckBox getChckbxJueves() {
-	if (chckbxJueves == null) {
-	    chckbxJueves = new JCheckBox("Jueves");
-	}
-	return chckbxJueves;
-    }
-
-    private JCheckBox getChckbxViernes() {
-	if (chckbxViernes == null) {
-	    chckbxViernes = new JCheckBox("Viernes");
-	}
-	return chckbxViernes;
-    }
-
-    private JCheckBox getChckbxSabado() {
-	if (chckbxSabado == null) {
-	    chckbxSabado = new JCheckBox("S\u00E1bado");
-	}
-	return chckbxSabado;
-    }
-
-    private JCheckBox getChckbxDomingo() {
-	if (chckbxDomingo == null) {
-	    chckbxDomingo = new JCheckBox("Domingo");
-	}
-	return chckbxDomingo;
+	contentPane.add(getPanelJornada());
     }
 
     private JPanel getPanelInicioJornada() {
 	if (panelInicioJornada == null) {
 	    panelInicioJornada = new JPanel();
-	    panelInicioJornada.setBounds(20, 43, 322, 54);
+	    panelInicioJornada.setBounds(10, 155, 341, 54);
 	    panelInicioJornada.setBorder(new TitledBorder(null,
 		    "D\u00EDa de inicio de la jornada",
 
@@ -248,69 +171,6 @@ public class AsignarcionJornadasLaborales extends JFrame {
 	return SpinnerAnioInicio;
     }
 
-    private JPanel getPanelHoraJornada() {
-	if (panelHoraJornada == null) {
-	    panelHoraJornada = new JPanel();
-	    panelHoraJornada.setBorder(new TitledBorder(
-
-		    new EtchedBorder(EtchedBorder.LOWERED,
-			    new Color(255, 255, 255),
-
-			    new Color(160, 160, 160)),
-
-		    "Horario de la jornada", TitledBorder.LEADING,
-		    TitledBorder.TOP,
-
-		    null, new Color(0, 0, 0)));
-	    panelHoraJornada.setBounds(18, 193, 324, 54);
-	    panelHoraJornada.setLayout(null);
-	    panelHoraJornada.add(getLblDe_1_1());
-	    panelHoraJornada.add(getspinnerHoraInicio());
-	    panelHoraJornada.add(getLblA());
-	    panelHoraJornada.add(getspinnerHoraFin());
-	    panelHoraJornada.add(getspinnerMinutoInicio());
-	    panelHoraJornada.add(getLblA_1());
-	    panelHoraJornada.add(getLblA_1_1());
-	    panelHoraJornada.add(getspinnerMinutoFin());
-	}
-	return panelHoraJornada;
-    }
-
-    private JLabel getLblDe_1_1() {
-	if (lblDe_1_1 == null) {
-	    lblDe_1_1 = new JLabel("De");
-	    lblDe_1_1.setBounds(58, 26, 19, 14);
-	}
-	return lblDe_1_1;
-    }
-
-    private JSpinner getspinnerHoraInicio() {
-	if (spinnerHoraInicio == null) {
-	    SpinnerModel sm = new SpinnerNumberModel(9, 0, 23, 1);
-	    spinnerHoraInicio = new JSpinner(sm);
-	    spinnerHoraInicio.setBounds(78, 23, 39, 20);
-	}
-	return spinnerHoraInicio;
-    }
-
-    private JLabel getLblA() {
-	if (lblA == null) {
-	    lblA = new JLabel("a");
-	    lblA.setHorizontalAlignment(SwingConstants.CENTER);
-	    lblA.setBounds(163, 26, 13, 14);
-	}
-	return lblA;
-    }
-
-    private JSpinner getspinnerHoraFin() {
-	if (spinnerHoraFin == null) {
-	    SpinnerModel sm = new SpinnerNumberModel(9, 0, 23, 1);
-	    spinnerHoraFin = new JSpinner(sm);
-	    spinnerHoraFin.setBounds(173, 23, 39, 20);
-	}
-	return spinnerHoraFin;
-    }
-
     private JPanel getPanelFinJornada() {
 	if (panelFinJornada == null) {
 	    panelFinJornada = new JPanel();
@@ -324,7 +184,7 @@ public class AsignarcionJornadasLaborales extends JFrame {
 		    "D\u00EDa de fin de la jornada", TitledBorder.LEADING,
 
 		    TitledBorder.TOP, null, new Color(0, 0, 0)));
-	    panelFinJornada.setBounds(18, 258, 324, 54);
+	    panelFinJornada.setBounds(10, 220, 341, 54);
 	    panelFinJornada.setLayout(null);
 	    panelFinJornada.add(getspinnerDiaFin());
 	    panelFinJornada.add(getLblDe_1());
@@ -393,15 +253,6 @@ public class AsignarcionJornadasLaborales extends JFrame {
 		modelo.addElement(medico);
 	    }
 	    listMedicos = new JList<MedicoRecord>(modelo);
-	    /**
-	     * listMedicos.addMouseListener(new MouseAdapter() {
-	     * 
-	     * @Override public void mousePressed(MouseEvent e) { CitaRecord
-	     *           citaPulsada = (CitaRecord) listMedicos.getModel()
-	     *           .getElementAt(
-	     *           listMedicos.locationToIndex(e.getPoint())); } });
-	     */
-
 	    listMedicos.setBounds(363, 42, 270, 276);
 	}
 	return listMedicos;
@@ -427,8 +278,8 @@ public class AsignarcionJornadasLaborales extends JFrame {
 			if (getListMedicos().getSelectedValuesList()
 				.size() == 0)
 			    JOptionPane.showMessageDialog(null,
-				    "Por favor, seleccione a alg�n m�dico al que quiera a�adirle una jornada",
-				    "Error - M�dico no seleccionado", 0);
+				    "Por favor, seleccione a algun medico al que quiera añadirle una jornada",
+				    "Error - Medico no seleccionado", 0);
 		    } catch (HeadlessException e2) {
 			e2.printStackTrace();
 		    } catch (BusinessException e2) {
@@ -442,12 +293,10 @@ public class AsignarcionJornadasLaborales extends JFrame {
 					.toString().equals(medico.toString())) {
 				    if (comprobacionesBasicas()) {
 					jornada.idMedico = medico.idMedico;
-					jornada.inicio = indicarInicio();
-					jornada.fin = indicarFin();
 					asignarDias(jornada);
 					JOptionPane.showMessageDialog(null,
-						"Se han a�adido las jornadas correctamente.",
-						"Asignaci�n realizada", 1);
+						"Se han añadido las jornadas correctamente.",
+						"Asignacion realizada", 1);
 				    }
 				}
 
@@ -477,42 +326,6 @@ public class AsignarcionJornadasLaborales extends JFrame {
 	    btnCancelar.setBounds(445, 329, 89, 23);
 	}
 	return btnCancelar;
-    }
-
-    private JSpinner getspinnerMinutoInicio() {
-	if (spinnerMinutoInicio == null) {
-	    SpinnerModel sm = new SpinnerNumberModel(0, 0, 45, 15);
-	    spinnerMinutoInicio = new JSpinner(sm);
-	    spinnerMinutoInicio.setBounds(124, 23, 39, 20);
-	}
-	return spinnerMinutoInicio;
-    }
-
-    private JLabel getLblA_1() {
-	if (lblA_1 == null) {
-	    lblA_1 = new JLabel(":");
-	    lblA_1.setHorizontalAlignment(SwingConstants.CENTER);
-	    lblA_1.setBounds(114, 26, 13, 14);
-	}
-	return lblA_1;
-    }
-
-    private JLabel getLblA_1_1() {
-	if (lblA_1_1 == null) {
-	    lblA_1_1 = new JLabel(":");
-	    lblA_1_1.setHorizontalAlignment(SwingConstants.CENTER);
-	    lblA_1_1.setBounds(211, 26, 13, 14);
-	}
-	return lblA_1_1;
-    }
-
-    private JSpinner getspinnerMinutoFin() {
-	if (spinnerMinutoFin == null) {
-	    SpinnerModel sm = new SpinnerNumberModel(15, 0, 45, 15);
-	    spinnerMinutoFin = new JSpinner(sm);
-	    spinnerMinutoFin.setBounds(222, 23, 39, 20);
-	}
-	return spinnerMinutoFin;
     }
 
     private void arregloDias(String mes, int dia, String temporada) {
@@ -575,26 +388,24 @@ public class AsignarcionJornadasLaborales extends JFrame {
 	return 0;
     }
 
-    private Timestamp indicarFin() {
+    private Timestamp indicarFin(int hora, int minuto) {
 	int anio = Integer.parseInt(getspinnerAnioFin().getValue().toString());
 	int dia = (int) getspinnerDiaFin().getValue();
 	dia = arreglarDiaMes(anio, indicarMesFin() + 1, dia);
 	@SuppressWarnings("deprecation")
-	Timestamp fecha = new Timestamp(anio - 1900, indicarMesFin(), dia,
-		(int) getspinnerHoraFin().getValue(),
-		(int) getspinnerMinutoFin().getValue(), 0, 0);
+	Timestamp fecha = new Timestamp(anio - 1900, indicarMesFin(), dia, hora,
+		minuto, 0, 0);
 	return fecha;
     }
 
-    private Timestamp indicarInicio() {
+    private Timestamp indicarInicio(int hora, int minuto) {
 	int anio = Integer
 		.parseInt(getspinnerAnioInicio().getValue().toString());
 	int dia = (int) getspinnerDiaInicio().getValue();
 	dia = arreglarDiaMes(anio, indicarMesInicio() + 1, dia);
 	@SuppressWarnings("deprecation")
-	Timestamp fecha = new Timestamp(anio - 1900, indicarMesInicio(), dia,
-		(int) getspinnerHoraInicio().getValue(),
-		(int) getspinnerMinutoInicio().getValue(), 0, 0);
+	Timestamp fecha = new Timestamp(anio - 1900, indicarMesFin(), dia, hora,
+		minuto, 0, 0);
 	return fecha;
     }
 
@@ -610,44 +421,114 @@ public class AsignarcionJornadasLaborales extends JFrame {
     }
 
     private void asignarDias(JornadaRecord jornada) {
+	String[] franja;
+	String[] horas;
 	try {
-	    if (getChckbxLunes().isSelected()) {
+	    for (String d : jornadaComun.get().lunes) {
+		franja = d.split("-");
+		horas = franja[0].split(":");
 		jornada.dia = "Lunes";
-		BusinessFactory.forAdminService()
-			.asignarJornadasLaboralesMedicos(jornada);
-	    }
-	    if (getChckbxMartes().isSelected()) {
-		jornada.dia = "Martes";
-		BusinessFactory.forAdminService()
-			.asignarJornadasLaboralesMedicos(jornada);
-	    }
-	    if (getChckbxMiercoles().isSelected()) {
-		jornada.dia = "Miercoles";
-		BusinessFactory.forAdminService()
-			.asignarJornadasLaboralesMedicos(jornada);
-	    }
-	    if (getChckbxJueves().isSelected()) {
-		jornada.dia = "Jueves";
-		BusinessFactory.forAdminService()
-			.asignarJornadasLaboralesMedicos(jornada);
-	    }
-	    if (getChckbxViernes().isSelected()) {
-		jornada.dia = "Viernes";
-		BusinessFactory.forAdminService()
-			.asignarJornadasLaboralesMedicos(jornada);
-	    }
-	    if (getChckbxSabado().isSelected()) {
-		jornada.dia = "Sabado";
-		BusinessFactory.forAdminService()
-			.asignarJornadasLaboralesMedicos(jornada);
-	    }
-	    if (getChckbxDomingo().isSelected()) {
-		jornada.dia = "Domingo";
+		jornada.inicio = indicarInicio(Integer.parseInt(horas[0]),
+			Integer.parseInt(horas[1]));
+		horas = franja[1].split(":");
+		jornada.fin = indicarFin(Integer.parseInt(horas[0]),
+			Integer.parseInt(horas[1]));
 		BusinessFactory.forAdminService()
 			.asignarJornadasLaboralesMedicos(jornada);
 	    }
 	} catch (Exception e) {
-	    e.printStackTrace();
+	}
+	try {
+	    for (String d : jornadaComun.get().martes) {
+		franja = d.split("-");
+		horas = franja[0].split(":");
+		jornada.dia = "Martes";
+		jornada.inicio = indicarInicio(Integer.parseInt(horas[0]),
+			Integer.parseInt(horas[1]));
+		horas = franja[1].split(":");
+		jornada.fin = indicarFin(Integer.parseInt(horas[0]),
+			Integer.parseInt(horas[1]));
+		BusinessFactory.forAdminService()
+			.asignarJornadasLaboralesMedicos(jornada);
+
+	    }
+	} catch (Exception e) {
+	}
+	try {
+	    for (String d : jornadaComun.get().miercoles) {
+		franja = d.split("-");
+		horas = franja[0].split(":");
+		jornada.dia = "Miercoles";
+		jornada.inicio = indicarInicio(Integer.parseInt(horas[0]),
+			Integer.parseInt(horas[1]));
+		horas = franja[1].split(":");
+		jornada.fin = indicarFin(Integer.parseInt(horas[0]),
+			Integer.parseInt(horas[1]));
+		BusinessFactory.forAdminService()
+			.asignarJornadasLaboralesMedicos(jornada);
+	    }
+	} catch (Exception e) {
+	}
+	try {
+	    for (String d : jornadaComun.get().jueves) {
+		franja = d.split("-");
+		horas = franja[0].split(":");
+		jornada.dia = "Jueves";
+		jornada.inicio = indicarInicio(Integer.parseInt(horas[0]),
+			Integer.parseInt(horas[1]));
+		horas = franja[1].split(":");
+		jornada.fin = indicarFin(Integer.parseInt(horas[0]),
+			Integer.parseInt(horas[1]));
+		BusinessFactory.forAdminService()
+			.asignarJornadasLaboralesMedicos(jornada);
+	    }
+	} catch (Exception e) {
+	}
+	try {
+	    for (String d : jornadaComun.get().viernes) {
+		franja = d.split("-");
+		horas = franja[0].split(":");
+		jornada.dia = "Viernes";
+		jornada.inicio = indicarInicio(Integer.parseInt(horas[0]),
+			Integer.parseInt(horas[1]));
+		horas = franja[1].split(":");
+		jornada.fin = indicarFin(Integer.parseInt(horas[0]),
+			Integer.parseInt(horas[1]));
+		BusinessFactory.forAdminService()
+			.asignarJornadasLaboralesMedicos(jornada);
+	    }
+	} catch (Exception e) {
+	}
+	try {
+	    for (String d : jornadaComun.get().sabado) {
+		franja = d.split("-");
+		horas = franja[0].split(":");
+		jornada.dia = "Sabado";
+		jornada.inicio = indicarInicio(Integer.parseInt(horas[0]),
+			Integer.parseInt(horas[1]));
+		horas = franja[1].split(":");
+		jornada.fin = indicarFin(Integer.parseInt(horas[0]),
+			Integer.parseInt(horas[1]));
+		BusinessFactory.forAdminService()
+			.asignarJornadasLaboralesMedicos(jornada);
+	    }
+	} catch (Exception e) {
+	}
+	try {
+	    for (String d : jornadaComun.get().domingo) {
+		franja = d.split("-");
+		horas = franja[0].split(":");
+		jornada.dia = "Domingo";
+		jornada.inicio = indicarInicio(Integer.parseInt(horas[0]),
+			Integer.parseInt(horas[1]));
+		horas = franja[1].split(":");
+		jornada.fin = indicarFin(Integer.parseInt(horas[0]),
+			Integer.parseInt(horas[1]));
+		BusinessFactory.forAdminService()
+			.asignarJornadasLaboralesMedicos(jornada);
+	    }
+
+	} catch (Exception e) {
 	}
 
     }
@@ -670,25 +551,91 @@ public class AsignarcionJornadasLaborales extends JFrame {
     }
 
     private boolean comprobacionesBasicas() {
-	if (!getChckbxLunes().isSelected() && !getChckbxMartes().isSelected()
-		&& !getChckbxMiercoles().isSelected()
-		&& !getChckbxJueves().isSelected()
-		&& !getChckbxViernes().isSelected()
-		&& !getChckbxSabado().isSelected()
-		&& !getChckbxDomingo().isSelected()) {
+	if (!comprobarDia()) {
 	    JOptionPane.showMessageDialog(null,
-		    "Por favor, seleccione al menos un d�a de la semana para a�adir a la jornada",
-		    "Error - D�as de la semana no escogidos", 0);
-	    return false;
-	}
-
-	if (indicarFin().compareTo(indicarInicio()) <= 0) {
-	    JOptionPane.showMessageDialog(null,
-		    "Por favor, comprueba de que la fecha de incio de jornada sea menor que la de finalizaci�n de la misma",
-		    "Error - Mala finalizaci�n de jornadas", 0);
+		    "Por favor, comprueba de que la fecha de incio de jornada sea menor que la de finalizacion de la misma",
+		    "Error - Mala finalizacion de jornadas", 0);
 	    return false;
 	}
 	return true;
     }
 
+    private boolean comprobarDia() {
+	if ((int) getspinnerAnioInicio().getValue() == (int) getspinnerAnioFin()
+		.getValue()) {
+	    if (indicarMesInicio() == indicarMesFin()) {
+		if ((int) getspinnerDiaInicio()
+			.getValue() >= (int) getspinnerDiaFin().getValue()) {
+		    return false;
+		} else {
+		    return true;
+		}
+	    }
+	    if (indicarMesInicio() < indicarMesFin()) {
+		return true;
+	    } else {
+		return false;
+	    }
+	}
+	if ((int) getspinnerAnioInicio().getValue() > (int) getspinnerAnioFin()
+		.getValue())
+	    return false;
+	return true;
+    }
+
+    private JPanel getPanelJornada() {
+	if (panelJornada == null) {
+	    panelJornada = new JPanel();
+	    panelJornada.setLayout(null);
+	    panelJornada.setBorder(new TitledBorder(
+		    new EtchedBorder(EtchedBorder.LOWERED,
+			    new Color(255, 255, 255), new Color(160, 160, 160)),
+		    "Jornada", TitledBorder.LEADING, TitledBorder.TOP, null,
+		    new Color(0, 0, 0)));
+	    panelJornada.setBounds(12, 90, 341, 54);
+	    panelJornada.add(getLblNombre());
+	    panelJornada.add(getCbNombreJornada());
+	}
+	return panelJornada;
+    }
+
+    private JLabel getLblNombre() {
+	if (lblNombre == null) {
+	    lblNombre = new JLabel("Nombre: ");
+	    lblNombre.setBounds(23, 11, 58, 32);
+	}
+	return lblNombre;
+    }
+
+    private JComboBox getCbNombreJornada() {
+	if (cbNombreJornada == null) {
+	    cbNombreJornada = new JComboBox();
+	    cbNombreJornada.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		    try {
+			jornadaComun = BusinessFactory.forAdminService()
+				.buscarJornadaComun(cbNombreJornada
+					.getSelectedItem().toString());
+		    } catch (NumberFormatException | BusinessException e1) {
+			e1.printStackTrace();
+		    }
+		}
+	    });
+	    cbNombreJornada.setEditable(true);
+	    cbNombreJornada.setRequestFocusEnabled(false);
+	    cbNombreJornada.setBounds(86, 17, 202, 20);
+	    DefaultComboBoxModel mod = new DefaultComboBoxModel<>();
+	    List<JornadaComunRecord> l = new ArrayList<>();
+	    try {
+		l = BusinessFactory.forAdminService().buscarJornadasComunes();
+	    } catch (BusinessException e) {
+		e.printStackTrace();
+	    }
+	    for (int i = 0; i < l.size(); i++) {
+		mod.addElement(l.get(i).nombre);
+	    }
+	    cbNombreJornada.setModel(mod);
+	}
+	return cbNombreJornada;
+    }
 }

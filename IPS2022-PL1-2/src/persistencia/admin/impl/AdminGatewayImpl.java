@@ -10,36 +10,45 @@ import java.util.Optional;
 
 import persistencia.JornadaAssembler;
 import persistencia.PersistenceException;
+import persistencia.RecordAssembler;
 import persistencia.admin.AdminGateway;
 import persistencia.admin.JornadaComunRecord;
 import persistencia.admin.JornadaRecord;
-import persistencia.admin.MedicoRecord;
+import persistencia.medico.MedicoRecord;
+import persistencia.paciente.PacienteRecord;
 import util.jdbc.Jdbc;
 
 public class AdminGatewayImpl implements AdminGateway {
 
     private static final String ALL_MEDICOS = "SELECT * from MEDICO";
+    private static final String ALL_JORNADAS_MEDICOS = "SELECT * from JORNADA";
+    private static final String ALL_JORNADAS_COMUNES = "SELECT * from JORNADACOMUN";
+    private static final String BUSCAR_MEDICO_LICENCIA = "SELECT * from MEDICO where idmedico = ?";
+    private static final String BUSCAR_JORNADA_COMUN_NOMBRE = "SELECT * from JORNADACOMUN where nombre = ?";
+    private static final String ALL_PACIENTES = "SELECT * from PACIENTE";
     private static final String ANIADIR_JORNADAS = "insert into JORNADA values (?, ?, ?, ?, ?)";
     private static final String CONTAR_JORNADAS = "SELECT count(*) from JORNADA";
     private static final String ANIADIR_JORNADASCOMUNES = "insert into JornadaComun values (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String CONTAR_JORNADASCOMUNES = "SELECT count(*) from JornadaComun";
     private static final String FINDBYMEDICOS = "SELECT * from JORNADA where idmedico = ?";
+    private static final String ASIGNAR_MEDICO_CABECERA_DNI = "UPDATE PACIENTE SET idmedicocabecera = ? where dni = ?";
+    private static final String ASIGNAR_MEDICO_CABECERA_TUTOR = "UPDATE PACIENTE SET idmedicocabecera = ? where dnitutorlegal = ? and (name = ? and surname = ?)";
+    private static final String ELIMINAR_MEDICO_CABECERA_DNI = "UPDATE PACIENTE SET idmedicocabecera = NULL where dni = ?";
+    private static final String ELIMINAR_MEDICO_CABECERA_TUTOR = "UPDATE PACIENTE SET idmedicocabecera = NULL where dnitutorlegal = ? and (name = ? and surname = ?)";
+    private static final String BUSCAR_PACIENTE_TUTOR = "SELECT * FROM PACIENTE where dnitutorlegal = ? and (name = ? and surname = ?)";
+    private static final String BUSCAR_PACIENTE_DNI = "SELECT * FROM PACIENTE where DNI = ? ";
 
     @Override
     public void add(MedicoRecord t) {
-	// TODO Auto-generated method stub
 
     }
 
     @Override
     public void remove(String id) {
-	// TODO Auto-generated method stub
-
     }
 
     @Override
     public void update(MedicoRecord t) {
-	// TODO Auto-generated method stub
 
     }
 
@@ -65,7 +74,7 @@ public class AdminGatewayImpl implements AdminGateway {
 		MedicoRecord medico = new MedicoRecord();
 		medico.nombre = rs.getString("nombre");
 		medico.apellidos = rs.getString("apellidos");
-		medico.id = rs.getInt("idmedico");
+		medico.idMedico = rs.getInt("idmedico");
 		medico.correo = rs.getString("correo");
 		medicos.add(medico);
 	    }
@@ -75,6 +84,99 @@ public class AdminGatewayImpl implements AdminGateway {
 	    Jdbc.close(rs, pst);
 	}
 	return medicos;
+    }
+
+    @Override
+    public List<PacienteRecord> findAllPacientes() {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	ArrayList<PacienteRecord> pacientes = new ArrayList<>();
+	try {
+	    c = Jdbc.getCurrentConnection();
+
+	    pst = c.prepareStatement(ALL_PACIENTES);
+
+	    rs = pst.executeQuery();
+	    while (rs.next()) {
+		PacienteRecord paciente = new PacienteRecord();
+		paciente.setId(rs.getInt("ID"));
+		paciente.setDniPaciente(rs.getString("DNI"));
+		paciente.setNombre(rs.getString("NOMBRE"));
+		paciente.setApellidos(rs.getString("APELLIDOS"));
+		paciente.setCorreo(rs.getString("CORREO"));
+		paciente.setFechaNac(rs.getDate("NACIMIENTO"));
+		paciente.setDniTutorLegal(rs.getString("DNITUTOR"));
+		paciente.setTutorLegal(rs.getString("NOMBRETUTOR"));
+		paciente.setIdMedicoCabecera(rs.getInt("IDMEDICOCABECERA"));
+		pacientes.add(paciente);
+	    }
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+	return pacientes;
+    }
+
+    @Override
+    public List<JornadaComunRecord> findAllJornadasComunes() {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	ArrayList<JornadaComunRecord> jornadas = new ArrayList<>();
+	try {
+	    c = Jdbc.getCurrentConnection();
+
+	    pst = c.prepareStatement(ALL_JORNADAS_COMUNES);
+
+	    rs = pst.executeQuery();
+	    while (rs.next()) {
+		JornadaComunRecord jornada = new JornadaComunRecord();
+		jornada.nombre = rs.getString("NOMBRE");
+		jornada.transformar(rs.getString("lunes"), "lunes");
+		jornada.transformar(rs.getString("martes"), "martes");
+		jornada.transformar(rs.getString("miercoles"), "miercoles");
+		jornada.transformar(rs.getString("jueves"), "jueves");
+		jornada.transformar(rs.getString("viernes"), "viernes");
+		jornada.transformar(rs.getString("sabado"), "sabado");
+		jornada.transformar(rs.getString("domingo"), "domingo ");
+		jornadas.add(jornada);
+	    }
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+	return jornadas;
+    }
+
+    @Override
+    public List<JornadaRecord> findAllJornadasMedicos() {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	ArrayList<JornadaRecord> jornadas = new ArrayList<>();
+	try {
+	    c = Jdbc.getCurrentConnection();
+
+	    pst = c.prepareStatement(ALL_JORNADAS_MEDICOS);
+
+	    rs = pst.executeQuery();
+	    while (rs.next()) {
+		JornadaRecord jornada = new JornadaRecord();
+		jornada.idMedico = rs.getInt("idmedico");
+		jornada.dia = rs.getString("dia");
+		jornada.inicio = (rs.getTimestamp("inicio"));
+		jornada.fin = (rs.getTimestamp("fin"));
+		jornadas.add(jornada);
+	    }
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+	return jornadas;
     }
 
     @Override
@@ -150,7 +252,7 @@ public class AdminGatewayImpl implements AdminGateway {
     }
 
     @Override
-    public List<JornadaRecord> findByMedico(String idMedico) {
+    public List<JornadaRecord> findByMedico(int idMedico) {
 	Connection c = null;
 	PreparedStatement pst = null;
 	ResultSet rs = null;
@@ -159,7 +261,7 @@ public class AdminGatewayImpl implements AdminGateway {
 	    c = Jdbc.getCurrentConnection();
 
 	    pst = c.prepareStatement(FINDBYMEDICOS);
-	    pst.setString(1, idMedico);
+	    pst.setInt(1, idMedico);
 	    rs = pst.executeQuery();
 
 	    jornadas = JornadaAssembler.toJornadaList(rs);
@@ -170,4 +272,173 @@ public class AdminGatewayImpl implements AdminGateway {
 	}
 	return jornadas;
     }
+
+    @Override
+    public void asignarMedicoCabeceraDni(String dniPaciente, int idMedico) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	try {
+	    c = Jdbc.getCurrentConnection();
+	    pst = c.prepareStatement(ASIGNAR_MEDICO_CABECERA_DNI);
+	    pst.setString(2, dniPaciente);
+	    pst.setInt(1, idMedico);
+	    pst.executeUpdate();
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+    }
+
+    @Override
+    public void asignarMedicoCabeceraTutor(String dniTutor, String name,
+	    String surname, int idMedico) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	try {
+	    c = Jdbc.getCurrentConnection();
+	    pst = c.prepareStatement(ASIGNAR_MEDICO_CABECERA_TUTOR);
+	    pst.setInt(1, idMedico);
+	    pst.setString(2, dniTutor);
+	    pst.setString(3, name);
+	    pst.setString(4, surname);
+	    pst.executeUpdate();
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+    }
+
+    @Override
+    public void eliminarMedicoCabeceraDni(String dniPaciente) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	try {
+	    c = Jdbc.getCurrentConnection();
+	    pst = c.prepareStatement(ELIMINAR_MEDICO_CABECERA_DNI);
+	    pst.setString(1, dniPaciente);
+	    pst.executeUpdate();
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+
+    }
+
+    @Override
+    public void eliminarMedicoCabeceraTutor(String dniTutor, String name,
+	    String surname) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	try {
+	    c = Jdbc.getCurrentConnection();
+	    pst = c.prepareStatement(ELIMINAR_MEDICO_CABECERA_TUTOR);
+	    pst.setString(1, dniTutor);
+	    pst.setString(2, name);
+	    pst.setString(3, surname);
+	    pst.executeUpdate();
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+    }
+
+    @Override
+    public Optional<PacienteRecord> findByPacienteDni(String dni) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	Optional<PacienteRecord> result = null;
+	try {
+	    c = Jdbc.getCurrentConnection();
+	    pst = c.prepareStatement(BUSCAR_PACIENTE_DNI);
+	    pst.setString(1, dni);
+	    pst.execute();
+
+	    rs = pst.executeQuery();
+	    result = RecordAssembler.toPacienteRecord(rs);
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+	return result;
+    }
+
+    @Override
+    public Optional<PacienteRecord> findByPacienteTutor(String dniTutor,
+	    String name, String surname) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	Optional<PacienteRecord> result = null;
+	try {
+	    c = Jdbc.getCurrentConnection();
+	    pst = c.prepareStatement(BUSCAR_PACIENTE_TUTOR);
+	    pst.setString(1, dniTutor);
+	    pst.setString(2, name);
+	    pst.setString(3, surname);
+	    pst.execute();
+
+	    rs = pst.executeQuery();
+	    result = RecordAssembler.toPacienteRecord(rs);
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+	return result;
+    }
+
+    @Override
+    public Optional<MedicoRecord> findMedicoLic(int licencia) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	Optional<MedicoRecord> result = null;
+	try {
+	    c = Jdbc.getCurrentConnection();
+	    pst = c.prepareStatement(BUSCAR_MEDICO_LICENCIA);
+	    pst.setInt(1, licencia);
+	    pst.execute();
+
+	    rs = pst.executeQuery();
+	    result = RecordAssembler.rsToMedicoO(rs);
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+	return result;
+    }
+
+    @Override
+    public Optional<JornadaComunRecord> findJornadaNombre(String nombre) {
+	Connection c = null;
+	PreparedStatement pst = null;
+	ResultSet rs = null;
+	Optional<JornadaComunRecord> result = null;
+	try {
+	    c = Jdbc.getCurrentConnection();
+	    pst = c.prepareStatement(BUSCAR_JORNADA_COMUN_NOMBRE);
+	    pst.setString(1, nombre);
+	    pst.execute();
+
+	    rs = pst.executeQuery();
+	    result = RecordAssembler.toJornadaComunRecord(rs);
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
+	} finally {
+	    Jdbc.close(rs, pst);
+	}
+	return result;
+    }
+
 }
