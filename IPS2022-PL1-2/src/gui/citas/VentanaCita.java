@@ -29,6 +29,7 @@ import business.cita.CitaService;
 import persistencia.PersistenceFactory;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
+import persistencia.cita.DiagnosticoRecord;
 import persistencia.cita.PrescripcionRecord;
 import persistencia.cita.impl.CitaGatewayImpl;
 import persistencia.enfermero.EnfermeroRecord;
@@ -83,6 +84,10 @@ public class VentanaCita extends JFrame {
 	private JList<VacunaRecord> listVacunas;
 	private DefaultListModel<VacunaRecord> modeloVacunas;
 	private JButton btnSolicitarCita;
+	private JLabel lblDiagnosticos;
+	private JButton btnSeleccionarDiagnosticos;
+	private JScrollPane scrollPaneDiagnosticos;
+	private JList listDiagnosticos;
 
 	/**
 	 * Launch the application.
@@ -225,7 +230,7 @@ public class VentanaCita extends JFrame {
 		btnCerrarCita.setBounds(635, 565, 124, 23);
 		contentPane.add(btnCerrarCita);
 		contentPane.add(getBtnVerHistorial());
-		if (medico!=null) {
+//		if (medico!=null) {
 			contentPane.add(getLblCausas());
 			contentPane.add(getBtnSeleccionarCausas());
 			contentPane.add(getLblPrescripciones());
@@ -240,13 +245,16 @@ public class VentanaCita extends JFrame {
 			scrollPaneCausas.setBounds(23, 250, 310, 129);
 			contentPane.add(scrollPaneCausas);
 			scrollPaneCausas.setViewportView(getListCausas());
-		}
+//		}
 		contentPane.add(getCbAsistencia());
 		contentPane.add(getLblVacunas());
 		contentPane.add(getBtnVacunar());
 		contentPane.add(getScrollPaneVacunas());
 		contentPane.add(getBtnVerCalendarioVacunas());
 		contentPane.add(getBtnSolicitarCita());
+		contentPane.add(getLblDiagnosticos());
+		contentPane.add(getBtnSeleccionarDiagnosticos());
+		contentPane.add(getScrollPaneDiagnosticos());
 	}
 
 	private void updateModeloCausas() {
@@ -326,13 +334,14 @@ public class VentanaCita extends JFrame {
 	private JButton getBtnVerHistorial() {
 		if (btnVerHistorial == null) {
 			btnVerHistorial = new JButton("Ver Historial");
+			btnVerHistorial.setFont(new Font("Tahoma", Font.PLAIN, 15));
 			btnVerHistorial.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					VentanaHistorial v  = new VentanaHistorial(pacienteAsociado,medico,enfermero);
 					v.setVisible(true);
 				}
 			});
-			btnVerHistorial.setBounds(655, 34, 104, 23);
+			btnVerHistorial.setBounds(608, 34, 151, 35);
 		}
 		return btnVerHistorial;
 	}
@@ -340,7 +349,7 @@ public class VentanaCita extends JFrame {
 		if (lblCausas == null) {
 			lblCausas = new JLabel("Causas de la consulta");
 			lblCausas.setFont(new Font("Tahoma", Font.PLAIN, 16));
-			lblCausas.setBounds(10, 211, 166, 41);
+			lblCausas.setBounds(23, 211, 166, 41);
 		}
 		return lblCausas;
 	}
@@ -477,5 +486,44 @@ public class VentanaCita extends JFrame {
 		VentanaCalendarioVacunacion v = new VentanaCalendarioVacunacion(pacienteAsociado, cita, medico, enfermero);
 		v.setVisible(true);
 		this.dispose();
+	}
+	private JLabel getLblDiagnosticos() {
+		if (lblDiagnosticos == null) {
+			lblDiagnosticos = new JLabel("Diagnosticos");
+			lblDiagnosticos.setFont(new Font("Tahoma", Font.PLAIN, 16));
+			lblDiagnosticos.setBounds(23, 393, 166, 41);
+		}
+		return lblDiagnosticos;
+	}
+	private JButton getBtnSeleccionarDiagnosticos() {
+		if (btnSeleccionarDiagnosticos == null) {
+			btnSeleccionarDiagnosticos = new JButton("Seleccionar Diagnosticos");
+			btnSeleccionarDiagnosticos.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					openVentDiagnosticos();
+				}
+			});
+			btnSeleccionarDiagnosticos.setBounds(186, 409, 181, 20);
+		}
+		return btnSeleccionarDiagnosticos;
+	}
+	
+	private void openVentDiagnosticos() {
+		VentanaDiagnosticos ventDiag = new VentanaDiagnosticos(cita,medico,enfermero);
+		ventDiag.setVisible(true);
+		this.dispose();
+		
+	}
+	
+	private JScrollPane getScrollPaneDiagnosticos() {
+		if (scrollPaneDiagnosticos == null) {
+			scrollPaneDiagnosticos = new JScrollPane();
+			scrollPaneDiagnosticos.setBounds(23, 436, 310, 129);
+			DefaultListModel<DiagnosticoRecord> model = new DefaultListModel<DiagnosticoRecord>();
+			model.addAll(PersistenceFactory.forCita().getDiagnosticos(cita.idCita));
+			listDiagnosticos = new JList<DiagnosticoRecord>(model);
+			scrollPaneDiagnosticos.setViewportView(listDiagnosticos);
+		}
+		return scrollPaneDiagnosticos;
 	}
 }

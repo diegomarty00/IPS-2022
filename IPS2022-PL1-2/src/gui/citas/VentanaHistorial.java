@@ -15,6 +15,7 @@ import business.BusinessFactory;
 import persistencia.PersistenceFactory;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
+import persistencia.cita.DiagnosticoRecord;
 import persistencia.cita.PrescripcionRecord;
 import persistencia.enfermero.EnfermeroRecord;
 import persistencia.medico.MedicoRecord;
@@ -46,7 +47,7 @@ public class VentanaHistorial extends JFrame {
 	private JList<PrescripcionRecord> listPrescripciones;
 	private JScrollPane scrollPaneDiagnosticos;
 	private JLabel lblDiagnosticos;
-	private JList<HistorialRecord> listDiagnosticos;
+	private JList<DiagnosticoRecord> listDiagnosticos;
 	private JScrollPane scrollPanelVacunas;
 	private JLabel lblVacunas;
 	private JList<VacunaRecord> listVacunas;
@@ -76,8 +77,8 @@ public class VentanaHistorial extends JFrame {
 		contentPane.add(getLblCausas());
 		contentPane.add(getScrollPanePrescripciones());
 		contentPane.add(getLblPrescricpiones());
-//		contentPane.add(getScrollPaneDiagnosticos());
-//		contentPane.add(getLblDiagnosticos());
+		contentPane.add(getScrollPaneDiagnosticos());
+		contentPane.add(getLblDiagnosticos());
 		contentPane.add(getScrollPanelVacunas());
 		contentPane.add(getLblVacunas());
 		contentPane.add(getBtnVacunar());
@@ -181,9 +182,11 @@ public class VentanaHistorial extends JFrame {
 		}
 		return lblDiagnosticos;
 	}
-	private JList<HistorialRecord> getListDiagnosticos() {
+	private JList<DiagnosticoRecord> getListDiagnosticos() {
 		if (listDiagnosticos == null) {
-			listDiagnosticos = new JList();
+			DefaultListModel<DiagnosticoRecord> model = new DefaultListModel<DiagnosticoRecord>();
+			model.addAll(historial.getDiagnosticos());
+			listDiagnosticos = new JList<DiagnosticoRecord>(model);
 		}
 		return listDiagnosticos;
 	}

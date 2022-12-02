@@ -11,6 +11,7 @@ import java.util.Optional;
 import persistencia.admin.JornadaComunRecord;
 import persistencia.cita.CausaRecord;
 import persistencia.cita.CitaRecord;
+import persistencia.cita.DiagnosticoRecord;
 import persistencia.cita.MedicoCitaRecord;
 import persistencia.cita.PrescripcionRecord;
 import persistencia.enfermero.EnfermeroRecord;
@@ -288,6 +289,25 @@ public class RecordAssembler {
 	return jornada;
     }
 
+  	public static List<DiagnosticoRecord> toDiagnosticoList(ResultSet rs) throws SQLException {
+		List<DiagnosticoRecord> diag = new ArrayList<>();
+		while (rs.next()) {
+			diag.add(toDiagnostico(rs));
+		}
+		return diag;
+	}
+
+	private static DiagnosticoRecord toDiagnostico(ResultSet rs) throws SQLException {
+		DiagnosticoRecord diag = new DiagnosticoRecord(rs.getString("TITULO"));
+		diag.setIdDiagnostico(rs.getInt("IDDIAGNOSTICO"));
+		diag.setIdCita(rs.getString("IDCITA"));
+		diag.setHoraAsginacion(rs.getTime("HORA").toLocalTime());
+		diag.setFechaAsignacion(rs.getDate("FECHA").toLocalDate());
+		diag.setMedicoAsociado(PersistenceFactory.forMedico().findById(String.valueOf(rs.getInt("IDMEDICO"))).get());
+		return diag;
+	}
+}
+  
     public static Optional<HistorialRecord> rsToHistorialO(ResultSet rs)
 	    throws SQLException {
 	if (rs.next()) {
