@@ -27,6 +27,7 @@ import javax.swing.border.TitledBorder;
 import business.BusinessFactory;
 import persistencia.cita.CitaRecord;
 import persistencia.paciente.PacienteRecord;
+import persistencia.paciente.impl.PacienteGatewayImpl;
 import util.BusinessException;
 
 public class AsignarInformacionContactoCitas extends JFrame {
@@ -131,8 +132,9 @@ public class AsignarInformacionContactoCitas extends JFrame {
 
     private void verCita(CitaRecord cita) {
 	try {
-	    Optional<PacienteRecord> paciente = BusinessFactory
-		    .forPacienteService().getByDni(cita.dniPaciente);
+		PacienteGatewayImpl p = new PacienteGatewayImpl();
+		
+	    Optional<PacienteRecord> paciente = p.findById(String.valueOf(cita.idPaciente));
 	    idCita = cita.idCita;
 	    getTextNombre().setText(paciente.get().getNombre() + " "
 		    + paciente.get().getApellidos());
@@ -140,7 +142,7 @@ public class AsignarInformacionContactoCitas extends JFrame {
 	    getTextCorreo().setEditable(true);
 	    getTextTelefono().setText(cita.telefonoPaciente + "");
 	    getTextCorreo().setText(cita.correoPaciente);
-	} catch (BusinessException e) {
+	} catch (Exception e) {
 	    e.printStackTrace();
 	}
 

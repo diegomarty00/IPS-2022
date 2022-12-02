@@ -32,22 +32,7 @@ public class CrearCita {
 	return lastId + 1;
     }
 
-    private int getHistorial(String dniPaciente) {
-	PacienteGatewayImpl p = new PacienteGatewayImpl();
-	int idHistorial = p.getHistorial(dniPaciente).getIdHistorial();
-	return idHistorial;
-    }
-
-    private String parsePaciente(String pa) {
-	String dni = "";
-	String[] partes = pa.split(" ");
-	dni = partes[partes.length - 1];
-	for (int i = 0; i < partes.length - 1; i++) {
-	    nombre = nombre + partes[i] + " ";
-	}
-	return dni;
-    }
-
+   
     private int parseMed(String s) {
 	int idm = -1;
 	String[] partes = s.split(" ");
@@ -62,17 +47,15 @@ public class CrearCita {
 	return p;
     }
 
-    public void crearCita(String paciente, boolean urgencia, String lugar,
+    public void crearCita(PacienteRecord paciente, boolean urgencia, String lugar,
 	    String anio, String mes, String dia, String horaE, String horaS,
 	    String correo, String num, String otros, boolean prio) {
 
-	String dni = parsePaciente(paciente);
 	LocalDate fecha = toFecha(anio, mes, dia);
 	PacienteGatewayImpl pa = new PacienteGatewayImpl();
-	ci.dniPaciente = dni;
-	ci.idHistorial = pa.getHistorial(dni).getIdHistorial();
+	ci.idPaciente = paciente.getId();
+	ci.idHistorial = pa.getHistorial(paciente.getId()).getIdHistorial();
 	ci.idCita = String.valueOf(nextid);
-	ci.idHistorial = getHistorial(dni);
 	ci.correoPaciente = correo;
 	ci.telefonoPaciente = num;
 	ci.urgente = urgencia;
@@ -88,17 +71,15 @@ public class CrearCita {
 
     }
 
-    public void SolicitarCita(String paciente, boolean urgencia, String lugar,
+    public void SolicitarCita(PacienteRecord paciente, boolean urgencia, String lugar,
 	    String anio, String mes, String dia, String horaE, String horaS,
 	    String correo, String num, boolean prio) {
-	String dni = parsePaciente(paciente);
 	LocalDate fecha = toFecha(anio, mes, dia);
 	PacienteGatewayImpl pa = new PacienteGatewayImpl();
-	ci.dniPaciente = dni;
+	ci.idPaciente = paciente.getId();
 	ci.idCita = String.valueOf(nextid);
-	ci.idHistorial = getHistorial(dni);
 	ci.correoPaciente = correo;
-	ci.idHistorial = pa.getHistorial(dni).getIdHistorial();
+	ci.idHistorial = pa.getHistorial(paciente.getId()).getIdHistorial();
 	ci.telefonoPaciente = num;
 	ci.urgente = urgencia;
 	ci.pacienteAcudido = "Asistencia Sin Asignar";

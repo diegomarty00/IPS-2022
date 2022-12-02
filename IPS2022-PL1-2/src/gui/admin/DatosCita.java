@@ -32,7 +32,7 @@ public class DatosCita extends JFrame {
 	private JTextField tfOtros;
 	private JButton btCancelar;
 	private JButton btConfirmar;
-	private String paciente;
+	private PacienteRecord paciente;
 	private String lugar ;
 	private String anio;
 	private String mes;
@@ -45,13 +45,12 @@ public class DatosCita extends JFrame {
 	private DefaultListModel<EnfermeroCitaRecord> enflist;
 	DefaultListModel<EspecialidadCitaRecord> eslist;
 	ProcesarAccion p = new ProcesarAccion();
-	private PacienteRecord pa;
 	/**
 	 * Create the frame.
 	 * @param eslist 
 	 * @param enflist 
 	 */
-	public DatosCita(String paciente, boolean urgencia,String lugar, String anio , String mes , String dia, String horaE, String horaS,DefaultListModel<String> modjlist,
+	public DatosCita(PacienteRecord paciente, boolean urgencia,String lugar, String anio , String mes , String dia, String horaE, String horaS,DefaultListModel<String> modjlist,
 			boolean prioridad, DefaultListModel<EspecialidadCitaRecord> eslist, DefaultListModel<EnfermeroCitaRecord> enflist) {
 		this.paciente = paciente;
 		this.urgente = urgencia;
@@ -65,7 +64,7 @@ public class DatosCita extends JFrame {
 		this.modjlist = modjlist;
 		this.prioritario = prioridad;
 		this.enflist = enflist;
-		pa =  ObtenerPacientes.sacarDatosContacto(ObtenerPacientes.parsePaciente(paciente));
+		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -104,7 +103,7 @@ public class DatosCita extends JFrame {
 			tfEmail = new JTextField();
 			tfEmail.setBounds(191, 83, 219, 20);
 			tfEmail.setColumns(10);
-			tfEmail.setText(pa.getCorreo());
+			tfEmail.setText(paciente.getCorreo());
 		}
 		return tfEmail;
 	}
@@ -113,7 +112,7 @@ public class DatosCita extends JFrame {
 			tfTelf = new JTextField();
 			tfTelf.setBounds(191, 134, 219, 22);
 			tfTelf.setColumns(10);
-			tfTelf.setText(String.valueOf(pa.getTelefono()));
+			tfTelf.setText(String.valueOf(paciente.getTelefono()));
 		}
 		return tfTelf;
 	}
